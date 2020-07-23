@@ -46,12 +46,11 @@ public class GameEngine implements Runnable {
 			
 			this.render(); //render
 			double endTime = time + loopSlot; //endTime is the start time + the minimum amount of time a loop is allowed to complete
-			while(System.nanoTime() / 1000_000_000 < endTime) { //if the loop completed too quickly, the thread pauses to keep the FPS going beyond the target FPS
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			try { //if the loop completed too quickly, the thread pauses to keep the FPS going beyond the target FPS
+				Thread.sleep((long) (endTime * 1000_000_000) - System.nanoTime()); //convert endTime to nanoseconds (its in seconds)
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) { //A lazy way of handling the fact that if the time elapsed is greater than the minimum time, the thread doesn't have to pause
 			}
 		}
 	}
