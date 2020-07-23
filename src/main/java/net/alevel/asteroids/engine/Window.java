@@ -49,10 +49,9 @@ public class Window {
 		this.width = 600; //width and height are measured in pixels
 		this.height = 600;
 		this.resized = false;
-		this.init();
 	}
 	
-	private void init() { //width and height variables are to do with the size (in pixels) of the window
+	public void init() { //width and height variables are to do with the size (in pixels) of the window
 		GLFWErrorCallback.createPrint(System.err).set(); //sets the GL error stream to the system stream
 		
 		if(!glfwInit()) //starts the GLFW library so OpenGL can now be interfaced with
