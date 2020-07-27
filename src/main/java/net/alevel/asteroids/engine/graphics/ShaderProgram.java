@@ -1,10 +1,14 @@
 package net.alevel.asteroids.engine.graphics;
 
 import static org.lwjgl.opengl.GL20.glCreateProgram;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform3f;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -14,7 +18,7 @@ import org.lwjgl.system.MemoryStack;
  */
 public class ShaderProgram {
 	private final int programId;
-	private int vertexShader;
+	private int vertexShaderId;
 	private int fragmentShaderId;
 	private final Map<String, Integer> uniforms; //this map will hold all the uniforms
 	
@@ -53,5 +57,63 @@ public class ShaderProgram {
 		glUniform1i(this.uniforms.get(uniformName), value);
 	}
 	
+	/**Load and compile GLSL code
+	 */
+	public void initShaders() {
+		try {
+			this.initShaderObject("vertex.vs", GL_VERTEX_SHADER);
+			this.initShaderObject("fragment.fs", GL_FRAGMENT_SHADER);
+		} catch (ClassNotFoundException e) { //this should never be thrown as the class its looking for is this one
+			e.printStackTrace();
+		}
+	}
 	
+	private int initShaderObject(String fileName, int shaderType) throws ClassNotFoundException {
+		int id;
+		try (Scanner s = new Scanner(Class.forName(ShaderProgram.class.getName()).getResourceAsStream("/" + fileName), "UTF-8")) { //this scanner reads the file as a stream as it is within the jar
+			if((id = glCreateShader(shaderType)) == 0)
+				throw new IllegalStateException("Error creating shader object of type: " + shaderType);
+			glShaderSource(id, s.useDelimiter("\\A").next()); //links the GLSL code to the shader object
+			glCompileShader(id); //compiles the GLSL code
+			if(glGetShaderi(id, GL_COMPILE_STATUS) == 0) //gets the returned code from the GLSL compiler and checks if it compiled correctly
+				throw new IllegalStateException("Compilation error when compiling shader code: " + glGetProgramInfoLog(this.programId, 1024));
+			glAttachShader(this.programId, id);
+		}
+		return id;
+	}
+	
+	/**Link this shader program to the shader pipeline. Essentially applies the program to the OpenGL engine
+	 */
+	public void link() {
+		glLinkProgram(this.programId);
+		if(glGetProgrami(this.programId, GL_LINK_STATUS) == 0)
+			throw new IllegalStateException("Error linking shader code: " + glGetProgramInfoLog(this.programId, 1024));
+		
+		if(this.vertexShaderId != 0) //the shader objects are no longer needed after linking
+			glDetachShader(this.programId, this.vertexShaderId);
+		if(this.fragmentShaderId != 0)
+			glDetachShader(this.programId, this.fragmentShaderId);
+		
+		glValidateProgram(this.programId);
+		if(glGetProgrami(this.programId, GL_VALIDATE_STATUS) == 0)
+			System.err.println("A warning appeared when validating shader program: " + glGetProgramInfoLog(this.programId, 1024));
+	}
+	
+	/**Tell the engine to use this program
+	 */
+	public void bind() {
+		glUseProgram(this.programId);
+	}
+	
+	public void unbind() {
+		glUseProgram(0);
+	}
+	
+	/**Destroys the program completely. Use on shutdown
+	 */
+	public void cleanUp() {
+		this.unbind();
+		if(this.programId != 0)
+			glDeleteProgram(this.programId);
+	}
 }
