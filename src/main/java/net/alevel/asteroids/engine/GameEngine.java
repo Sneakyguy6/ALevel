@@ -9,6 +9,7 @@ public class GameEngine implements Runnable {
 	private final MouseInput mouseInput;
 	
 	public GameEngine(ILogic gameLogic) {
+		this.timer = new Timer();
 		this.window = new Window();
 		this.gameLogic = gameLogic;
 		this.mouseInput = new MouseInput();
@@ -26,13 +27,14 @@ public class GameEngine implements Runnable {
 	
 	protected void init() throws Exception { //any errors will passed to the method that called this method
 		this.window.init();
+		this.timer.init();
 		this.mouseInput.init(this.window);
 		this.gameLogic.init(this.window);
 	}
 	
 	/** This is the main game loop. Methods are protected for convenience. It may come in useful if I need to alter what happens in the loop.
 	 */
-	protected void gameLoop() { //the main loop
+	/*protected void gameLoop() { //the main loop
 		float lastLoop = System.nanoTime() / 1000_000_000f; //stores time that last loop started
 		float accumulator = 0f; //stores the amount of time that the game needs to catch up with
 		float interval = 1f / TARGET_UPS; //the time interval between each update (the speed of the in game clock)
@@ -57,6 +59,41 @@ public class GameEngine implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) { //A lazy way of handling the fact that if the time elapsed is greater than the minimum time, the thread doesn't have to pause
+			}
+		}
+	}*/
+	
+	private final Timer timer;
+	protected void gameLoop() {
+		float elapsedTime;
+		float accumulator = 0f;
+		float interval = 1f / TARGET_UPS;
+		
+		boolean running = true;
+		while(running && !window.windowShouldClose()) {
+			elapsedTime = timer.getElapsedTime();
+			accumulator += elapsedTime;
+			
+			this.input();
+			
+			while(accumulator >= interval) {
+				this.update(interval);
+				accumulator -= interval;
+			}
+			
+			this.render();
+			
+			this.sync();
+		}
+	}
+	
+	private void sync() {
+		float loopSlot = 1f / TARGET_FPS;
+		double endTime = timer.getLastLoopTime() + loopSlot;
+		while(timer.getTime() < endTime) {
+			try {
+				Thread.sleep(1);
+			}catch(InterruptedException e) {
 			}
 		}
 	}
