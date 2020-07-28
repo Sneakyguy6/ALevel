@@ -16,12 +16,12 @@ public class Renderer {//Might be worth making this a singleton as I don't see w
 	private final Transformations transformations;
 	private ShaderProgram shaderProgram;
 	
-	public Renderer(Window window) throws IllegalStateException {
+	public Renderer() throws IllegalStateException {
 		this.transformations = new Transformations();
-		this.initShaderProgram(window);
+		//this.initShaderProgram(window);
 	}
 	
-	private void initShaderProgram(Window window) throws IllegalStateException {
+	public void initShaderProgram(Window window) throws IllegalStateException {
 		this.shaderProgram = new ShaderProgram(); //create the shader program instance
 		this.shaderProgram.initShaders(); //initialise shaders (compile GLSL and create shader objects)
 		this.shaderProgram.link(); //apply to shader pipeline

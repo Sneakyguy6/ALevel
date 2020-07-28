@@ -168,4 +168,9 @@ public class Mesh {
 	public int getVertexCount() {
 		return this.vertexCount;
 	}
+	
+	public static Mesh loadWavefrontMesh(String fileName) {
+		
+		return null;
+	}
 }
