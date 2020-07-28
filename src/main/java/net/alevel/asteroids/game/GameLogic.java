@@ -1,5 +1,7 @@
 package net.alevel.asteroids.game;
 
+import java.io.IOException;
+
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
@@ -8,7 +10,9 @@ import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.MouseInput;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
+import net.alevel.asteroids.engine.graphics.Mesh;
 import net.alevel.asteroids.engine.graphics.Renderer;
+import net.alevel.asteroids.engine.graphics.WavefrontMeshLoader;
 
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.05f;
@@ -16,7 +20,7 @@ public class GameLogic implements ILogic {
 	private final Vector3f cameraInc;
 	private final Camera camera;
 	private final Renderer renderer;
-	private GameObject[] GameObjects;
+	private GameObject[] gameObjects;
 	
 	public GameLogic() {
 		this.renderer = new Renderer();
@@ -25,11 +29,16 @@ public class GameLogic implements ILogic {
 	}
 	
 	@Override
-	public void init(Window window) {
+	public void init(Window window) throws Exception {
 		this.renderer.initShaderProgram(window);
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 		
-		//Mesh mesh = 
+		Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
+		mesh.setColour(new Vector3f(0f, 1f, 0f));
+		GameObject o = new GameObject(mesh);
+		o.setScale(1.5f);
+		o.setPosition(0, 0, -2);
+		this.gameObjects = new GameObject[] {o};
 	}
 
 	@Override

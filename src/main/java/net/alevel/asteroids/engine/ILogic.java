@@ -5,7 +5,7 @@ package net.alevel.asteroids.engine;
 public interface ILogic {
 	/**Runs when the object is instantiated. Setup any initial states here
 	 */
-	public void init(Window window);
+	public void init(Window window) throws Exception;
 	
 	/**Take keyboard and mouse input
 	 */
