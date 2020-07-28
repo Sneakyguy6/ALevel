@@ -5,9 +5,13 @@ public class GameEngine implements Runnable {
 	public static final int TARGET_UPS = 50; //updates per second
 	
 	private final Window window;
-	public GameEngine() {
+	private final ILogic gameLogic;
+	private final MouseInput mouseInput;
+	
+	public GameEngine(ILogic gameLogic) {
 		this.window = new Window();
-		
+		this.gameLogic = gameLogic;
+		this.mouseInput = new MouseInput();
 	}
 	
 	@Override
@@ -22,6 +26,8 @@ public class GameEngine implements Runnable {
 	
 	protected void init() throws Exception { //any errors will passed to the method that called this method
 		this.window.init();
+		this.mouseInput.init(this.window);
+		this.gameLogic.init(this.window);
 	}
 	
 	/** This is the main game loop. Methods are protected for convenience. It may come in useful if I need to alter what happens in the loop.
