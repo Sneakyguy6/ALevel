@@ -36,6 +36,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -93,6 +94,8 @@ public class Window {
 		glfwSwapInterval(1); //1 means it will use vsync (max FPS is monitor refresh rate)
 		
 		glfwShowWindow(this.windowHandle); //everything is setup so can now open the window
+		
+		GL.createCapabilities();
 		
 		glClearColor(0f, 0f, 0f, 0f); //background colour (the colour where nothing is rendered) will be black
 		

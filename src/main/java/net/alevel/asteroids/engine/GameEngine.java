@@ -38,15 +38,15 @@ public class GameEngine implements Runnable {
 		float interval = 1f / TARGET_UPS; //the time interval between each update (the speed of the in game clock)
 		float loopSlot = 1f / TARGET_FPS; //The loop runs every frame per second, not every update per second
 		
-		this.input();
-		
 		while(!this.window.windowShouldClose()) { //game loop will stop if the window is about to close (i.e. if the user closes the window). This will cause the whole app to terminate
 			float time = System.nanoTime() / 1000_000_000f;
 			accumulator += time - lastLoop; //get time (in seconds) to complete last loop and add it to the time accumulated (time behind).
 			lastLoop = time; //last loop is now equal to the time that this run started
 			
+			this.input();
+			
 			while(accumulator >= interval) { //keep updating until caught up with the time lost. This should mean the UPS should not change when the FPS changes
-				this.update();
+				this.update(interval);
 				accumulator -= interval;
 			}
 			
@@ -64,19 +64,20 @@ public class GameEngine implements Runnable {
 	/** Record any keys pressed
 	 */
 	protected void input() {
-		
+		this.mouseInput.input(this.window);
+		this.gameLogic.input(this.window, this.mouseInput);
 	}
 	
 	/** Update objects (simulate physics for that instant of time)
 	 */
-	protected void update() {
-		
+	protected void update(float interval) {
+		this.gameLogic.update(interval, this.mouseInput);
 	}
 	
 	/** Draw the updated objects onto the screen. Then the window will be called to swap frame buffers
 	 */
 	protected void render() {
-		
+		this.gameLogic.render(this.window);
 		this.window.update(); //the method will tell OpenGL to swap the old frame buffer with the new frame buffer (i.e update what is being displayed)
 	}
 }
