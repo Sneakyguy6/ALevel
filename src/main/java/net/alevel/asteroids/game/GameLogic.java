@@ -1,7 +1,11 @@
 package net.alevel.asteroids.game;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.ILogic;
@@ -41,26 +45,41 @@ public class GameLogic implements ILogic {
 
 	@Override
 	public void input(Window window, MouseInput mouseInput) {
-		// TODO Auto-generated method stub
-		
+		this.cameraInc.set(0, 0, 0);
+		if(window.isKeyPressed(GLFW_KEY_W))
+			this.cameraInc.z = -0.5f;
+		if(window.isKeyPressed(GLFW_KEY_S))
+			this.cameraInc.z = 0.5f;
+		if(window.isKeyPressed(GLFW_KEY_A))
+			this.cameraInc.x = -0.5f;
+		if(window.isKeyPressed(GLFW_KEY_D))
+			this.cameraInc.x = 0.5f;
+		if(window.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+			this.cameraInc.y = -0.5f;
+		if(window.isKeyPressed(GLFW_KEY_SPACE))
+			this.cameraInc.y = 0.5f;
 	}
 
 	@Override
 	public void update(float interval, MouseInput mouseInput) {
-		// TODO Auto-generated method stub
+		camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
 		
+		if(mouseInput.isRightBtnPressed()) {
+			Vector2f rotVec = mouseInput.getDisplayVec();
+			this.camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+		}
 	}
 
 	@Override
 	public void render(Window window) {
-		// TODO Auto-generated method stub
-		
+		this.renderer.render(window, this.camera, this.gameObjects);
 	}
 
 	@Override
 	public void cleanUp() {
-		// TODO Auto-generated method stub
-		
+		this.renderer.cleanUp();
+		for(GameObject o : this.gameObjects)
+			o.getMesh().cleanUp();
 	}
 
 }
