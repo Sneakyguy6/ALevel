@@ -22,7 +22,7 @@ public class ShaderProgram {
 	private int fragmentShaderId;
 	private final Map<String, Integer> uniforms; //this map will hold all the uniforms
 	
-	public ShaderProgram() throws Exception {
+	public ShaderProgram() throws IllegalStateException {
 		if((this.programId = glCreateProgram()) == 0)
 			throw new IllegalStateException("Could not create shader program");
 		this.uniforms = new HashMap<String, Integer>();
@@ -99,12 +99,14 @@ public class ShaderProgram {
 			System.err.println("A warning appeared when validating shader program: " + glGetProgramInfoLog(this.programId, 1024));
 	}
 	
-	/**Tell the engine to use this program
+	/**Use if need to run methods that should refer to this object instance.
 	 */
 	public void bind() {
 		glUseProgram(this.programId);
 	}
 	
+	/**Once finished with this instance, unbind from it so accidental changes are not made to this
+	 */
 	public void unbind() {
 		glUseProgram(0);
 	}
