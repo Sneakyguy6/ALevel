@@ -1,7 +1,5 @@
 package net.alevel.asteroids.game;
 
-import java.io.IOException;
-
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
