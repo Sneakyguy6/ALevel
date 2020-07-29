@@ -45,6 +45,8 @@ public class Renderer {//Might be worth making this a singleton as I don't see w
 			window.setResized(false);
 		}
 		
+		this.shaderProgram.bind(); //Methods that use the shader program will use this instance
+		
 		//Get updated projection matrix which depends on the new window size
 		Matrix4f projectionMatrix = this.transformations.getProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);
 		this.shaderProgram.setUniform("projectionMatrix", projectionMatrix); //update projection matrix in shaders
@@ -52,8 +54,6 @@ public class Renderer {//Might be worth making this a singleton as I don't see w
 		Matrix4f viewMatrix = this.transformations.getViewMatrix(camera);
 		
 		this.shaderProgram.setUniform("texture_sampler", 0); //Only using 1 texture so set it as a constant that points to texture unit 0
-		
-		this.shaderProgram.bind(); //Methods that use the shader program will use this instance
 		
 		//Render each game object
 		for(GameObject o : gameObjects) {
