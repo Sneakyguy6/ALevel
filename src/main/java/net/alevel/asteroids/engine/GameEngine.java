@@ -34,7 +34,7 @@ public class GameEngine implements Runnable {
 	
 	/** This is the main game loop. Methods are protected for convenience. It may come in useful if I need to alter what happens in the loop.
 	 */
-	/*protected void gameLoop() { //the main loop
+	protected void gameLoop() { //the main loop
 		float lastLoop = System.nanoTime() / 1000_000_000f; //stores time that last loop started
 		float accumulator = 0f; //stores the amount of time that the game needs to catch up with
 		float interval = 1f / TARGET_UPS; //the time interval between each update (the speed of the in game clock)
@@ -46,25 +46,28 @@ public class GameEngine implements Runnable {
 			lastLoop = time; //last loop is now equal to the time that this run started
 			
 			this.input();
+			//System.out.println("inputting"); debug
 			
 			while(accumulator >= interval) { //keep updating until caught up with the time lost. This should mean the UPS should not change when the FPS changes
 				this.update(interval);
 				accumulator -= interval;
+				//System.out.println("updating"); debug
 			}
 			
+			//System.out.println("rendering"); debug
 			this.render(); //render
 			double endTime = time + loopSlot; //endTime is the start time + the minimum amount of time a loop is allowed to complete
 			try { //if the loop completed too quickly, the thread pauses to keep the FPS going beyond the target FPS
-				Thread.sleep((long) (endTime * 1000_000_000) - System.nanoTime()); //convert endTime to nanoseconds (its in seconds)
+				Thread.sleep((long) (endTime * 1000) - (System.nanoTime() / 1000_000)); //convert endTime to milliseconds (its in seconds)
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) { //A lazy way of handling the fact that if the time elapsed is greater than the minimum time, the thread doesn't have to pause
 			}
 		}
-	}*/
+	}
 	
 	private final Timer timer;
-	protected void gameLoop() {
+	/*protected void gameLoop() {
 		float elapsedTime;
 		float accumulator = 0f;
 		float interval = 1f / TARGET_UPS;
@@ -96,7 +99,7 @@ public class GameEngine implements Runnable {
 			}catch(InterruptedException e) {
 			}
 		}
-	}
+	}*/
 	
 	/** Record any keys pressed
 	 */
