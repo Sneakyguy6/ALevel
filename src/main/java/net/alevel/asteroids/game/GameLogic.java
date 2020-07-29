@@ -52,15 +52,15 @@ public class GameLogic implements ILogic {
 		this.cameraInc.set(0, 0, 0);
 		if(window.isKeyPressed(GLFW_KEY_W))
 			this.cameraInc.z = -0.5f;
-		if(window.isKeyPressed(GLFW_KEY_S))
+		else if(window.isKeyPressed(GLFW_KEY_S))
 			this.cameraInc.z = 0.5f;
 		if(window.isKeyPressed(GLFW_KEY_A))
 			this.cameraInc.x = -0.5f;
-		if(window.isKeyPressed(GLFW_KEY_D))
+		else if(window.isKeyPressed(GLFW_KEY_D))
 			this.cameraInc.x = 0.5f;
 		if(window.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 			this.cameraInc.y = -0.5f;
-		if(window.isKeyPressed(GLFW_KEY_SPACE))
+		else if(window.isKeyPressed(GLFW_KEY_SPACE))
 			this.cameraInc.y = 0.5f;
 	}
 
