@@ -61,15 +61,15 @@ public class Camera {
 			this.position.z += (float) Math.cos(Math.toRadians(rotation.y)) * offsetZ;
 		}
 		if(offsetX != 0) {
-			this.position.x += (float) Math.sin(Math.toRadians(rotation.y)) * -1f * offsetX;
-			this.position.z += (float) Math.cos(Math.toRadians(rotation.y)) * offsetX;
+			this.position.x += (float) Math.sin(Math.toRadians(rotation.y - 90)) * -1f * offsetX;
+			this.position.z += (float) Math.cos(Math.toRadians(rotation.y - 90)) * offsetX;
 		}
-		this.rotation.y += offsetY;
+		this.position.y += offsetY;
 	}
 	
 	public void moveRotation(float offsetX, float offsetY, float offsetZ) {
-		this.rotation.x = offsetX;
-		this.rotation.y = offsetY;
-		this.rotation.z = offsetZ;
+		this.rotation.x += offsetX;
+		this.rotation.y += offsetY;
+		this.rotation.z += offsetZ;
 	}
 }

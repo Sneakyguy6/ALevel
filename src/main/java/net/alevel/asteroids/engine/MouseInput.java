@@ -54,6 +54,8 @@ public class MouseInput {
 			if(rotateY)
 				this.displVec.x = (float) deltay;
 		}
+		this.previousPos.x = this.currentPos.x;
+		this.previousPos.y = this.currentPos.y;
 	}
 	
 	public boolean isLeftBtnPressed() {
