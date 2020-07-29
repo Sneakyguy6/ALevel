@@ -9,7 +9,6 @@ public class GameEngine implements Runnable {
 	private final MouseInput mouseInput;
 	
 	public GameEngine(ILogic gameLogic) {
-		this.timer = new Timer();
 		this.window = new Window();
 		this.gameLogic = gameLogic;
 		this.mouseInput = new MouseInput();
@@ -27,7 +26,6 @@ public class GameEngine implements Runnable {
 	
 	protected void init() throws Exception { //any errors will passed to the method that called this method
 		this.window.init();
-		this.timer.init();
 		this.mouseInput.init(this.window);
 		this.gameLogic.init(this.window);
 	}
@@ -65,41 +63,6 @@ public class GameEngine implements Runnable {
 			}
 		}
 	}
-	
-	private final Timer timer;
-	/*protected void gameLoop() {
-		float elapsedTime;
-		float accumulator = 0f;
-		float interval = 1f / TARGET_UPS;
-		
-		boolean running = true;
-		while(running && !window.windowShouldClose()) {
-			elapsedTime = timer.getElapsedTime();
-			accumulator += elapsedTime;
-			
-			this.input();
-			
-			while(accumulator >= interval) {
-				this.update(interval);
-				accumulator -= interval;
-			}
-			
-			this.render();
-			
-			this.sync();
-		}
-	}
-	
-	private void sync() {
-		float loopSlot = 1f / TARGET_FPS;
-		double endTime = timer.getLastLoopTime() + loopSlot;
-		while(timer.getTime() < endTime) {
-			try {
-				Thread.sleep(1);
-			}catch(InterruptedException e) {
-			}
-		}
-	}*/
 	
 	/** Record any keys pressed
 	 */
