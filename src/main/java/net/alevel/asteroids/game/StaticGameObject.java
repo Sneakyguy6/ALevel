@@ -10,6 +10,6 @@ public class StaticGameObject extends GameObject {
 	}
 
 	@Override
-	public void update() { //static objects do nothing
+	public void update(float time) { //static objects do nothing
 	}
 }

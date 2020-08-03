@@ -21,16 +21,18 @@ public class GameLogic implements ILogic {
 	public static final float MOUSE_SENSITIVITY = 0.05f;
 	private final Camera camera;
 	private GameObject[] gameObjects;
+	private float accumulatedTime;
 	
 	public GameLogic() {
-		camera = new Camera();
+		this.camera = new Camera();
+		this.accumulatedTime = 0;
 	}
 	
 	@Override
 	public void init(Window window) throws Exception {
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 		
-		Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
+		/*Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
 		mesh.setColour(new Vector3f(0f, 1f, 0f));
 		GameObject o = new StaticGameObject(mesh);
 		o.setScale(1.5f);
@@ -46,8 +48,16 @@ public class GameLogic implements ILogic {
 		mesh2.setColour(new Vector3f(0f, 1f, 0f));
 		GameObject o2 = new StaticGameObject(mesh2);
 		o2.setScale(1.5f);
-		o2.setPosition(0, -1, -2);
-		gameObjects = new GameObject[] {o, o1, o2};
+		o2.setPosition(0, -1, -2);*/
+		
+		Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
+		mesh.setColour(new Vector3f(0f, 1f, 0f));
+		GameObject o = new Projectile(mesh);
+		o.setScale(1.5f);
+		o.setPosition(0, 0, -20);
+		
+		this.gameObjects = new GameObject[] {o};
+		
 	}
 
 	@Override
@@ -71,6 +81,10 @@ public class GameLogic implements ILogic {
 			Vector2f rotVec = input.getDeltaMousePos();
 			camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
 		}
+		
+		this.accumulatedTime += interval;
+		for(GameObject i : this.gameObjects)
+			i.update(this.accumulatedTime);
 	}
 	
 	@Override

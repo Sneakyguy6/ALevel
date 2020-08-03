@@ -19,7 +19,7 @@ public abstract class GameObject {
 		this.rotation = new Vector3f();
 	}
 	
-	public abstract void update();
+	public abstract void update(float time);
 
 	public Vector3f getPosition() {
 		return this.position;
