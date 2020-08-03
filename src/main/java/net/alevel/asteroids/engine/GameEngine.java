@@ -44,15 +44,10 @@ public class GameEngine implements Runnable {
 			lastLoop = time; //last loop is now equal to the time that this run started
 			
 			this.input();
-			//System.out.println("inputting"); debug
 			
-			while(accumulator >= interval) { //keep updating until caught up with the time lost. This should mean the UPS should not change when the FPS changes
+			for(; accumulator >= interval; accumulator -= interval) //keep updating until caught up with the time lost. This should mean the UPS should not change when the FPS changes
 				this.update(interval);
-				accumulator -= interval;
-				//System.out.println("updating"); debug
-			}
-			
-			//System.out.println("rendering"); debug
+				
 			this.render(); //render
 			double endTime = time + loopSlot; //endTime is the start time + the minimum amount of time a loop is allowed to complete
 			try { //if the loop completed too quickly, the thread pauses to keep the FPS going beyond the target FPS
