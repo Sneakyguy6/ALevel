@@ -1,17 +1,19 @@
 package net.alevel.asteroids.engine;
 
+import net.alevel.asteroids.engine.input.Input;
+
 public class GameEngine implements Runnable {
 	public static final int TARGET_FPS = 60; //frames per second
 	public static final int TARGET_UPS = 50; //updates per second
 	
 	private final Window window;
 	private final ILogic gameLogic;
-	private final MouseInput mouseInput;
+	private final Input humanInput;
 	
 	public GameEngine(ILogic gameLogic) {
 		this.window = new Window();
 		this.gameLogic = gameLogic;
-		this.mouseInput = new MouseInput();
+		this.humanInput = new Input();
 	}
 	
 	@Override
@@ -26,7 +28,7 @@ public class GameEngine implements Runnable {
 	
 	protected void init() throws Exception { //any errors will passed to the method that called this method
 		this.window.init();
-		this.mouseInput.init(this.window);
+		this.humanInput.init(this.window);
 		this.gameLogic.init(this.window);
 	}
 	
@@ -62,14 +64,13 @@ public class GameEngine implements Runnable {
 	/** Record any keys pressed
 	 */
 	protected void input() {
-		this.mouseInput.input(this.window);
-		this.gameLogic.input(this.window, this.mouseInput);
+		this.humanInput.input(this.window);
 	}
 	
 	/** Update objects (simulate physics for that instant of time)
 	 */
 	protected void update(float interval) {
-		this.gameLogic.update(interval, this.mouseInput);
+		this.gameLogic.update(interval, this.humanInput);
 	}
 	
 	/** Draw the updated objects onto the screen. Then the window will be called to swap frame buffers

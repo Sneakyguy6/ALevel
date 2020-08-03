@@ -1,5 +1,7 @@
 package net.alevel.asteroids.engine;
 
+import net.alevel.asteroids.engine.input.Input;
+
 /** Implement this interface for classes that contribute to the logic of the game
  */
 public interface ILogic {
@@ -7,13 +9,9 @@ public interface ILogic {
 	 */
 	public void init(Window window) throws Exception;
 	
-	/**Take keyboard and mouse input
-	 */
-	public void input(Window window, MouseInput mouseInput);
-	
 	/**Simulate the game (change object states and/or positions)
 	 */
-	public void update(float interval, MouseInput mouseInput);
+	public void update(float interval, Input mouseInput);
 	
 	/**Tells the engine what to render. The game logic can control what is rendered with this method
 	 */
