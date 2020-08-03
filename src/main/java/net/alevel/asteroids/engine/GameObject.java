@@ -8,9 +8,9 @@ import net.alevel.asteroids.engine.graphics.Mesh;
  */
 public class GameObject {
 	private final Mesh mesh;
-	private final Vector3f position;
-	private float scale;
-	private final Vector3f rotation;
+	protected final Vector3f position;
+	protected float scale;
+	protected final Vector3f rotation;
 	
 	public GameObject(Mesh mesh) {
 		this.mesh = mesh;
