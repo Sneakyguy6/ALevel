@@ -27,7 +27,8 @@ public class Input {
 		this.keyBoard = new KeyBoardInput();
 	}
 	
-	public void init(Window window) { //probably use this for something in the future
+	public void init(Window window) {
+		this.mouse.init(window);
 	}
 	
 	public void input(Window window) {
