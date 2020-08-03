@@ -7,7 +7,7 @@ import net.alevel.asteroids.engine.utils.Pair;
 
 public class GameEngine implements Runnable {
 	public static final int TARGET_FPS = 60; //frames per second
-	public static final int TARGET_UPS = 50; //updates per second
+	public static final int TARGET_UPS = 100; //updates per second
 	
 	private final Window window;
 	private final Renderer renderer;
@@ -54,8 +54,8 @@ public class GameEngine implements Runnable {
 			this.input();
 			
 			for(; accumulator >= interval; accumulator -= interval) //keep updating until caught up with the time lost. This should mean the UPS should not change when the FPS changes
-				this.update(interval);
-				
+				this.update(0.0001f); //the value passed here is 1 in game time second. You can change the speed of the physics with this value
+			
 			this.render(); //render
 			double endTime = time + loopSlot; //endTime is the start time + the minimum amount of time a loop is allowed to complete
 			try { //if the loop completed too quickly, the thread pauses to keep the FPS going beyond the target FPS

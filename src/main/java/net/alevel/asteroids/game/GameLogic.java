@@ -8,7 +8,6 @@ import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
-import net.alevel.asteroids.engine.graphics.Mesh;
 import net.alevel.asteroids.engine.graphics.WavefrontMeshLoader;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.MouseBtns;
@@ -50,14 +49,15 @@ public class GameLogic implements ILogic {
 		o2.setScale(1.5f);
 		o2.setPosition(0, -1, -2);*/
 		
-		Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
-		mesh.setColour(new Vector3f(0f, 1f, 0f));
-		GameObject o = new Projectile(mesh);
-		o.setScale(1.5f);
-		o.setPosition(0, 0, -20);
-		
-		this.gameObjects = new GameObject[] {o};
-		
+		this.gameObjects = new GameObject[6];
+		for(int i = 0; i < this.gameObjects.length; i++)
+			this.gameObjects[i] = new StaticGameObject(WavefrontMeshLoader.loadMesh("/models/bunny.obj"));
+		this.gameObjects[0].setPosition(0, 0, -1);
+		this.gameObjects[1].setPosition(0, 0, 1);
+		this.gameObjects[2].setPosition(0, -1, 0);
+		this.gameObjects[3].setPosition(0, 1, 0);
+		this.gameObjects[4].setPosition(-1, 0, 0);
+		this.gameObjects[5].setPosition(1, 0, 0);
 	}
 
 	@Override
