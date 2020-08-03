@@ -34,9 +34,9 @@ public class Transformations {
 							.translate(gameObject.getPosition())
 							.rotateX((float) Math.toRadians(-rotation.x))
 							.rotateY((float) Math.toRadians(-rotation.y))
-							.rotateZ((float) Math.toRadians(-rotation.z));
-		Matrix4f viewCurr = new Matrix4f(viewMatrix);
-		return viewCurr.mul(this.modelViewMatrix);
+							.rotateZ((float) Math.toRadians(-rotation.z))
+							.scale(gameObject.getScale());
+		return this.modelViewMatrix;
 	}
 	
 	public Matrix4f getViewMatrix(Camera camera) {
@@ -44,8 +44,8 @@ public class Transformations {
 		Vector3f rotation = camera.getRotation();
 		this.viewMatrix.identity();
 		this.viewMatrix.rotate((float) Math.toRadians(rotation.x), new Vector3f(1, 0, 0))
-					   .rotate((float) Math.toRadians(rotation.y), new Vector3f(0, 1, 0));
-		this.viewMatrix.translate(-position.x, -position.y, -position.z);
+					   .rotate((float) Math.toRadians(rotation.y), new Vector3f(0, 1, 0)); //rotate first so it rotates over current pos
+		this.viewMatrix.translate(-position.x, -position.y, -position.z); //then translate
 		return this.viewMatrix;
 	}
 }
