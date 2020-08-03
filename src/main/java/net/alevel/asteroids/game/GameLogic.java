@@ -32,19 +32,19 @@ public class GameLogic implements ILogic {
 		
 		Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
 		mesh.setColour(new Vector3f(0f, 1f, 0f));
-		GameObject o = new GameObject(mesh);
+		GameObject o = new StaticGameObject(mesh);
 		o.setScale(1.5f);
 		o.setPosition(0, 0, -2);
 		
 		Mesh mesh1 = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
 		mesh1.setColour(new Vector3f(0f, 1f, 0f));
-		GameObject o1 = new GameObject(mesh1);
+		GameObject o1 = new StaticGameObject(mesh1);
 		o1.setScale(1.5f);
 		o1.setPosition(0, 1, -2);
 		
 		Mesh mesh2 = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
 		mesh2.setColour(new Vector3f(0f, 1f, 0f));
-		GameObject o2 = new GameObject(mesh2);
+		GameObject o2 = new StaticGameObject(mesh2);
 		o2.setScale(1.5f);
 		o2.setPosition(0, -1, -2);
 		gameObjects = new GameObject[] {o, o1, o2};

@@ -6,7 +6,7 @@ import net.alevel.asteroids.engine.graphics.Mesh;
 
 /**A generic in game object.
  */
-public class GameObject {
+public abstract class GameObject {
 	private final Mesh mesh;
 	protected final Vector3f position;
 	protected float scale;
@@ -18,6 +18,8 @@ public class GameObject {
 		this.scale = 1;
 		this.rotation = new Vector3f();
 	}
+	
+	public abstract void update();
 
 	public Vector3f getPosition() {
 		return this.position;
