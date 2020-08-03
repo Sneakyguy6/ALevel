@@ -66,7 +66,7 @@ public class GameLogic implements ILogic {
 
 	@Override
 	public void update(float interval, MouseInput mouseInput) {
-		camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
+		camera.movePosition(this.cameraInc.x * CAMERA_POS_STEP, this.cameraInc.y * CAMERA_POS_STEP, this.cameraInc.z * CAMERA_POS_STEP);
 		
 		if(mouseInput.isRightBtnPressed()) {
 			Vector2f rotVec = mouseInput.getDisplayVec();
