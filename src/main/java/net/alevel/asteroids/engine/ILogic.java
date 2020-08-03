@@ -1,5 +1,9 @@
 package net.alevel.asteroids.engine;
 
+import net.alevel.asteroids.engine.graphics.Camera;
+import net.alevel.asteroids.engine.input.Input;
+import net.alevel.asteroids.engine.utils.Pair;
+
 /** Implement this interface for classes that contribute to the logic of the game
  */
 public interface ILogic {
@@ -7,17 +11,17 @@ public interface ILogic {
 	 */
 	public void init(Window window) throws Exception;
 	
-	/**Take keyboard and mouse input
-	 */
-	public void input(Window window, MouseInput mouseInput);
-	
 	/**Simulate the game (change object states and/or positions)
+	 * @param interval the time between this update and the previous update (in terms of in game clock)
+	 * @param input the sample of the mouse and keyboard inputs at a certain instant
 	 */
-	public void update(float interval, MouseInput mouseInput);
+	public void update(float interval, Input input);
 	
-	/**Tells the engine what to render. The game logic can control what is rendered with this method
+	/**Tells the renderer what to render and also passes the camera to use
+	 * @param camera camera to use
+	 * @param objectsToRender game objects that will be rendered. If you do not want an object to be rendered, exclude it from this list
 	 */
-	public void render(Window window);
+	public Pair<Camera, GameObject[]> toRender();
 	
 	/**Runs when the object is about to be destroyed (either on shutdown or not needed anymore)
 	 */

@@ -1,17 +1,24 @@
 package net.alevel.asteroids.engine;
 
+import net.alevel.asteroids.engine.graphics.Camera;
+import net.alevel.asteroids.engine.graphics.Renderer;
+import net.alevel.asteroids.engine.input.Input;
+import net.alevel.asteroids.engine.utils.Pair;
+
 public class GameEngine implements Runnable {
 	public static final int TARGET_FPS = 60; //frames per second
-	public static final int TARGET_UPS = 50; //updates per second
+	public static final int TARGET_UPS = 100; //updates per second
 	
 	private final Window window;
+	private final Renderer renderer;
 	private final ILogic gameLogic;
-	private final MouseInput mouseInput;
+	private final Input humanInput;
 	
 	public GameEngine(ILogic gameLogic) {
 		this.window = new Window();
+		this.renderer = new Renderer();
 		this.gameLogic = gameLogic;
-		this.mouseInput = new MouseInput();
+		this.humanInput = new Input();
 	}
 	
 	@Override
@@ -26,7 +33,8 @@ public class GameEngine implements Runnable {
 	
 	protected void init() throws Exception { //any errors will passed to the method that called this method
 		this.window.init();
-		this.mouseInput.init(this.window);
+		this.renderer.initShaderProgram(window);
+		this.humanInput.init(this.window);
 		this.gameLogic.init(this.window);
 	}
 	
@@ -44,15 +52,10 @@ public class GameEngine implements Runnable {
 			lastLoop = time; //last loop is now equal to the time that this run started
 			
 			this.input();
-			//System.out.println("inputting"); debug
 			
-			while(accumulator >= interval) { //keep updating until caught up with the time lost. This should mean the UPS should not change when the FPS changes
-				this.update(interval);
-				accumulator -= interval;
-				//System.out.println("updating"); debug
-			}
+			for(; accumulator >= interval; accumulator -= interval) //keep updating until caught up with the time lost. This should mean the UPS should not change when the FPS changes
+				this.update(0.0001f); //the value passed here is 1 in game time second. You can change the speed of the physics with this value
 			
-			//System.out.println("rendering"); debug
 			this.render(); //render
 			double endTime = time + loopSlot; //endTime is the start time + the minimum amount of time a loop is allowed to complete
 			try { //if the loop completed too quickly, the thread pauses to keep the FPS going beyond the target FPS
@@ -62,25 +65,32 @@ public class GameEngine implements Runnable {
 			} catch (IllegalArgumentException e) { //A lazy way of handling the fact that if the time elapsed is greater than the minimum time, the thread doesn't have to pause
 			}
 		}
+		
+		this.cleanUp();
 	}
 	
 	/** Record any keys pressed
 	 */
 	protected void input() {
-		this.mouseInput.input(this.window);
-		this.gameLogic.input(this.window, this.mouseInput);
+		this.humanInput.input(this.window);
 	}
 	
 	/** Update objects (simulate physics for that instant of time)
 	 */
 	protected void update(float interval) {
-		this.gameLogic.update(interval, this.mouseInput);
+		this.gameLogic.update(interval, this.humanInput);
 	}
 	
 	/** Draw the updated objects onto the screen. Then the window will be called to swap frame buffers
 	 */
 	protected void render() {
-		this.gameLogic.render(this.window);
+		Pair<Camera, GameObject[]> p = this.gameLogic.toRender();
+		this.renderer.render(this.window, p.getO1(), p.getO2());
 		this.window.update(); //the method will tell OpenGL to swap the old frame buffer with the new frame buffer (i.e update what is being displayed)
+	}
+	
+	protected void cleanUp() {
+		this.renderer.cleanUp();
+		this.gameLogic.cleanUp();
 	}
 }
