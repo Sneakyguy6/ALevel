@@ -9,28 +9,25 @@ import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.graphics.Mesh;
-import net.alevel.asteroids.engine.graphics.Renderer;
 import net.alevel.asteroids.engine.graphics.WavefrontMeshLoader;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.MouseBtns;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
+import net.alevel.asteroids.engine.utils.Pair;
 
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
 	public static final float MOUSE_SENSITIVITY = 0.05f;
 	private final Camera camera;
-	private final Renderer renderer;
 	private GameObject[] gameObjects;
 	
 	public GameLogic() {
-		renderer = new Renderer();
 		camera = new Camera();
 	}
 	
 	@Override
 	public void init(Window window) throws Exception {
-		renderer.initShaderProgram(window);
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 		
 		Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
@@ -38,7 +35,19 @@ public class GameLogic implements ILogic {
 		GameObject o = new GameObject(mesh);
 		o.setScale(1.5f);
 		o.setPosition(0, 0, -2);
-		gameObjects = new GameObject[] {o};
+		
+		Mesh mesh1 = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
+		mesh1.setColour(new Vector3f(0f, 1f, 0f));
+		GameObject o1 = new GameObject(mesh1);
+		o1.setScale(1.5f);
+		o1.setPosition(0, 1, -2);
+		
+		Mesh mesh2 = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
+		mesh2.setColour(new Vector3f(0f, 1f, 0f));
+		GameObject o2 = new GameObject(mesh2);
+		o2.setScale(1.5f);
+		o2.setPosition(0, -1, -2);
+		gameObjects = new GameObject[] {o, o1, o2};
 	}
 
 	@Override
@@ -63,15 +72,14 @@ public class GameLogic implements ILogic {
 			camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
 		}
 	}
-
+	
 	@Override
-	public void render(Window window) {
-		renderer.render(window, camera, gameObjects);
+	public Pair<Camera, GameObject[]> toRender() {
+		return new Pair<Camera, GameObject[]>(this.camera, this.gameObjects);
 	}
 
 	@Override
 	public void cleanUp() {
-		renderer.cleanUp();
 		for(GameObject o : gameObjects)
 			o.getMesh().cleanUp();
 	}

@@ -1,17 +1,22 @@
 package net.alevel.asteroids.engine;
 
+import net.alevel.asteroids.engine.graphics.Camera;
+import net.alevel.asteroids.engine.graphics.Renderer;
 import net.alevel.asteroids.engine.input.Input;
+import net.alevel.asteroids.engine.utils.Pair;
 
 public class GameEngine implements Runnable {
 	public static final int TARGET_FPS = 60; //frames per second
 	public static final int TARGET_UPS = 50; //updates per second
 	
 	private final Window window;
+	private final Renderer renderer;
 	private final ILogic gameLogic;
 	private final Input humanInput;
 	
 	public GameEngine(ILogic gameLogic) {
 		this.window = new Window();
+		this.renderer = new Renderer();
 		this.gameLogic = gameLogic;
 		this.humanInput = new Input();
 	}
@@ -28,6 +33,7 @@ public class GameEngine implements Runnable {
 	
 	protected void init() throws Exception { //any errors will passed to the method that called this method
 		this.window.init();
+		this.renderer.initShaderProgram(window);
 		this.humanInput.init(this.window);
 		this.gameLogic.init(this.window);
 	}
@@ -59,6 +65,8 @@ public class GameEngine implements Runnable {
 			} catch (IllegalArgumentException e) { //A lazy way of handling the fact that if the time elapsed is greater than the minimum time, the thread doesn't have to pause
 			}
 		}
+		
+		this.cleanUp();
 	}
 	
 	/** Record any keys pressed
@@ -76,7 +84,13 @@ public class GameEngine implements Runnable {
 	/** Draw the updated objects onto the screen. Then the window will be called to swap frame buffers
 	 */
 	protected void render() {
-		this.gameLogic.render(this.window);
+		Pair<Camera, GameObject[]> p = this.gameLogic.toRender();
+		this.renderer.render(this.window, p.getO1(), p.getO2());
 		this.window.update(); //the method will tell OpenGL to swap the old frame buffer with the new frame buffer (i.e update what is being displayed)
+	}
+	
+	protected void cleanUp() {
+		this.renderer.cleanUp();
+		this.gameLogic.cleanUp();
 	}
 }
