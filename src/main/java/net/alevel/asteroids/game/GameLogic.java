@@ -49,15 +49,18 @@ public class GameLogic implements ILogic {
 		o2.setScale(1.5f);
 		o2.setPosition(0, -1, -2);*/
 		
-		this.gameObjects = new GameObject[6];
-		for(int i = 0; i < this.gameObjects.length; i++)
+		this.gameObjects = new GameObject[7];
+		for(int i = 0; i < 6; i++)
 			this.gameObjects[i] = new StaticGameObject(WavefrontMeshLoader.loadMesh("/models/bunny.obj"));
 		this.gameObjects[0].setPosition(0, 0, -1).getMesh().setColour(new Vector3f(0, 1, 0));
-		this.gameObjects[1].setPosition(0, 0, 1).getMesh().setColour(new Vector3f(1, 0, 0));
+		this.gameObjects[1].setPosition(0, 0, 1).setRotation(0f, 180f, 0f).getMesh().setColour(new Vector3f(1, 0, 0));
 		this.gameObjects[2].setPosition(0, -1, 0).getMesh().setColour(new Vector3f(0, 0, 1));
 		this.gameObjects[3].setPosition(0, 1, 0).getMesh().setColour(new Vector3f(0, 1, 1));
 		this.gameObjects[4].setPosition(-1, 0, 0).getMesh().setColour(new Vector3f(1, 1, 0));
 		this.gameObjects[5].setPosition(1, 0, 0).getMesh().setColour(new Vector3f(1, 0, 1));
+		
+		this.gameObjects[6] = new Projectile(WavefrontMeshLoader.loadMesh("/models/bunny.obj"));
+		this.gameObjects[6].setPosition(0, 1, 1).getMesh().setColour(new Vector3f(1, 0.5f, 0));
 	}
 
 	@Override

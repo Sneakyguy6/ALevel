@@ -1,6 +1,7 @@
 #version 330
 
-in  vec2 outTexCoord;
+in vec2 outTexCoord;
+//flat in int shouldLight; //light test
 out vec4 fragColor;
 
 uniform sampler2D texture_sampler;
@@ -11,10 +12,10 @@ void main()
 {
     if ( useColour == 1 )
     {
-        fragColor = vec4(colour, 1);
+        fragColor = vec4(colour, 0);// * vec4(0, 0, 0, 0);
     }
     else
     {
-        fragColor = texture(texture_sampler, outTexCoord);
+        fragColor = texture(texture_sampler, outTexCoord);// * shouldLight;
     }
 }

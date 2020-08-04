@@ -3,6 +3,7 @@ package net.alevel.asteroids.engine.graphics;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.Window;
@@ -32,6 +33,8 @@ public class Renderer {//Might be worth making this a singleton as I don't see w
 		this.shaderProgram.createUniform("texture_sampler");
 		this.shaderProgram.createUniform("colour");
 		this.shaderProgram.createUniform("useColour");
+		
+		//this.shaderProgram.createUniform("lightCoord"); //light test
 	}
 	
 	public void clear() {
@@ -46,6 +49,8 @@ public class Renderer {//Might be worth making this a singleton as I don't see w
 		}
 		
 		this.shaderProgram.bind(); //Methods that use the shader program will use this instance
+		
+		//this.shaderProgram.setUniform("lightCoord", new Vector3f(0, 0, 0)); //light test
 		
 		//Get updated projection matrix which depends on the new window size
 		Matrix4f projectionMatrix = this.transformations.getProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);

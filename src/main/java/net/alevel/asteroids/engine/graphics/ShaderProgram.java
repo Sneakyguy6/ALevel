@@ -61,8 +61,8 @@ public class ShaderProgram {
 	 */
 	public void initShaders() {
 		try {
-			this.initShaderObject("vertex.vs", GL_VERTEX_SHADER);
-			this.initShaderObject("fragment.fs", GL_FRAGMENT_SHADER);
+			this.vertexShaderId = this.initShaderObject("vertex.vs", GL_VERTEX_SHADER);
+			this.fragmentShaderId = this.initShaderObject("fragment.fs", GL_FRAGMENT_SHADER);
 		} catch (ClassNotFoundException e) { //this should never be thrown as the class its looking for is this one
 			e.printStackTrace();
 		}
@@ -76,7 +76,8 @@ public class ShaderProgram {
 			glShaderSource(id, s.useDelimiter("\\A").next()); //links the GLSL code to the shader object
 			glCompileShader(id); //compiles the GLSL code
 			if(glGetShaderi(id, GL_COMPILE_STATUS) == 0) //gets the returned code from the GLSL compiler and checks if it compiled correctly
-				throw new IllegalStateException("Compilation error when compiling shader code: " + glGetProgramInfoLog(this.programId, 1024));
+				throw new IllegalStateException("Compilation error when compiling shader code: " + glGetShaderInfoLog(id) + glGetProgramInfoLog(this.programId, 1024));
+			System.out.println(glGetShaderi(id, GL_COMPILE_STATUS));
 			glAttachShader(this.programId, id);
 		}
 		return id;
@@ -97,6 +98,7 @@ public class ShaderProgram {
 		glValidateProgram(this.programId);
 		if(glGetProgrami(this.programId, GL_VALIDATE_STATUS) == 0)
 			System.err.println("A warning appeared when validating shader program: " + glGetProgramInfoLog(this.programId, 1024));
+		System.out.println(glGetProgrami(this.programId, GL_LINK_STATUS));
 	}
 	
 	/**Use if need to run methods that should refer to this object instance.

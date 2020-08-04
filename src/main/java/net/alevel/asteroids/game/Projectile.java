@@ -12,7 +12,7 @@ public class Projectile extends GameObject {
 	
 	public Projectile(Mesh mesh) {
 		super(mesh);
-		this.U = 0.1f;
+		this.U = 0.5f;
 		this.C = (float) Math.toRadians(60);
 		this.D = (float) Math.toRadians(0);
 		super.position.set(0, 0, 0);
@@ -21,6 +21,9 @@ public class Projectile extends GameObject {
 
 	@Override
 	public void update(float t) {
+		if(t < 0.15)
+			return;
+		t -= 0.15;
 		super.position.x += (float) ((this.U * Math.cos(this.C)) * t * Math.cos(this.D));
 		super.position.y += (float) ((t * this.U * Math.sin(this.C)) + ((ACC_GRAV / 2) * Math.pow(t, 2)));
 		super.position.z += (float) ((this.U * Math.cos(this.C)) * t * Math.sin(this.D));
