@@ -39,6 +39,8 @@ public class Input {
 		this.mouseBtnsPressed.clear();
 		this.mouseBtnsPressed.or(this.mouse.getMouseButtonsPressed()); //copy values not object reference, should be independant of each other
 		this.keyBoard.input(window.getWindowHandle());
+		
+		
 	}
 	
 	public boolean isKeyPressed(char character) {
