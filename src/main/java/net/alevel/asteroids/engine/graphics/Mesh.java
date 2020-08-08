@@ -25,7 +25,10 @@ public class Mesh {
 	private Texture texture;
 	private Vector3f colour;
 	
+	private final float[] positions; //for physics
+	
 	public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) { //normals are only needed for lighting
+		this.positions = positions;
 		FloatBuffer posBuffer = null;
 		FloatBuffer textBuffer = null;
 		FloatBuffer normBuffer = null;
@@ -167,5 +170,9 @@ public class Mesh {
 	
 	public int getVertexCount() {
 		return this.vertexCount;
+	}
+	
+	public float[] getVertexPositionFloats() {
+		return this.positions;
 	}
 }

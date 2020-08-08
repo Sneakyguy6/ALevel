@@ -7,7 +7,7 @@ import net.alevel.asteroids.engine.graphics.Mesh;
 /**A generic in game object.
  */
 public abstract class GameObject {
-	private final Mesh mesh;
+	protected final Mesh mesh;
 	protected final Vector3f position;
 	protected float scale;
 	protected final Vector3f rotation;

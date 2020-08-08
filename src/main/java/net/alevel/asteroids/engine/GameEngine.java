@@ -1,5 +1,7 @@
 package net.alevel.asteroids.engine;
 
+import java.util.Set;
+
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.graphics.Renderer;
 import net.alevel.asteroids.engine.input.Input;
@@ -84,7 +86,7 @@ public class GameEngine implements Runnable {
 	/** Draw the updated objects onto the screen. Then the window will be called to swap frame buffers
 	 */
 	protected void render() {
-		Pair<Camera, GameObject[]> p = this.gameLogic.toRender();
+		Pair<Camera, Set<GameObject>> p = this.gameLogic.toRender();
 		this.renderer.render(this.window, p.getO1(), p.getO2());
 		this.window.update(); //the method will tell OpenGL to swap the old frame buffer with the new frame buffer (i.e update what is being displayed)
 	}
