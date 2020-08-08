@@ -64,7 +64,7 @@ public class GameEngine implements Runnable {
 				Thread.sleep((long) (endTime * 1000) - (System.nanoTime() / 1000_000)); //convert endTime to milliseconds (its in seconds)
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			} catch (IllegalArgumentException e) { //A lazy way of handling the fact that if the time elapsed is greater than the minimum time, the thread doesn't have to pause
+			} catch (IllegalArgumentException e) { //A lazy way to handle the fact that if the time elapsed is greater than the minimum time, the thread doesn't have to pause
 			}
 		}
 		

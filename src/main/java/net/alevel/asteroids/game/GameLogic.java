@@ -25,6 +25,7 @@ public class GameLogic implements ILogic {
 	public static final float MOUSE_SENSITIVITY = 0.05f;
 	private final Camera camera;
 	private final Set<GameObject> gameObjects;
+	private GameObject tempProjectile;
 	private float accumulatedTime;
 	
 	private GameLogic() {
@@ -75,9 +76,9 @@ public class GameLogic implements ILogic {
 		GameObject temp = new Projectile(WavefrontMeshLoader.loadMesh("/models/cube.obj"));
 		((Projectile) temp).setHorizontalAngleProjected(270).setPosition(0, 0, 0).setScale(0.05f);
 		this.gameObjects.add(temp);
-		temp = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj")); 
-		temp.setPosition(0, 0, -1).setScale(0.1f);
-		this.gameObjects.add(temp);
+		this.tempProjectile = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj")); 
+		this.tempProjectile.setPosition(0, 0, -1).setScale(0.1f);
+		this.gameObjects.add(this.tempProjectile);
 	}
 
 	@Override
@@ -106,6 +107,7 @@ public class GameLogic implements ILogic {
 		for(GameObject i : this.gameObjects)
 			i.update(this.accumulatedTime);
 		Collision.getInstance().checkForCollisions();
+		System.out.println(((PhysicalObject) this.tempProjectile).getBoundingBox());
 	}
 	
 	@Override

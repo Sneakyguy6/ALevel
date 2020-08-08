@@ -46,11 +46,11 @@ public class PhysicalObject extends GameObject {
 				maxZ = temp.z;
 			else if(temp.z < minZ)
 				minZ = temp.z;
-			System.out.println(temp);
+			//System.out.println(temp);
 		}
 		
 		this.boudingBox.setMax(maxX, maxY, maxZ).setMin(minX, minY, minZ);
-		System.out.println(this.boudingBox);
+		//System.out.println(this.boudingBox);
 	}
 	
 	protected void simulatePhysics(float time) {
