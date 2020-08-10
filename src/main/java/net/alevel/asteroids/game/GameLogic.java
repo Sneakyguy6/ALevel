@@ -26,6 +26,7 @@ public class GameLogic implements ILogic {
 	private final Camera camera;
 	private final Set<GameObject> gameObjects;
 	private GameObject tempProjectile;
+	private GameObject tempPhysicalObject;
 	private float accumulatedTime;
 	
 	private GameLogic() {
@@ -73,12 +74,12 @@ public class GameLogic implements ILogic {
 		((Projectile) this.gameObjects[6]).setHorizontalAngleProjected(270).setPosition(0, 0, 0).setScale(0.05f);
 		this.gameObjects[7] = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj"));
 		this.gameObjects[7].setPosition(0, 0, -1).setScale(0.1f);*/
-		GameObject temp = new Projectile(WavefrontMeshLoader.loadMesh("/models/cube.obj"));
-		((Projectile) temp).setHorizontalAngleProjected(270).setPosition(0, 0, 0).setScale(0.05f);
-		this.gameObjects.add(temp);
-		this.tempProjectile = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj")); 
-		this.tempProjectile.setPosition(0, 0, -1).setScale(0.1f);
+		this.tempProjectile = new Projectile(WavefrontMeshLoader.loadMesh("/models/cube.obj"));
+		((Projectile) this.tempProjectile).setHorizontalAngleProjected(270).setPosition(0, 0, 0).setScale(0.05f);
 		this.gameObjects.add(this.tempProjectile);
+		this.tempPhysicalObject = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj")); 
+		this.tempPhysicalObject.setPosition(0, 0, -1).setScale(0.1f);
+		this.gameObjects.add(this.tempPhysicalObject);
 	}
 
 	@Override
@@ -108,6 +109,8 @@ public class GameLogic implements ILogic {
 			i.update(this.accumulatedTime);
 		Collision.getInstance().checkForCollisions();
 		System.out.println(((PhysicalObject) this.tempProjectile).getBoundingBox());
+		System.out.println(((PhysicalObject) this.tempPhysicalObject).getBoundingBox());
+		System.out.println();
 	}
 	
 	@Override

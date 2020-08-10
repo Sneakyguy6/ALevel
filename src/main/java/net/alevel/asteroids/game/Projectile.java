@@ -21,9 +21,9 @@ public class Projectile extends PhysicalObject {
 
 	@Override
 	public void simulatePhysics(float t) {
-		if(t < 0.1)
+		if(t < 0.01)
 			return;
-		t -= 0.1;
+		t -= 0.01;
 		super.position.x += (float) ((this.U * Math.cos(this.C)) * t * Math.cos(this.D));
 		super.position.y += (float) ((t * this.U * Math.sin(this.C)) + ((ACC_GRAV / 2) * Math.pow(t, 2)));
 		super.position.z += (float) ((this.U * Math.cos(this.C)) * t * Math.sin(this.D));
