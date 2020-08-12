@@ -1,7 +1,10 @@
 package net.alevel.asteroids.game.physics;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.alevel.asteroids.game.GameLogic;
@@ -14,25 +17,31 @@ public class Collision {
 	}
 	
 	public void checkForCollisions() {
-		//System.out.println(this.objectsToCheck);
+		System.out.println(this.objectsToCheck);
+		final Map<PhysicalObject, PhysicalObject> eventsToFire = new HashMap<PhysicalObject, PhysicalObject>();
 		for(Iterator<PhysicalObject> i = this.objectsToCheck.iterator(); i.hasNext();) {
 			PhysicalObject iObject = i.next();
 			for(Iterator<PhysicalObject> j = this.objectsToCheck.iterator(); j.hasNext();) {
 				PhysicalObject jObject = j.next();
 				if(iObject.equals(jObject))
 					continue;
+				System.out.println("Testing for intersection");
 				if(iObject.getBoundingBox().testAABB(jObject.getBoundingBox()))
-					this.onCollision(iObject, jObject);
+					eventsToFire.put(iObject, jObject);
 			}
 		}
+		this.fireCollisionEvents(eventsToFire);
 	}
 	
-	private void onCollision(PhysicalObject o1, PhysicalObject o2) {
-		System.out.println("intersection found");
-		this.objectsToCheck.remove(o1);
-		this.objectsToCheck.remove(o2);
-		GameLogic.getInstance().removeObject(o1);
-		GameLogic.getInstance().removeObject(o2);
+	private void fireCollisionEvents(Map<PhysicalObject, PhysicalObject> eventsToFire) {
+		for(Iterator<Entry<PhysicalObject, PhysicalObject>> iterator = eventsToFire.entrySet().iterator(); iterator.hasNext();) {
+			Entry<PhysicalObject, PhysicalObject> objects = iterator.next();
+			System.out.println("intersection found");
+			this.objectsToCheck.remove(objects.getKey());
+			this.objectsToCheck.remove(objects.getValue());
+			GameLogic.getInstance().removeObject(objects.getKey());
+			GameLogic.getInstance().removeObject(objects.getValue());
+		}
 	}
 	
 	public boolean addObjectToCheck(PhysicalObject o) {

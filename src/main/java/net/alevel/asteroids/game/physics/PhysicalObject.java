@@ -1,8 +1,8 @@
 package net.alevel.asteroids.game.physics;
 
 import org.joml.AABBf;
+import org.joml.Matrix3f;
 import org.joml.Vector3f;
-
 import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.graphics.Mesh;
 
@@ -33,7 +33,8 @@ public class PhysicalObject extends GameObject {
 		//this.worldMatrix2.identity()
 		//				 .mul
 		
-		float minX = Float.MIN_VALUE, maxX = Float.MAX_VALUE, minY = Float.MIN_VALUE, maxY = Float.MAX_VALUE, minZ = Float.MIN_VALUE, maxZ = Float.MAX_VALUE;
+		//float minX = Float.MIN_VALUE, maxX = Float.MAX_VALUE, minY = Float.MIN_VALUE, maxY = Float.MAX_VALUE, minZ = Float.MIN_VALUE, maxZ = Float.MAX_VALUE;
+		float minX = 0, maxX = 0, minY = 0, maxY = 0, minZ = 0, maxZ = 0;
 		for(int i = 0; i < super.mesh.getVertexPositionFloats().length; i += 3) {
 			/*Vector4f temp = new Vector4f(super.mesh.getVertexPositionFloats()[i],
 									  	 super.mesh.getVertexPositionFloats()[i + 1],
@@ -42,7 +43,6 @@ public class PhysicalObject extends GameObject {
 			Vector3f temp = new Vector3f(super.mesh.getVertexPositionFloats()[i],
 									  	 super.mesh.getVertexPositionFloats()[i + 1],
 									  	 super.mesh.getVertexPositionFloats()[i + 2]);
-			temp.add(super.position);
 			/*temp.mul(new Matrix3f(1, 0, 0,
 								  0, (float) cos(super.rotation.x), (float) sin(super.rotation.x),
 								  0, (float) -sin(super.rotation.x), (float) cos(super.rotation.x)));
@@ -55,24 +55,30 @@ public class PhysicalObject extends GameObject {
 			//temp.mul(super.scale);
 			
 			//temp.mul(this.worldMatrix);
-			if(temp.x < maxX)
+			if(temp.x > maxX)
 				maxX = temp.x;
-			if(temp.x > minX)
+			if(temp.x < minX)
 				minX = temp.x;
-			if(temp.y < maxY)
+			if(temp.y > maxY)
 				maxY = temp.y;
-			if(temp.y > minY)
+			if(temp.y < minY)
 				minY = temp.y;
-			if(temp.z < maxZ)
+			if(temp.z > maxZ)
 				maxZ = temp.z;
-			if(temp.z > minZ) {
+			if(temp.z < minZ) {
 				minZ = temp.z;
 				System.out.println(temp);
 			}
 			//System.out.println(temp);
 		}
+		Matrix3f rotateAndScale = new Matrix3f();
+		rotateAndScale.rotateX(super.rotation.x);
+		rotateAndScale.rotateY(super.rotation.y);
+		rotateAndScale.rotateZ(super.rotation.z);
+		rotateAndScale.scale(super.scale);
 		
-		this.boudingBox.setMax(maxX, maxY, maxZ).setMin(minX, minY, minZ);
+		this.boudingBox.setMax(new Vector3f(maxX, maxY, maxZ).mul(rotateAndScale).add(super.position))
+					   .setMin(new Vector3f(minX, minY, minZ).mul(rotateAndScale).add(super.position));
 		//System.out.println(this.boudingBox);
 	}
 	
