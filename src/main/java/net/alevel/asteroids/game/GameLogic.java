@@ -108,9 +108,9 @@ public class GameLogic implements ILogic {
 		for(GameObject i : this.gameObjects)
 			i.update(this.accumulatedTime);
 		Collision.getInstance().checkForCollisions();
-		System.out.println(((PhysicalObject) this.tempProjectile).getBoundingBox());
-		System.out.println(this.tempPhysicalObject.getBoundingBox());
-		System.out.println();
+		//System.out.println(((PhysicalObject) this.tempProjectile).getBoundingBox());
+		//System.out.println(this.tempPhysicalObject.getBoundingBox());
+		//System.out.println();
 	}
 	
 	@Override

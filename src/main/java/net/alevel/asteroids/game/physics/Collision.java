@@ -17,7 +17,7 @@ public class Collision {
 	}
 	
 	public void checkForCollisions() {
-		System.out.println(this.objectsToCheck);
+		//System.out.println(this.objectsToCheck);
 		final Map<PhysicalObject, PhysicalObject> eventsToFire = new HashMap<PhysicalObject, PhysicalObject>();
 		for(Iterator<PhysicalObject> i = this.objectsToCheck.iterator(); i.hasNext();) {
 			PhysicalObject iObject = i.next();
@@ -25,7 +25,7 @@ public class Collision {
 				PhysicalObject jObject = j.next();
 				if(iObject.equals(jObject))
 					continue;
-				System.out.println("Testing for intersection");
+				//System.out.println("Testing for intersection");
 				if(iObject.getBoundingBox().testAABB(jObject.getBoundingBox()))
 					eventsToFire.put(iObject, jObject);
 			}
@@ -36,7 +36,7 @@ public class Collision {
 	private void fireCollisionEvents(Map<PhysicalObject, PhysicalObject> eventsToFire) {
 		for(Iterator<Entry<PhysicalObject, PhysicalObject>> iterator = eventsToFire.entrySet().iterator(); iterator.hasNext();) {
 			Entry<PhysicalObject, PhysicalObject> objects = iterator.next();
-			System.out.println("intersection found");
+			//System.out.println("intersection found");
 			this.objectsToCheck.remove(objects.getKey());
 			this.objectsToCheck.remove(objects.getValue());
 			GameLogic.getInstance().removeObject(objects.getKey());
