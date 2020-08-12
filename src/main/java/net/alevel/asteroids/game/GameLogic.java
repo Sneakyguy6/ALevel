@@ -11,6 +11,7 @@ import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
+import net.alevel.asteroids.engine.graphics.Mesh;
 import net.alevel.asteroids.engine.graphics.WavefrontMeshLoader;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
@@ -38,7 +39,7 @@ public class GameLogic implements ILogic {
 	public void init(Window window) throws Exception {
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 		Collision.init();
-		/*Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
+		Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
 		mesh.setColour(new Vector3f(0f, 1f, 0f));
 		GameObject o = new StaticGameObject(mesh);
 		o.setScale(1.5f);
@@ -54,7 +55,11 @@ public class GameLogic implements ILogic {
 		mesh2.setColour(new Vector3f(0f, 1f, 0f));
 		GameObject o2 = new StaticGameObject(mesh2);
 		o2.setScale(1.5f);
-		o2.setPosition(0, -1, -2);*/
+		o2.setPosition(0, -1, -2);
+		
+		this.gameObjects.add(o);
+		this.gameObjects.add(o1);
+		this.gameObjects.add(o2);
 		
 		/*this.gameObjects = new GameObject[8];
 		for(int i = 0; i < 6; i++)

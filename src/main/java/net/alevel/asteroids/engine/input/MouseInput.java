@@ -28,7 +28,7 @@ class MouseInput {
 	/**Setup mouse event listeners
 	 */
 	public void init(Window window) {
-		glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN); //hides the cursor
 		glfwSetCursorPosCallback(window.getWindowHandle(), (windowHande, xpos, ypos) -> { //updates the currentPos values with the current cursor location
 			this.currentPos.x = xpos;
 			this.currentPos.y = ypos;
@@ -57,16 +57,14 @@ class MouseInput {
 		if(this.previousPos.x > 0 && this.previousPos.y > 0 && this.inWindow) {
 			double deltax = this.currentPos.x - this.previousPos.x;
 			double deltay = this.currentPos.y - this.previousPos.y;
-			boolean rotateX = deltax != 0;
-			boolean rotateY = deltay != 0;
-			if(rotateX)
-				this.displVec.y += (float) deltax;
-			if(rotateY)
+			if(deltax != 0)
+				this.displVec.y += (float) deltax; //by switching y and x, the look inverts
+			if(deltay != 0)
 				this.displVec.x += (float) deltay;
 		}
 		this.previousPos.x = this.currentPos.x;
 		this.previousPos.y = this.currentPos.y;
-		glfwSetCursorPos(window.getWindowHandle(), window.getWidth() / 2, window.getHeight() / 2);
+		glfwSetCursorPos(window.getWindowHandle(), window.getWidth() / 2, window.getHeight() / 2); //sets the cursor to the centre of the screen so when doing large turns, cursor has enough space to move
 	}
 	
 	public BitSet getMouseButtonsPressed() {
