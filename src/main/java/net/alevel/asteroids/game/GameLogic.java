@@ -13,7 +13,6 @@ import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.graphics.WavefrontMeshLoader;
 import net.alevel.asteroids.engine.input.Input;
-import net.alevel.asteroids.engine.input.enums.MouseBtns;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
 import net.alevel.asteroids.engine.utils.Pair;
@@ -99,10 +98,10 @@ public class GameLogic implements ILogic {
 			cameraInc.y = 0.5f;
 		camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
 		
-		if(input.isMouseBtnPressed(MouseBtns.RIGHT_CLICK)) {
+		//if(input.isMouseBtnPressed(MouseBtns.RIGHT_CLICK)) {
 			Vector2f rotVec = input.getDeltaMousePos();
 			camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
-		}
+		//}
 		
 		this.accumulatedTime += interval;
 		for(GameObject i : this.gameObjects)

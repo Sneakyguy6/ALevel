@@ -28,6 +28,7 @@ class MouseInput {
 	/**Setup mouse event listeners
 	 */
 	public void init(Window window) {
+		glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		glfwSetCursorPosCallback(window.getWindowHandle(), (windowHande, xpos, ypos) -> { //updates the currentPos values with the current cursor location
 			this.currentPos.x = xpos;
 			this.currentPos.y = ypos;
@@ -51,20 +52,21 @@ class MouseInput {
 	}
 	
 	public void input(Window window) {
-		this.displVec.x = 0;
-		this.displVec.y = 0;
+		//this.displVec.x = 0;
+		//this.displVec.y = 0;
 		if(this.previousPos.x > 0 && this.previousPos.y > 0 && this.inWindow) {
 			double deltax = this.currentPos.x - this.previousPos.x;
 			double deltay = this.currentPos.y - this.previousPos.y;
 			boolean rotateX = deltax != 0;
 			boolean rotateY = deltay != 0;
 			if(rotateX)
-				this.displVec.y = (float) deltax;
+				this.displVec.y += (float) deltax;
 			if(rotateY)
-				this.displVec.x = (float) deltay;
+				this.displVec.x += (float) deltay;
 		}
 		this.previousPos.x = this.currentPos.x;
 		this.previousPos.y = this.currentPos.y;
+		glfwSetCursorPos(window.getWindowHandle(), window.getWidth() / 2, window.getHeight() / 2);
 	}
 	
 	public BitSet getMouseButtonsPressed() {
