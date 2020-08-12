@@ -67,8 +67,10 @@ public class Window {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		
+		GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor()); //gets resolution of main monitor
+		
 		//this statement creates the window and at the same time checks if creation was successful
-		if((this.windowHandle = glfwCreateWindow(this.width, this.height, "Asteroids", NULL, NULL)) == NULL)
+		if((this.windowHandle = glfwCreateWindow(vidMode.width(), vidMode.height() - 30, "Asteroids", NULL, NULL)) == NULL)
 			throw new RuntimeException("Failed to create new window");
 		
 		//this gets called every time the window is resized. This means the width and height will be updated
@@ -84,10 +86,7 @@ public class Window {
 				glfwSetWindowShouldClose(window, true); //this will be detected in the rendering loop
 		});
 		
-		GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor()); //gets resolution of main monitor
-		glfwSetWindowPos(this.windowHandle,
-				(vidMode.width() - this.width) / 2,
-				(vidMode.height() - this.height) / 2);
+		glfwSetWindowPos(this.windowHandle, 0, 30);
 		
 		glfwMakeContextCurrent(this.windowHandle); //tells OpenGL to use this window
 		
