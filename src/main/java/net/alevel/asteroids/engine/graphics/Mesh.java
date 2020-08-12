@@ -1,16 +1,33 @@
 package net.alevel.asteroids.engine.graphics;
 
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
-
+import org.joml.AABBf;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
@@ -25,10 +42,13 @@ public class Mesh {
 	private Texture texture;
 	private Vector3f colour;
 	
-	private final float[] positions; //for physics
+	private final AABBf boundingBox;
+	
+	//private final float[] positions; //for physics
 	
 	public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) { //normals are only needed for lighting
-		this.positions = positions;
+		this.boundingBox = this.createModelAABB(positions);
+		
 		FloatBuffer posBuffer = null;
 		FloatBuffer textBuffer = null;
 		FloatBuffer normBuffer = null;
@@ -105,6 +125,54 @@ public class Mesh {
 		}
 	}
 	
+	private AABBf createModelAABB(float[] positions) {
+		/*this.worldMatrix.identity()
+			.translation(super.position)
+			.rotateX((float) Math.toRadians(super.rotation.x))
+			.rotateY((float) Math.toRadians(super.rotation.y))
+			.rotateZ((float) Math.toRadians(super.rotation.z))
+			.scale(super.scale);*/
+		//float minX = Float.MIN_VALUE, maxX = Float.MAX_VALUE, minY = Float.MIN_VALUE, maxY = Float.MAX_VALUE, minZ = Float.MIN_VALUE, maxZ = Float.MAX_VALUE;
+		float minX = 0, maxX = 0, minY = 0, maxY = 0, minZ = 0, maxZ = 0;
+		for(int i = 0; i < positions.length; i += 3) {
+			/*Vector4f temp = new Vector4f(super.mesh.getVertexPositionFloats()[i],
+									  	 super.mesh.getVertexPositionFloats()[i + 1],
+									  	 super.mesh.getVertexPositionFloats()[i + 2],
+									  	 1);*/
+			Vector3f temp = new Vector3f(positions[i],
+										 positions[i + 1],
+									  	 positions[i + 2]);
+			/*temp.mul(new Matrix3f(1, 0, 0,
+								  0, (float) cos(super.rotation.x), (float) sin(super.rotation.x),
+								  0, (float) -sin(super.rotation.x), (float) cos(super.rotation.x)));
+			temp.mul(new Matrix3f((float) cos(super.rotation.y), 0, (float) -sin(super.rotation.y),
+								  0, 1, 0,
+								  (float) -sin(super.rotation.y), 0, (float) cos(super.rotation.y)));
+			temp.mul(new Matrix3f((float) cos(super.rotation.z), (float) sin(super.rotation.z), 0,
+								  (float) -sin(super.rotation.z), (float) cos(super.rotation.z), 0,
+								  0, 0, 1));*/
+			//temp.mul(super.scale);
+			
+			//temp.mul(this.worldMatrix);
+			if(temp.x > maxX)
+				maxX = temp.x;
+			if(temp.x < minX)
+				minX = temp.x;
+			if(temp.y > maxY)
+				maxY = temp.y;
+			if(temp.y < minY)
+				minY = temp.y;
+			if(temp.z > maxZ)
+				maxZ = temp.z;
+			if(temp.z < minZ) {
+				minZ = temp.z;
+				System.out.println(temp);
+			}
+			//System.out.println(temp);
+		}
+		return new AABBf().setMax(maxX, maxY, maxZ).setMin(minX, minY, minZ);
+	}
+	
 	/**Called by the renderer to tell the engine to draw this element onto the screen
 	 */
 	public void render() {
@@ -172,7 +240,7 @@ public class Mesh {
 		return this.vertexCount;
 	}
 	
-	public float[] getVertexPositionFloats() {
-		return this.positions;
+	public AABBf getModelAABB() {
+		return this.boundingBox;
 	}
 }
