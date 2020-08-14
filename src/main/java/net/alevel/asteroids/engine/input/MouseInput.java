@@ -28,6 +28,7 @@ class MouseInput {
 	/**Setup mouse event listeners
 	 */
 	public void init(Window window) {
+		//glfwSetCursorPos(window.getWindowHandle(), window.getWidth() / 2, window.getHeight() / 2); //stops camera constantly moving glitch (it makes it worse) TODO
 		glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN); //hides the cursor
 		glfwSetCursorPosCallback(window.getWindowHandle(), (windowHande, xpos, ypos) -> { //updates the currentPos values with the current cursor location
 			this.currentPos.x = xpos;

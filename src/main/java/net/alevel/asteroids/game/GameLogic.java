@@ -17,16 +17,16 @@ import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
 import net.alevel.asteroids.engine.utils.Pair;
+import net.alevel.asteroids.game.asteroid.Generate;
 import net.alevel.asteroids.game.physics.Collision;
-import net.alevel.asteroids.game.physics.PhysicalObject;
 
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
 	public static final float MOUSE_SENSITIVITY = 0.05f;
 	private final Camera camera;
 	private final Set<GameObject> gameObjects;
-	private Projectile tempProjectile;
-	private PhysicalObject tempPhysicalObject;
+	//private Projectile tempProjectile;
+	//private PhysicalObject tempPhysicalObject;
 	private float accumulatedTime;
 	
 	private GameLogic() {
@@ -78,12 +78,14 @@ public class GameLogic implements ILogic {
 		((Projectile) this.gameObjects[6]).setHorizontalAngleProjected(270).setPosition(0, 0, 0).setScale(0.05f);
 		this.gameObjects[7] = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj"));
 		this.gameObjects[7].setPosition(0, 0, -1).setScale(0.1f);*/
-		this.tempProjectile = new Projectile(WavefrontMeshLoader.loadMesh("/models/cube.obj"));
+		
+		/*this.tempProjectile = new Projectile(WavefrontMeshLoader.loadMesh("/models/cube.obj"));
 		this.tempProjectile.setHorizontalAngleProjected(270).setPosition(0, 0, 0).setScale(0.05f);
 		this.gameObjects.add(this.tempProjectile);
 		this.tempPhysicalObject = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj")); 
 		this.tempPhysicalObject.setPosition(0, 0, -1).setScale(0.1f);
-		this.gameObjects.add(this.tempPhysicalObject);
+		this.gameObjects.add(this.tempPhysicalObject);*/
+		this.gameObjects.add(new StaticGameObject(Generate.createNewModel()));
 	}
 
 	@Override
