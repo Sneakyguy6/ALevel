@@ -85,7 +85,7 @@ public class GameLogic implements ILogic {
 		this.tempPhysicalObject = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj")); 
 		this.tempPhysicalObject.setPosition(0, 0, -1).setScale(0.1f);
 		this.gameObjects.add(this.tempPhysicalObject);*/
-		this.gameObjects.add(new StaticGameObject(Generate.createNewModel()));
+		this.gameObjects.add(new StaticGameObject(Generate.createNewModel(6)).setScale(1));
 	}
 
 	@Override
