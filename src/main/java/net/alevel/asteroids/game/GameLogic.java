@@ -91,17 +91,17 @@ public class GameLogic implements ILogic {
 	@Override
 	public void update(float interval, Input input) {
 		final Vector3f cameraInc = new Vector3f();
-		if(input.isKeyPressed('W'))
+		if(input.isKeyPressed('W') && !input.isKeyPressed('S'))
 			cameraInc.z = -0.5f;
-		else if(input.isKeyPressed('S'))
+		else if(input.isKeyPressed('S') && !input.isKeyPressed('W'))
 			cameraInc.z = 0.5f;
-		if(input.isKeyPressed('A'))
+		if(input.isKeyPressed('A') && !input.isKeyPressed('D'))
 			cameraInc.x = -0.5f;
-		else if(input.isKeyPressed('D'))
+		else if(input.isKeyPressed('D') && !input.isKeyPressed('A'))
 			cameraInc.x = 0.5f;
-		if(input.isKeyPressed(NonPrintableChars.LEFT_SHIFT))
+		if(input.isKeyPressed(NonPrintableChars.LEFT_SHIFT) && !input.isKeyPressed(SpecialChars.SPACE))
 			cameraInc.y = -0.5f;
-		else if(input.isKeyPressed(SpecialChars.SPACE))
+		if(input.isKeyPressed(SpecialChars.SPACE) && !input.isKeyPressed(NonPrintableChars.LEFT_SHIFT))
 			cameraInc.y = 0.5f;
 		camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
 		

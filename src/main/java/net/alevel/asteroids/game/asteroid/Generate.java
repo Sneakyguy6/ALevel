@@ -11,7 +11,7 @@ import net.alevel.asteroids.engine.graphics.Mesh;
 public class Generate {
 	public static Mesh createNewModel() {
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
-		vertices.add(new Vector3f(0, 0, 1f));
+		vertices.add(new Vector3f(0, 0, 1));
 		vertices.add(new Vector3f(0, 0, -1));
 		vertices.add(new Vector3f(0, 1, 0));
 		vertices.add(new Vector3f(0, -1, 0));
@@ -28,10 +28,10 @@ public class Generate {
 		indices.add(new int[] {5, 0, 2});
 		indices.add(new int[] {5, 0, 3});
 		
-		for(int i = 0; i < 6; i++)
+		for(int i = 0; i < 1; i++)
 			splitTriangles(vertices, indices);
-		for(int i = 0; i < vertices.size(); i++)
-			vertices.set(i, adjustVertexToRadius(vertices.get(i), 1));
+		//for(int i = 0; i < vertices.size(); i++)
+		//	vertices.set(i, adjustVertexToRadius(vertices.get(i), 1));
 		
 		float[] floats = new float[vertices.size() * 3];
 		int[] ints = new int[indices.size() * 3];
@@ -104,7 +104,12 @@ public class Generate {
 			angleToAdd = (float) Math.PI * 2;
 		else
 			angleToAdd = 0;
-		return angleToAdd + ((float) Math.atan(opp / adj));
+		/*double angle = Math.atan(opp / adj);
+		if(Double.isNaN(angle))
+			return angleToAdd;
+		else
+			return angleToAdd + (float) angle;
+		//*/return angleToAdd + ((float) Math.atan(opp / adj));
 	}
 	
 	private static Vector3f getMidpoint(Vector3f a, Vector3f b) {
