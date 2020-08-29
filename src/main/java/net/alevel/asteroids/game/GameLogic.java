@@ -1,8 +1,10 @@
 package net.alevel.asteroids.game;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.joml.AABBf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
@@ -12,13 +14,13 @@ import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.graphics.Mesh;
-import net.alevel.asteroids.engine.graphics.WavefrontMeshLoader;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
 import net.alevel.asteroids.engine.utils.Pair;
 import net.alevel.asteroids.game.asteroid.Generate;
 import net.alevel.asteroids.game.physics.Collision;
+import net.alevel.asteroids.game.physics.PhysicalObject;
 
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
@@ -39,7 +41,7 @@ public class GameLogic implements ILogic {
 	public void init(Window window) throws Exception {
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 		Collision.init();
-		Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
+		/*Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
 		mesh.setColour(new Vector3f(0f, 1f, 0f));
 		GameObject o = new StaticGameObject(mesh);
 		o.setScale(1.5f);
@@ -59,7 +61,7 @@ public class GameLogic implements ILogic {
 		
 		this.gameObjects.add(o);
 		this.gameObjects.add(o1);
-		this.gameObjects.add(o2);
+		this.gameObjects.add(o2);*/
 		
 		/*this.gameObjects = new GameObject[8];
 		for(int i = 0; i < 6; i++)
@@ -85,30 +87,72 @@ public class GameLogic implements ILogic {
 		this.tempPhysicalObject = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj")); 
 		this.tempPhysicalObject.setPosition(0, 0, -1).setScale(0.1f);
 		this.gameObjects.add(this.tempPhysicalObject);*/
-		this.gameObjects.add(new StaticGameObject(Generate.createNewModel(6)).setScale(1));
+		PhysicalObject aabbTest = new PhysicalObject(Generate.createNewModel(6)) {
+			@Override
+			public void simulatePhysics(float time) {
+				//super.rotation.add(0, 0.25f, 0);
+			}
+		};
+		aabbTest.setScale(1f);
+		aabbTest.setPosition(0, 2, 0);
+		AABBf aabb = aabbTest.getBoundingBox();
+		float[] boundingBoxVertices = {
+			aabb.maxX, aabb.maxY, aabb.maxZ,
+			aabb.minX, aabb.minY, aabb.minZ,
+			aabb.maxX, aabb.maxY, aabb.minZ,
+			aabb.minX, aabb.maxY, aabb.minZ,
+			aabb.minX, aabb.maxY, aabb.maxZ,
+			aabb.maxX, aabb.minY, aabb.minZ,
+			aabb.maxX, aabb.minY, aabb.maxZ,
+			aabb.minX, aabb.minY, aabb.maxZ,
+		};
+		System.out.println(aabbTest.getModelBoundingBox());
+		System.out.println(aabb);
+		System.out.println(aabbTest.getPosition() + " | " + aabbTest.getRotation() + " | " + aabbTest.getScale() + " | " + aabbTest.getBoundingBox());
+		System.out.println(Arrays.toString(boundingBoxVertices));
+		
+		int[] indices = {
+			0, 2, 3,
+			0, 4, 3,
+			2, 5, 1,
+			2, 3, 1,
+			2, 5, 6,
+			2, 0, 6,
+			3, 4, 1,
+			4, 7, 1,
+			0, 6, 7,
+			0, 4, 7,
+			5, 6, 7,
+			5, 1, 7,
+		};
+		this.gameObjects.add(new StaticGameObject(new Mesh(boundingBoxVertices, boundingBoxVertices, boundingBoxVertices, indices)));
+		this.gameObjects.add(aabbTest);
 	}
 
 	@Override
 	public void update(float interval, Input input) {
 		final Vector3f cameraInc = new Vector3f();
 		if(input.isKeyPressed('W') && !input.isKeyPressed('S'))
-			cameraInc.z = -0.5f;
+			cameraInc.z = -1f;
 		else if(input.isKeyPressed('S') && !input.isKeyPressed('W'))
-			cameraInc.z = 0.5f;
+			cameraInc.z = 1f;
 		if(input.isKeyPressed('A') && !input.isKeyPressed('D'))
-			cameraInc.x = -0.5f;
+			cameraInc.x = -1f;
 		else if(input.isKeyPressed('D') && !input.isKeyPressed('A'))
-			cameraInc.x = 0.5f;
+			cameraInc.x = 1f;
 		if(input.isKeyPressed(NonPrintableChars.LEFT_SHIFT) && !input.isKeyPressed(SpecialChars.SPACE))
-			cameraInc.y = -0.5f;
+			cameraInc.y = -1f;
 		if(input.isKeyPressed(SpecialChars.SPACE) && !input.isKeyPressed(NonPrintableChars.LEFT_SHIFT))
-			cameraInc.y = 0.5f;
-		camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
+			cameraInc.y = 1f;
+		float posStep;
+		if(input.isKeyPressed(NonPrintableChars.LEFT_CTRL))
+			posStep = 3;
+		else
+			posStep = 0.25f;
+		camera.movePosition(cameraInc.x * CAMERA_POS_STEP * posStep, cameraInc.y * CAMERA_POS_STEP * posStep, cameraInc.z * CAMERA_POS_STEP * posStep);
 		
-		//if(input.isMouseBtnPressed(MouseBtns.RIGHT_CLICK)) {
-			Vector2f rotVec = input.getDeltaMousePos();
-			camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
-		//}
+		Vector2f rotVec = input.getDeltaMousePos();
+		camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
 		
 		this.accumulatedTime += interval;
 		for(GameObject i : this.gameObjects)
@@ -140,9 +184,10 @@ public class GameLogic implements ILogic {
 	
 	private static GameLogic instance;
 	
-	public static void init() {
+	public static GameLogic init() {
 		if(instance == null)
 			instance = new GameLogic();
+		return instance;
 	}
 	
 	public static GameLogic getInstance() {

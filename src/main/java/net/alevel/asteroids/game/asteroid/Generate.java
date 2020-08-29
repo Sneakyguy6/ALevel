@@ -47,8 +47,8 @@ public class Generate {
 			ints[i * 3 + 2] = triangle[2];
 		}
 		
-		System.out.println(Arrays.toString(floats));
-		System.out.println(Arrays.toString(ints));
+		//System.out.println(Arrays.toString(floats));
+		//System.out.println(Arrays.toString(ints));
 		return new Mesh(floats, floats, floats, ints);
 	}
 	
@@ -71,7 +71,7 @@ public class Generate {
 	private static void splitTriangles(List<Vector3f> vertices, List<int[]> indices) {
 		@SuppressWarnings("unchecked")
 		ArrayList<int[]> indicesCopy = (ArrayList<int[]>) ((ArrayList<int[]>) indices).clone();
-		System.out.println(indicesCopy);
+		//System.out.println(indicesCopy);
 		for(int[] i : indicesCopy)
 			getMidpointTriangle(i, vertices, indices);
 	}
