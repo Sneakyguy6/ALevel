@@ -23,16 +23,18 @@ public class PhysicalObject extends GameObject {
 		this.simulatePhysics(time);
 		
 		Matrix3f rotateAndScale = new Matrix3f();
-		rotateAndScale.rotateX(super.rotation.x);
-		rotateAndScale.rotateY(super.rotation.y);
-		rotateAndScale.rotateZ(super.rotation.z);
+		rotateAndScale.rotateX((float) Math.toRadians(-super.rotation.x));
+		rotateAndScale.rotateY((float) Math.toRadians(-super.rotation.y));
+		rotateAndScale.rotateZ((float) Math.toRadians(-super.rotation.z));
 		rotateAndScale.scale(super.scale);
 		
-		System.out.println("PhysUpdate: " + new Vector3f(this.modelBoundingBox.maxX, this.modelBoundingBox.maxY, this.modelBoundingBox.maxZ).mul(rotateAndScale).add(super.position));
-		System.out.println("PhysUpdate: " + new Vector3f(this.modelBoundingBox.minX, this.modelBoundingBox.minY, this.modelBoundingBox.minZ));
+		//System.out.println("PhysUpdate: " + new Vector3f(this.modelBoundingBox.maxX, this.modelBoundingBox.maxY, this.modelBoundingBox.maxZ).mul(rotateAndScale).add(super.position));
+		//System.out.println("PhysUpdate: " + new Vector3f(this.modelBoundingBox.minX, this.modelBoundingBox.minY, this.modelBoundingBox.minZ).mul(rotateAndScale).add(super.position));
+		//System.out.println();
 		
 		this.boundingBox.setMax(new Vector3f(this.modelBoundingBox.maxX, this.modelBoundingBox.maxY, this.modelBoundingBox.maxZ).mul(rotateAndScale).add(super.position))
 						.setMin(new Vector3f(this.modelBoundingBox.minX, this.modelBoundingBox.minY, this.modelBoundingBox.minZ).mul(rotateAndScale).add(super.position));
+		System.out.println();
 		//System.out.println(this.modelBoundingBox);
 		//System.out.println(this.boundingBox);
 	}

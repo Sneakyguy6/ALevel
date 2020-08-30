@@ -1,6 +1,5 @@
 package net.alevel.asteroids.game;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +13,7 @@ import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.graphics.Mesh;
+import net.alevel.asteroids.engine.graphics.WavefrontMeshLoader;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
@@ -27,8 +27,8 @@ public class GameLogic implements ILogic {
 	public static final float MOUSE_SENSITIVITY = 0.05f;
 	private final Camera camera;
 	private final Set<GameObject> gameObjects;
-	//private Projectile tempProjectile;
-	//private PhysicalObject tempPhysicalObject;
+	private PhysicalObject aabbTest;
+	private StaticGameObject boundingBox;
 	private float accumulatedTime;
 	
 	private GameLogic() {
@@ -41,7 +41,7 @@ public class GameLogic implements ILogic {
 	public void init(Window window) throws Exception {
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 		Collision.init();
-		/*Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
+		Mesh mesh = WavefrontMeshLoader.loadMesh("/models/bunny.obj");
 		mesh.setColour(new Vector3f(0f, 1f, 0f));
 		GameObject o = new StaticGameObject(mesh);
 		o.setScale(1.5f);
@@ -61,7 +61,7 @@ public class GameLogic implements ILogic {
 		
 		this.gameObjects.add(o);
 		this.gameObjects.add(o1);
-		this.gameObjects.add(o2);*/
+		this.gameObjects.add(o2);
 		
 		/*this.gameObjects = new GameObject[8];
 		for(int i = 0; i < 6; i++)
@@ -87,46 +87,20 @@ public class GameLogic implements ILogic {
 		this.tempPhysicalObject = new PhysicalObject(WavefrontMeshLoader.loadMesh("/models/cube.obj")); 
 		this.tempPhysicalObject.setPosition(0, 0, -1).setScale(0.1f);
 		this.gameObjects.add(this.tempPhysicalObject);*/
-		PhysicalObject aabbTest = new PhysicalObject(Generate.createNewModel(6)) {
+		this.aabbTest = new PhysicalObject(Generate.createNewModel(6)) {
 			@Override
 			public void simulatePhysics(float time) {
-				//super.rotation.add(0, 0.25f, 0);
+				super.rotation.add(0, 0.1f, 0);
+				//super.position.add(0.01f, 0, 0);
 			}
 		};
 		aabbTest.setScale(1f);
 		aabbTest.setPosition(0, 2, 0);
-		AABBf aabb = aabbTest.getBoundingBox();
-		float[] boundingBoxVertices = {
-			aabb.maxX, aabb.maxY, aabb.maxZ,
-			aabb.minX, aabb.minY, aabb.minZ,
-			aabb.maxX, aabb.maxY, aabb.minZ,
-			aabb.minX, aabb.maxY, aabb.minZ,
-			aabb.minX, aabb.maxY, aabb.maxZ,
-			aabb.maxX, aabb.minY, aabb.minZ,
-			aabb.maxX, aabb.minY, aabb.maxZ,
-			aabb.minX, aabb.minY, aabb.maxZ,
-		};
-		System.out.println(aabbTest.getModelBoundingBox());
-		System.out.println(aabb);
-		System.out.println(aabbTest.getPosition() + " | " + aabbTest.getRotation() + " | " + aabbTest.getScale() + " | " + aabbTest.getBoundingBox());
-		System.out.println(Arrays.toString(boundingBoxVertices));
+		float[] floats = {1, 1, 1};
+		this.boundingBox = new StaticGameObject(new Mesh(floats, floats, floats, new int[] {0, 1, 2}));
 		
-		int[] indices = {
-			0, 2, 3,
-			0, 4, 3,
-			2, 5, 1,
-			2, 3, 1,
-			2, 5, 6,
-			2, 0, 6,
-			3, 4, 1,
-			4, 7, 1,
-			0, 6, 7,
-			0, 4, 7,
-			5, 6, 7,
-			5, 1, 7,
-		};
-		this.gameObjects.add(new StaticGameObject(new Mesh(boundingBoxVertices, boundingBoxVertices, boundingBoxVertices, indices)));
 		this.gameObjects.add(aabbTest);
+		this.gameObjects.add(this.boundingBox);
 	}
 
 	@Override
@@ -153,6 +127,40 @@ public class GameLogic implements ILogic {
 		
 		Vector2f rotVec = input.getDeltaMousePos();
 		camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+		
+		AABBf aabb = aabbTest.getBoundingBox();
+		float[] boundingBoxVertices = {
+			aabb.maxX, aabb.maxY, aabb.maxZ,
+			aabb.minX, aabb.minY, aabb.minZ,
+			aabb.maxX, aabb.maxY, aabb.minZ,
+			aabb.minX, aabb.maxY, aabb.minZ,
+			aabb.minX, aabb.maxY, aabb.maxZ,
+			aabb.maxX, aabb.minY, aabb.minZ,
+			aabb.maxX, aabb.minY, aabb.maxZ,
+			aabb.minX, aabb.minY, aabb.maxZ,
+		};
+		//System.out.println(aabbTest.getModelBoundingBox());
+		//System.out.println(aabb);
+		//System.out.println(aabbTest.getPosition() + " | " + aabbTest.getRotation() + " | " + aabbTest.getScale() + " | " + aabbTest.getBoundingBox());
+		//System.out.println(Arrays.toString(boundingBoxVertices));
+		
+		int[] indices = {
+			0, 2, 3,
+			0, 4, 3,
+			2, 5, 1,
+			2, 3, 1,
+			2, 5, 6,
+			2, 0, 6,
+			3, 4, 1,
+			4, 7, 1,
+			0, 6, 7,
+			0, 4, 7,
+			5, 6, 7,
+			5, 1, 7,
+		};
+		this.gameObjects.remove(this.boundingBox);
+		this.boundingBox = new StaticGameObject(new Mesh(boundingBoxVertices, boundingBoxVertices, boundingBoxVertices, indices));
+		this.gameObjects.add(this.boundingBox);
 		
 		this.accumulatedTime += interval;
 		for(GameObject i : this.gameObjects)

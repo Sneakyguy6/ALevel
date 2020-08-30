@@ -49,6 +49,7 @@ public class Generate {
 		
 		//System.out.println(Arrays.toString(floats));
 		//System.out.println(Arrays.toString(ints));
+		System.out.println(floats.length + " <- number of floats in sphere");
 		return new Mesh(floats, floats, floats, ints);
 	}
 	
