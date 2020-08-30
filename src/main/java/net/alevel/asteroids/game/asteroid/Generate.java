@@ -55,9 +55,9 @@ public class Generate {
 	
 	private static void getMidpointTriangle(int[] selectedVertices, List<Vector3f> vertices, List<int[]> indices) {
 		Vector3f[] midpoints = new Vector3f[3];
-		midpoints[0] = getMidpoint(vertices.get(selectedVertices[0]), vertices.get(selectedVertices[1]));//.mul(1.5f);
-		midpoints[1] = getMidpoint(vertices.get(selectedVertices[1]), vertices.get(selectedVertices[2]));//.mul(1.5f);
-		midpoints[2] = getMidpoint(vertices.get(selectedVertices[2]), vertices.get(selectedVertices[0]));//.mul(1.5f);
+		midpoints[0] = getMidpoint(vertices.get(selectedVertices[0]), vertices.get(selectedVertices[1]));
+		midpoints[1] = getMidpoint(vertices.get(selectedVertices[1]), vertices.get(selectedVertices[2]));
+		midpoints[2] = getMidpoint(vertices.get(selectedVertices[2]), vertices.get(selectedVertices[0]));
 		int firstIndex = vertices.size();
 		vertices.addAll(Arrays.asList(midpoints));
 		List<int[]> newTriangles = new ArrayList<int[]>();
@@ -82,7 +82,7 @@ public class Generate {
 		//float angleToX = vertex.x == 0 ? vertex.z : vertex.z / vertex.x;
 		//float angleToY = vertex.x == 0 ? vertex.y : vertex.y / vertex.x;
 		//float angleToZ = vertex.z == 0 ? vertex.x : vertex.x / vertex.z;
-		float scale = 1 - (vertex.length() / 1);
+		float scale = 1 - vertex.length();
 		//return vertex.mul(scale);
 		float dX = vertex.x * (scale / vertex.length());
 		float dY = vertex.y * (scale / vertex.length());
@@ -101,24 +101,6 @@ public class Generate {
 		//float angle = (float) Math.acos(vertex.dot(new Vector3f(0, 0, 0)) / vertex.distance(0, 0, 0));
 		//return new Vector3f((float) Math.cos(angleToX), (float) Math.cos(angleToY), (float) Math.cos(angleToZ)).mul(radius).mul(angle);
 	}
-	
-	/*private static float getAngle(float opp, float adj) {
-		float angleToAdd;
-		if(adj < 0 && opp < 0)
-			angleToAdd = (float) Math.PI;
-		else if(adj < 0 && opp >= 0)
-			angleToAdd = (float) Math.PI;
-		else if(adj >= 0 && opp < 0)
-			angleToAdd = (float) Math.PI * 2;
-		else
-			angleToAdd = 0;
-		/*double angle = Math.atan(opp / adj);
-		if(Double.isNaN(angle))
-			return angleToAdd;
-		else
-			return angleToAdd + (float) angle;
-		//return angleToAdd + ((float) Math.atan(opp / adj));
-	}*/
 	
 	private static Vector3f getMidpoint(Vector3f a, Vector3f b) {
 		return new Vector3f(a).add(b).div(2);
