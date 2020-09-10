@@ -3,6 +3,7 @@ package net.alevel.asteroids.game.physics;
 import org.joml.AABBf;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
+
 import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.graphics.Mesh;
 
@@ -14,7 +15,7 @@ public class PhysicalObject extends GameObject {
 		super(mesh);
 		this.modelBoundingBox = new AABBf();
 		this.boundingBox = new AABBf();
-		this.createBoundingBox(mesh.getPositionsTemp());
+		this.createModelBoundingBox(mesh.getPositionsTemp());
 		Collision.getInstance().addObjectToCheck(this);
 	}
 	
@@ -34,44 +35,23 @@ public class PhysicalObject extends GameObject {
 		
 		this.boundingBox.setMax(new Vector3f(this.modelBoundingBox.maxX, this.modelBoundingBox.maxY, this.modelBoundingBox.maxZ).mul(rotateAndScale).add(super.position))
 						.setMin(new Vector3f(this.modelBoundingBox.minX, this.modelBoundingBox.minY, this.modelBoundingBox.minZ).mul(rotateAndScale).add(super.position));
+		System.out.println("(" + this.boundingBox.minX + ", " + this.boundingBox.minY + ", " + this.boundingBox.minZ + ") (" + this.boundingBox.maxX + ", " + this.boundingBox.maxY + ", " + this.boundingBox.maxZ + ")");
 		System.out.println();
 		//System.out.println(this.modelBoundingBox);
 		//System.out.println(this.boundingBox);
 	}
 	
 	protected void simulatePhysics(float time) {
-		//nothing
+		//nothing. So i can create an object that does nothing on update but still is detected in collisions
 	}
 	
-	private final void createBoundingBox(float[] positions) {
-		/*this.worldMatrix.identity()
-		.translation(super.position)
-		.rotateX((float) Math.toRadians(super.rotation.x))
-		.rotateY((float) Math.toRadians(super.rotation.y))
-		.rotateZ((float) Math.toRadians(super.rotation.z))
-		.scale(super.scale);*/
+	private final void createModelBoundingBox(float[] positions) {
 	//float minX = Float.MIN_VALUE, maxX = Float.MAX_VALUE, minY = Float.MIN_VALUE, maxY = Float.MAX_VALUE, minZ = Float.MIN_VALUE, maxZ = Float.MAX_VALUE;
 	float minX = 0, maxX = 0, minY = 0, maxY = 0, minZ = 0, maxZ = 0;
 		for(int i = 0; i < positions.length; i += 3) {
-			/*Vector4f temp = new Vector4f(super.mesh.getVertexPositionFloats()[i],
-								  	 	super.mesh.getVertexPositionFloats()[i + 1],
-								  	 	super.mesh.getVertexPositionFloats()[i + 2],
-								  	 	1);*/
 			Vector3f temp = new Vector3f(positions[i],
 									 	positions[i + 1],
 									 	positions[i + 2]);
-			/*temp.mul(new Matrix3f(1, 0, 0,
-							  	0, (float) cos(super.rotation.x), (float) sin(super.rotation.x),
-							  	0, (float) -sin(super.rotation.x), (float) cos(super.rotation.x)));
-			temp.mul(new Matrix3f((float) cos(super.rotation.y), 0, (float) -sin(super.rotation.y),
-							  	0, 1, 0,
-							  	(float) -sin(super.rotation.y), 0, (float) cos(super.rotation.y)));
-			temp.mul(new Matrix3f((float) cos(super.rotation.z), (float) sin(super.rotation.z), 0,
-							  	(float) -sin(super.rotation.z), (float) cos(super.rotation.z), 0,
-							  	0, 0, 1));*/
-			//temp.mul(super.scale);
-		
-			//temp.mul(this.worldMatrix);
 			if(temp.x > maxX)
 				maxX = temp.x;
 			if(temp.x < minX)
