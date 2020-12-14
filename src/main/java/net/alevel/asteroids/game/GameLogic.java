@@ -3,7 +3,6 @@ package net.alevel.asteroids.game;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.joml.AABBf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
@@ -28,7 +27,7 @@ public class GameLogic implements ILogic {
 	private final Camera camera;
 	private final Set<GameObject> gameObjects;
 	private PhysicalObject aabbTest;
-	private StaticGameObject boundingBox;
+	//private StaticGameObject boundingBox;
 	private float accumulatedTime;
 	
 	private GameLogic() {
@@ -96,11 +95,11 @@ public class GameLogic implements ILogic {
 		};
 		aabbTest.setScale(1f);
 		aabbTest.setPosition(0, 2, 0);
-		float[] floats = {1, 1, 1};
-		this.boundingBox = new StaticGameObject(new Mesh(floats, floats, floats, new int[] {0, 1, 2}));
+		//float[] floats = {1, 1, 1};
+		//this.boundingBox = new StaticGameObject(new Mesh(floats, floats, floats, new int[] {0, 1, 2}));
 		
 		this.gameObjects.add(aabbTest);
-		this.gameObjects.add(this.boundingBox);
+		//this.gameObjects.add(this.boundingBox);
 	}
 
 	@Override
@@ -128,7 +127,7 @@ public class GameLogic implements ILogic {
 		Vector2f rotVec = input.getDeltaMousePos();
 		camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
 		
-		AABBf aabb = aabbTest.getBoundingBox();
+		/*AABBf aabb = aabbTest.getBoundingBox();
 		float[] boundingBoxVertices = {
 			aabb.maxX, aabb.maxY, aabb.maxZ,
 			aabb.minX, aabb.minY, aabb.minZ,
@@ -160,7 +159,7 @@ public class GameLogic implements ILogic {
 		};
 		this.gameObjects.remove(this.boundingBox);
 		this.boundingBox = new StaticGameObject(new Mesh(boundingBoxVertices, boundingBoxVertices, boundingBoxVertices, indices));
-		this.gameObjects.add(this.boundingBox);
+		this.gameObjects.add(this.boundingBox);*/
 		
 		this.accumulatedTime += interval;
 		for(GameObject i : this.gameObjects)

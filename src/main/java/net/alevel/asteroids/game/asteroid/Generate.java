@@ -102,6 +102,10 @@ public class Generate {
 		//return new Vector3f((float) Math.cos(angleToX), (float) Math.cos(angleToY), (float) Math.cos(angleToZ)).mul(radius).mul(angle);
 	}
 	
+	private static void heightMap() {
+		
+	}
+	
 	private static Vector3f getMidpoint(Vector3f a, Vector3f b) {
 		return new Vector3f(a).add(b).div(2);
 	}

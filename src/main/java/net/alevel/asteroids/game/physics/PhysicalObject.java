@@ -35,8 +35,8 @@ public class PhysicalObject extends GameObject {
 		
 		this.boundingBox.setMax(new Vector3f(this.modelBoundingBox.maxX, this.modelBoundingBox.maxY, this.modelBoundingBox.maxZ).mul(rotateAndScale).add(super.position))
 						.setMin(new Vector3f(this.modelBoundingBox.minX, this.modelBoundingBox.minY, this.modelBoundingBox.minZ).mul(rotateAndScale).add(super.position));
-		System.out.println("(" + this.boundingBox.minX + ", " + this.boundingBox.minY + ", " + this.boundingBox.minZ + ") (" + this.boundingBox.maxX + ", " + this.boundingBox.maxY + ", " + this.boundingBox.maxZ + ")");
-		System.out.println();
+		//System.out.println("(" + this.boundingBox.minX + ", " + this.boundingBox.minY + ", " + this.boundingBox.minZ + ") (" + this.boundingBox.maxX + ", " + this.boundingBox.maxY + ", " + this.boundingBox.maxZ + ")");
+		//System.out.println();
 		//System.out.println(this.modelBoundingBox);
 		//System.out.println(this.boundingBox);
 	}
