@@ -1,4 +1,4 @@
-package net.alevel.asteroids.game.objects;
+package net.alevel.asteroids.game.objects.shapes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,15 +6,15 @@ import java.util.List;
 
 import org.joml.Vector3f;
 
-import net.alevel.asteroids.engine.graphics.Mesh;
-import net.alevel.asteroids.game.objects.shapes.MeshGen;
-
-/**
- * @deprecated Use {@link MeshGen#sphere(int, int)}
- */
-@Deprecated
-public class Generate {
-	public static Mesh createNewModel(int resolution) {
+class GenOctahedron {
+	private List<Vector3f> positions;
+	private int[] indices;
+	
+	public GenOctahedron(int resolution) {
+		this.generate(resolution);
+	}
+	
+	public void generate(int resolution) {
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
 		vertices.add(new Vector3f(0, 0, 1));
 		vertices.add(new Vector3f(0, 0, -1));
@@ -35,27 +35,20 @@ public class Generate {
 		
 		for(int i = 0; i < resolution; i++)
 			splitTriangles(vertices, indices);
-		for(int i = 0; i < vertices.size(); i++)
-			vertices.set(i, adjustVertexToRadius(vertices.get(i)));
+		this.positions = vertices;
 		
-		float[] floats = new float[vertices.size() * 3];
-		int[] ints = new int[indices.size() * 3];
-		for(int i = 0; i < vertices.size(); i++) {
-			floats[i * 3] = vertices.get(i).x;
-			floats[i * 3 + 1] = vertices.get(i).y;
-			floats[i * 3 + 2] = vertices.get(i).z;
-		}
+		this.indices = new int[indices.size() * 3];
 		for(int i = 0; i < indices.size(); i++) {
 			int[] triangle = indices.get(i);
-			ints[i * 3] = triangle[0];
-			ints[i * 3 + 1] = triangle[1];
-			ints[i * 3 + 2] = triangle[2];
+			this.indices[i * 3] = triangle[0];
+			this.indices[i * 3 + 1] = triangle[1];
+			this.indices[i * 3 + 2] = triangle[2];
 		}
 		
 		//System.out.println(Arrays.toString(floats));
 		//System.out.println(Arrays.toString(ints));
-		System.out.println(floats.length + " <- number of floats in sphere");
-		return new Mesh(floats, floats, floats, ints);
+		//System.out.println(floats.length + " <- number of floats in sphere");
+		//return new Mesh(floats, floats, floats, ints);
 	}
 	
 	private static void getMidpointTriangle(int[] selectedVertices, List<Vector3f> vertices, List<int[]> indices) {
@@ -82,32 +75,25 @@ public class Generate {
 			getMidpointTriangle(i, vertices, indices);
 	}
 	
-	private static Vector3f adjustVertexToRadius(Vector3f vertex) {
-		//Vector3f translateBy = new Vector3f();
-		//float angleToX = vertex.x == 0 ? vertex.z : vertex.z / vertex.x;
-		//float angleToY = vertex.x == 0 ? vertex.y : vertex.y / vertex.x;
-		//float angleToZ = vertex.z == 0 ? vertex.x : vertex.x / vertex.z;
-		float scale = 1 - vertex.length();
-		//return vertex.mul(scale);
-		float dX = vertex.x * (scale / vertex.length());
-		float dY = vertex.y * (scale / vertex.length());
-		float dZ = vertex.z * (scale / vertex.length());
-		return vertex.add(dX, dY, dZ);
-		
-		//float angleToX = getAngle(vertex.z, vertex.x);
-		//float angleToY = getAngle(vertex.y, vertex.x);
-		//return new Vector3f(radius, 0, 0).rotateY(angleToX).rotateX(angleToY);
-		//float scale = vertex.length() / radius;
-		//Vector3f out = new Vector3f(radius * angleToX, radius * angleToY, radius * angleToZ);
-		
-		//return vertex.mul(scale);
-		//float angleToZ = getAngle(vertex.x, vertex.z);
-		//System.out.println(angleToX + " - " + angleToY + " - " + angleToZ);
-		//float angle = (float) Math.acos(vertex.dot(new Vector3f(0, 0, 0)) / vertex.distance(0, 0, 0));
-		//return new Vector3f((float) Math.cos(angleToX), (float) Math.cos(angleToY), (float) Math.cos(angleToZ)).mul(radius).mul(angle);
-	}
-	
 	private static Vector3f getMidpoint(Vector3f a, Vector3f b) {
 		return new Vector3f(a).add(b).div(2);
+	}
+	
+	public List<Vector3f> getPositions() {
+		return this.positions;
+	}
+	
+	public float[] getPositionsAsFloats() {
+		float[] floats = new float[this.positions.size() * 3];
+		for(int i = 0; i < this.positions.size(); i++) {
+			floats[i * 3] = this.positions.get(i).x;
+			floats[i * 3 + 1] = this.positions.get(i).y;
+			floats[i * 3 + 2] = this.positions.get(i).z;
+		}
+		return floats;
+	}
+	
+	public int[] getIndices() {
+		return this.indices;
 	}
 }

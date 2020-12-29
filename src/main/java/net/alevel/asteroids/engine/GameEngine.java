@@ -47,6 +47,7 @@ public class GameEngine implements Runnable {
 		float accumulator = 0f; //stores the amount of time that the game needs to catch up with
 		float interval = 1f / TARGET_UPS; //the time interval between each update (the speed of the in game clock)
 		float loopSlot = 1f / TARGET_FPS; //The loop runs every frame per second, not every update per second
+		float totalTime = 0; //the actual in game time (time the simulation has been running for)
 		
 		while(!this.window.windowShouldClose()) { //game loop will stop if the window is about to close (i.e. if the user closes the window). This will cause the whole app to terminate
 			float time = System.nanoTime() / 1000_000_000f;
@@ -55,8 +56,10 @@ public class GameEngine implements Runnable {
 			
 			this.input();
 			
-			for(; accumulator >= interval; accumulator -= interval) //keep updating until caught up with the time lost. This should mean the UPS should not change when the FPS changes
-				this.update(0.0001f); //the value passed here is 1 in game time second. You can change the speed of the physics with this value
+			for(; accumulator >= interval; accumulator -= interval) { //keep updating until caught up with the time lost. This should mean the UPS should not change when the FPS changes
+				this.update(totalTime + accumulator, 0.0001f); //the value passed here is 1 in game time second. You can change the speed of the physics with this value
+				totalTime += interval; //test with this and 0.0001f
+			}
 			
 			this.render(); //render
 			double endTime = time + loopSlot; //endTime is the start time + the minimum amount of time a loop is allowed to complete
@@ -79,8 +82,8 @@ public class GameEngine implements Runnable {
 	
 	/** Update objects (simulate physics for that instant of time)
 	 */
-	protected void update(float interval) {
-		this.gameLogic.update(interval, this.humanInput);
+	protected void update(float accumulatedTime, float interval) {
+		this.gameLogic.update(accumulatedTime, interval, this.humanInput);
 	}
 	
 	/** Draw the updated objects onto the screen. Then the window will be called to swap frame buffers

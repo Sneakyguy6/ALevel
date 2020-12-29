@@ -17,7 +17,7 @@ public interface ILogic {
 	 * @param interval the time between this update and the previous update (in terms of in game clock)
 	 * @param input the sample of the mouse and keyboard inputs at a certain instant
 	 */
-	public void update(float interval, Input input);
+	public void update(float accumulatedTime, float interval, Input input);
 	
 	/**Tells the renderer what to render and also passes the camera to use
 	 * @param camera camera to use

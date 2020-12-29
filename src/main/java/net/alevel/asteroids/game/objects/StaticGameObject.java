@@ -1,4 +1,4 @@
-package net.alevel.asteroids.game;
+package net.alevel.asteroids.game.objects;
 
 import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.graphics.Mesh;
