@@ -41,12 +41,10 @@ public class Mesh {
 	private Texture texture;
 	private Vector3f colour;
 	
-	//private final AABBf boundingBox;
-	
-	private float[] positionsTemp; //for physics
+	private float[] positions; //for physics
 	
 	public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) { //normals are only needed for lighting
-		this.positionsTemp = positions;
+		this.positions = positions;
 		
 		FloatBuffer posBuffer = null;
 		FloatBuffer textBuffer = null;
@@ -195,10 +193,10 @@ public class Mesh {
 		return this.vertexCount;
 	}
 	
-	public float[] getPositionsTemp() {
-		float[] temp = this.positionsTemp;
-		this.positionsTemp = null;
-		return temp;
+	public float[] getVertices() {
+		//float[] temp = this.positionsTemp;
+		//this.positionsTemp = null;
+		return this.positions;
 	}
 	
 	/*public AABBf getModelAABB() {

@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glViewport;
 
-import java.util.Set;
+import java.util.List;
 
 import org.joml.Matrix4f;
 
@@ -45,7 +45,7 @@ public class Renderer {//Might be worth making this a singleton as I don't see w
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //| is bitwise OR. Clears the 2 buffers specified (sets them to their clear values)
 	}
 	
-	public void render(Window window, Camera camera, Set<GameObject> gameObjects) {
+	public void render(Window window, Camera camera, List<GameObject> gameObjects) {
 		this.clear();
 		if(window.isResized()) {//If window is resized, update how OpenGL transforms the final projection coordinates to pixel coordinates
 			glViewport(0, 0, window.getWidth(), window.getHeight());

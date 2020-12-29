@@ -1,6 +1,6 @@
 package net.alevel.asteroids.engine;
 
-import java.util.Set;
+import java.util.List;
 
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.input.Input;
@@ -23,7 +23,7 @@ public interface ILogic {
 	 * @param camera camera to use
 	 * @param objectsToRender game objects that will be rendered. If you do not want an object to be rendered, exclude it from this list
 	 */
-	public Pair<Camera, Set<GameObject>> toRender();
+	public Pair<Camera, List<GameObject>> toRender();
 	
 	/**Runs when the object is about to be destroyed (either on shutdown or not needed anymore)
 	 */

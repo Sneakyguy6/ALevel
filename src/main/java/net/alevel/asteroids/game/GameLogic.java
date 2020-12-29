@@ -1,9 +1,7 @@
 package net.alevel.asteroids.game;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -17,57 +15,33 @@ import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
 import net.alevel.asteroids.engine.utils.Pair;
-import net.alevel.asteroids.game.objects.Generate;
 import net.alevel.asteroids.game.objects.ObjectAssembly;
 import net.alevel.asteroids.game.objects.Ship;
-import net.alevel.asteroids.game.objects.StaticGameObject;
-import net.alevel.asteroids.game.objects.shapes.MeshGen;
-import net.alevel.asteroids.game.physics.Collision;
-import net.alevel.asteroids.game.physics.PhysicalObject;
 
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
 	public static final float MOUSE_SENSITIVITY = 0.05f;
 	private final Camera camera;
-	private final Set<GameObject> gameObjects;
+	private final List<GameObject> gameObjects;
 	private Ship player;
 	private final List<ObjectAssembly> ships;
-	private PhysicalObject aabbTest;
-	//private StaticGameObject boundingBox;
 	
 	private GameLogic() {
 		this.camera = new Camera();
-		this.gameObjects = new HashSet<GameObject>();
+		this.gameObjects = new ArrayList<GameObject>();
 		this.ships = new ArrayList<ObjectAssembly>();
 	}
 	
 	@Override
 	public void init(Window window) throws Exception {
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
-		Collision.init();
 		
 		this.player = new Ship();
 		this.player.spawn();
-		//this.ships.add(ship1);
-		for(int i = 0; i < this.ships.size(); i++)
-			this.ships.get(i).spawn();
-		
-		this.aabbTest = new PhysicalObject(Generate.createNewModel(6)) {
-			@Override
-			public void simulatePhysics(float time) {
-				super.rotation.add(0, 0.1f, 0);
-				//super.position.add(0.01f, 0, 0);
-			}
-		};
-		aabbTest.setScale(1f);
-		aabbTest.setPosition(0, 2, 0);
-		//float[] floats = {1, 1, 1};
-		//this.boundingBox = new StaticGameObject(new Mesh(floats, floats, floats, new int[] {0, 1, 2}));
 		
 		//this.gameObjects.add(aabbTest);
 		//this.gameObjects.add(new StaticGameObject(MeshGen.triangularPrism(new Vector2f(0, 0), new Vector2f(1, 0), new Vector2f(0, 1), 10)));
 		//this.gameObjects.add(new StaticGameObject(MeshGen.sphere(2)));
-		//this.gameObjects.add(this.boundingBox);
 	}
 
 	@Override
@@ -102,17 +76,13 @@ public class GameLogic implements ILogic {
 			//this.ships.get(i).translate(0, 0.001f, 0);
 		}
 		
-		for(GameObject i : this.gameObjects)
-			i.update(accumulatedTime);
-		Collision.getInstance().checkForCollisions();
-		//System.out.println(((PhysicalObject) this.tempProjectile).getBoundingBox());
-		//System.out.println(this.tempPhysicalObject.getBoundingBox());
-		//System.out.println();
+		for(int i = 0; i < this.gameObjects.size(); i++)
+			this.gameObjects.get(i).update(accumulatedTime);
 	}
 	
 	@Override
-	public Pair<Camera, Set<GameObject>> toRender() {
-		return new Pair<Camera, Set<GameObject>>(this.camera, this.gameObjects);
+	public Pair<Camera, List<GameObject>> toRender() {
+		return new Pair<Camera, List<GameObject>>(this.camera, this.gameObjects);
 	}
 
 	@Override

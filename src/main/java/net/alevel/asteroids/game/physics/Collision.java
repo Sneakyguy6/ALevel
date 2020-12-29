@@ -9,6 +9,9 @@ import java.util.Set;
 
 import net.alevel.asteroids.game.GameLogic;
 
+/**Being replaced with a better one
+ */
+@Deprecated
 public class Collision {
 	private final Set<PhysicalObject> objectsToCheck;
 	

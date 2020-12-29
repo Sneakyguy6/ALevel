@@ -7,6 +7,9 @@ import org.joml.Vector3f;
 import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.graphics.Mesh;
 
+/**@deprecated no longer using axis aligned bounding boxes
+ */
+@Deprecated
 public class PhysicalObject extends GameObject {
 	private final AABBf modelBoundingBox;
 	private final AABBf boundingBox;
@@ -15,7 +18,7 @@ public class PhysicalObject extends GameObject {
 		super(mesh);
 		this.modelBoundingBox = new AABBf();
 		this.boundingBox = new AABBf();
-		this.createModelBoundingBox(mesh.getPositionsTemp());
+		this.createModelBoundingBox(mesh.getVertices());
 		Collision.getInstance().addObjectToCheck(this);
 	}
 	
