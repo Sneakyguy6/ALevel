@@ -41,10 +41,12 @@ public class Mesh {
 	private Texture texture;
 	private Vector3f colour;
 	
-	private float[] positions; //for physics
+	private final float[] positions; //for physics
+	private final int[] indices;
 	
 	public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) { //normals are only needed for lighting
 		this.positions = positions;
+		this.indices = indices;
 		
 		FloatBuffer posBuffer = null;
 		FloatBuffer textBuffer = null;
@@ -197,6 +199,10 @@ public class Mesh {
 		//float[] temp = this.positionsTemp;
 		//this.positionsTemp = null;
 		return this.positions;
+	}
+	
+	public int[] getIndices() {
+		return this.indices;
 	}
 	
 	/*public AABBf getModelAABB() {

@@ -1,7 +1,10 @@
 package net.alevel.asteroids.game.objects.shapes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.joml.Matrix2f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -81,8 +84,8 @@ public class MeshGen {
 		return new Mesh(positions, positions, positions, indices);
 	}
 	
-	public static Mesh sphere(int radius) {
-		return sphere(radius, 5);
+	public static Mesh sphere(float f) {
+		return sphere(f, 5);
 	}
 	
 	/**Creates a mesh of a sphere
@@ -90,13 +93,13 @@ public class MeshGen {
 	 * @param resolution
 	 * @return a mesh of the sphere
 	 */
-	public static Mesh sphere(int radius, int resolution) {
+	public static Mesh sphere(float radius, int resolution) {
 		GenOctahedron genOctahedron = new GenOctahedron(resolution);
 		List<Vector3f> positions = genOctahedron.getPositions();
 		float[] floats = new float[positions.size() * 3];
 		for(int i = 0; i < positions.size(); i++) {
 			Vector3f vertex = positions.get(i);
-			float scale = 1 - vertex.length();
+			float scale = radius - vertex.length();
 			float dX = vertex.x * (scale / vertex.length());
 			float dY = vertex.y * (scale / vertex.length());
 			float dZ = vertex.z * (scale / vertex.length());
@@ -105,5 +108,57 @@ public class MeshGen {
 			floats[i * 3 + 2] = vertex.z + dZ;
 		}
 		return new Mesh(floats, floats, floats, genOctahedron.getIndices());
+	}
+	
+	public static Mesh cylinder(float radius, float length) {
+		return cylinder(radius, length, 4);
+	}
+	
+	public static Mesh cylinder(float radius, float length, int circleResolution) {
+		Matrix2f rotationMatrix = new Matrix2f().rotate((float) (Math.PI / 2) / circleResolution); //Where the angle is 90 degrees / circleResolution
+		List<Vector2f> pointsOnCircle = new ArrayList<Vector2f>(); //holds all points on a circle
+		Vector2f temp = new Vector2f(1, 0);
+		pointsOnCircle.add(temp);
+		for(int i = 0; i < 4 * circleResolution; i++) { //to rotate around 360 degrees, do number of points per 90 degrees (circleResolution) 4 times
+			temp = new Vector2f().set(temp).mul(rotationMatrix);
+			pointsOnCircle.add(temp);
+		}
+		float[] positions = new float[pointsOnCircle.size() * 6 + 6]; //* 2 (because 2 circles) * 3 (because each vertex has 3 components) therefore * 6 + 6 for 2 centres
+		for(int i = 0; i < pointsOnCircle.size(); i++) {
+			positions[i * 6] = pointsOnCircle.get(i).x;
+			positions[(i * 6) + 1] = pointsOnCircle.get(i).y;
+			positions[(i * 6) + 2] = -length / 2;
+			positions[(i * 6) + 3] = pointsOnCircle.get(i).x;
+			positions[(i * 6) + 4] = pointsOnCircle.get(i).y;
+			positions[(i * 6) + 5] = length / 2;
+		}
+		//add centres
+		positions[positions.length - 6] = 0;
+		positions[positions.length - 5] = 0;
+		positions[positions.length - 4] = -length / 2;
+		positions[positions.length - 3] = 0;
+		positions[positions.length - 2] = 0;
+		positions[positions.length - 1] = length / 2;
+		
+		int[] indices = new int[positions.length + (pointsOnCircle.size() * 6)];
+		int i = 0;
+		for(int j = 0; i < pointsOnCircle.size() * 6; i += 3, j++) {
+			indices[i] = j;
+			indices[i + 1] = (j + 1) % (pointsOnCircle.size() * 2);
+			indices[i + 2] = (j + 2) % (pointsOnCircle.size() * 2);
+		}
+		for(int j = 0, c = 0; c < pointsOnCircle.size(); i += 3, j += 2, c++) {
+			indices[i] = j;
+			indices[i + 1] = (positions.length / 3) - 2;
+			indices[i + 2] = j + 2;
+		}
+		for(int j = 1; i < indices.length - 2; i += 3, j += 2) {
+			indices[i] = j;
+			indices[i + 1] = (positions.length / 3) - 1;
+			indices[i + 2] = j + 2;
+		}
+		System.out.println(Arrays.toString(indices));
+		System.out.println(Arrays.toString(positions) + pointsOnCircle.size());
+		return new Mesh(positions, positions, positions, indices);
 	}
 }

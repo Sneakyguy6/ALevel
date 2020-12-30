@@ -46,6 +46,16 @@ public abstract class GameObject {
 		return this;
 	}
 	
+	public GameObject move(Vector3f delta) {
+		this.position.add(delta);
+		return this;
+	}
+	
+	public GameObject move(float dx, float dy, float dz) {
+		this.position.add(dx, dy, dz);
+		return this;
+	}
+	
 	public GameObject setPosition(float x, float y, float z) {
 		this.position.x = x;
 		this.position.y = y;

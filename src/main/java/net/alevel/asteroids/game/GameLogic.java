@@ -1,6 +1,7 @@
 package net.alevel.asteroids.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.joml.Vector2f;
@@ -17,6 +18,9 @@ import net.alevel.asteroids.engine.input.enums.SpecialChars;
 import net.alevel.asteroids.engine.utils.Pair;
 import net.alevel.asteroids.game.objects.ObjectAssembly;
 import net.alevel.asteroids.game.objects.Ship;
+import net.alevel.asteroids.game.objects.shapes.MeshGen;
+import net.alevel.asteroids.game.physics.RigidObject;
+import net.alevel.asteroids.game.physics.SATCollision;
 
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
@@ -24,6 +28,7 @@ public class GameLogic implements ILogic {
 	private final Camera camera;
 	private final List<GameObject> gameObjects;
 	private Ship player;
+	private RigidObject[] rigidObjects;
 	private final List<ObjectAssembly> ships;
 	
 	private GameLogic() {
@@ -37,9 +42,14 @@ public class GameLogic implements ILogic {
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 		
 		this.player = new Ship();
-		this.player.spawn();
-		
-		//this.gameObjects.add(aabbTest);
+		this.rigidObjects = new RigidObject[] {
+				new RigidObject(MeshGen.cube(1, 1, 1)),
+				new RigidObject(MeshGen.cube(1, 1, 1))
+		};
+		this.rigidObjects[0].setPosition(0, 0, 10);
+		this.rigidObjects[1].setPosition(0, 0, -10);
+		this.gameObjects.addAll(Arrays.asList(this.rigidObjects));
+		//this.player.spawn();
 		//this.gameObjects.add(new StaticGameObject(MeshGen.triangularPrism(new Vector2f(0, 0), new Vector2f(1, 0), new Vector2f(0, 1), 10)));
 		//this.gameObjects.add(new StaticGameObject(MeshGen.sphere(2)));
 	}
@@ -75,7 +85,9 @@ public class GameLogic implements ILogic {
 			//this.ships.get(i).rotate(0, 0.01f, 0);
 			//this.ships.get(i).translate(0, 0.001f, 0);
 		}
-		
+		this.rigidObjects[0].move(0, 0, -.01f);
+		this.rigidObjects[1].move(0, 0, .01f);
+		SATCollision.checkCollisions(this.gameObjects);
 		for(int i = 0; i < this.gameObjects.size(); i++)
 			this.gameObjects.get(i).update(accumulatedTime);
 	}
