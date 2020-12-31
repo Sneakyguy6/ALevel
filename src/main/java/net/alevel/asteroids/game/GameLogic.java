@@ -12,6 +12,7 @@ import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.cl.MatrixMulTest;
+import net.alevel.asteroids.engine.cl.SurfaceNormalsTest;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
@@ -62,7 +63,9 @@ public class GameLogic implements ILogic {
 			testCL.readFloatBuffer(out, 2, true);
 			System.out.println(Arrays.toString(out));
 		}*/
-		MatrixMulTest.run();
+		//MatrixMulTest.run();
+		SurfaceNormalsTest.run();
+		SurfaceNormalsTest.runJava();
 		
 		this.player = new Ship();
 		this.rigidObjects = new RigidObject[] {

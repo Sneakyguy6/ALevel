@@ -1,7 +1,7 @@
 package net.alevel.asteroids.engine.cl;
 
 import static org.jocl.CL.CL_CONTEXT_PLATFORM;
-import static org.jocl.CL.CL_DEVICE_TYPE_GPU;
+import static org.jocl.CL.*;
 import static org.jocl.CL.clCreateCommandQueueWithProperties;
 import static org.jocl.CL.clCreateContext;
 import static org.jocl.CL.clGetDeviceIDs;
@@ -54,6 +54,7 @@ public class CLManager {
 		// Obtain the number of devices for the platform
 		int numDevicesArray[] = new int[1];
 		clGetDeviceIDs(platform, deviceType, 0, null, numDevicesArray);
+		//System.out.println(Arrays.toString(numDevicesArray));
 		int numDevices = numDevicesArray[0];
 
 		// Obtain a device ID

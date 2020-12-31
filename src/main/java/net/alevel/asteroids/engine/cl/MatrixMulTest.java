@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Random;
 
 import org.jocl.Pointer;
 import org.jocl.Sizeof;
@@ -39,28 +40,33 @@ public class MatrixMulTest {
 		cl_program program = clCreateProgramWithSource(CLManager.getContext(), 1, new String[] {programString}, null, null);
 		clBuildProgram(program, 0, null, null, null, null);
 		cl_kernel kernel = clCreateKernel(program, "matrixMultiply", null);
-		float[] srcArrayA = {
+		float[] srcArrayA = new float[32];/*{
 			1, 0, 1, 3,
 		    0, 1, 0, 2,
 		    1, 0, 1, 1,
-		};
-		float[] srcArrayB = {
+		};*/
+		float[] srcArrayB = new float[32];/*{
 		    2, 3, 2,
 		    1, 2, 1,
 		    3, 1, 2,
 		    1, 2, 3,
-		};
-		float[] srcArrayC = new float[9];
+		};*/
+		Random rng = new Random();
+		for(int i = 0; i < 32; i++) {
+			srcArrayA[i] = rng.nextInt(9) + 1;
+			srcArrayB[i] = rng.nextInt(9) + 1;
+		}
+		float[] srcArrayC = new float[16];
 		cl_mem matAMem = clCreateBuffer(CLManager.getContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * srcArrayA.length, Pointer.to(srcArrayA), null);
 		cl_mem matBMem = clCreateBuffer(CLManager.getContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * srcArrayB.length, Pointer.to(srcArrayB), null);
-		cl_mem matCMem = clCreateBuffer(CLManager.getContext(), CL_MEM_READ_WRITE, Sizeof.cl_float * 16, null, null);
-		cl_mem matSizes = clCreateBuffer(CLManager.getContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_int * 4, Pointer.to(new int[] {4, 3, 3, 4}), null);
+		cl_mem matCMem = clCreateBuffer(CLManager.getContext(), CL_MEM_READ_WRITE, Sizeof.cl_float * 256, null, null);
+		cl_mem matSizes = clCreateBuffer(CLManager.getContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_int * 4, Pointer.to(new int[] {8, 4, 4, 8}), null);
 		clSetKernelArg(kernel, 0, Sizeof.cl_mem, Pointer.to(matAMem));
 		clSetKernelArg(kernel, 1, Sizeof.cl_mem, Pointer.to(matBMem));
 		clSetKernelArg(kernel, 2, Sizeof.cl_mem, Pointer.to(matCMem));
 		clSetKernelArg(kernel, 3, Sizeof.cl_mem, Pointer.to(matSizes));
 		
-		long[] global_work_size = {3, 3};
+		long[] global_work_size = {4, 4};
 		clEnqueueNDRangeKernel(
 				CLManager.getCommandQueue(),
 				kernel,
@@ -82,6 +88,8 @@ public class MatrixMulTest {
 				0,
 				null,
 				null);
+		System.out.println(Arrays.toString(srcArrayA));
+		System.out.println(Arrays.toString(srcArrayB));
 		System.out.println(Arrays.toString(srcArrayC));
 		
 		clReleaseMemObject(matAMem);
