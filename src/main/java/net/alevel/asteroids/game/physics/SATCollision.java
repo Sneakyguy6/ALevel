@@ -33,16 +33,16 @@ public class SATCollision {
 	private static boolean checkIfCollide(RigidObject o1, RigidObject o2) {
 		Map<Vector3f, float[]> o1Points = o1.getMinMaxPoints();
 		Map<Vector3f, float[]> o2Points = o2.getMinMaxPoints();
-		System.out.println(o1Points.size());
+		//System.out.println(o1Points.size());
 		for(Vector3f axis : o1Points.keySet()) {
 			if(!o2Points.containsKey(axis)) //this assumes that util.Map locates a value depending on the components of the vector and not the vector object itself
 				continue; //(depends on how equals and hashcode are defined in Vector3f) need to check
 			
 			float o1ProjectedPos = o1.getPosition().dot(axis);
-			System.out.print(o1ProjectedPos + "\t");
+			//System.out.print(o1ProjectedPos + "\t");
 			float o2ProjectedPos = o2.getPosition().dot(axis);
-			System.out.print(o2ProjectedPos);
-			System.out.println("____________________");
+			//System.out.print(o2ProjectedPos);
+			//System.out.println("____________________");
 			float[] o1MinMax = o1Points.get(axis);
 			float[] o2MinMax = o2Points.get(axis);
 			if(o2ProjectedPos + o2MinMax[0] > o1MinMax[1] + o1ProjectedPos)
@@ -50,7 +50,7 @@ public class SATCollision {
 			if(o1ProjectedPos + o1MinMax[0] > o2MinMax[1] + o2ProjectedPos)
 				return false;
 		}
-		System.out.println();
+		//System.out.println();
 		return true;
 	}
 	
@@ -77,7 +77,7 @@ public class SATCollision {
 			n.z = Math.abs(n.z);
 			surfaceNormals.add(n);
 		}
-		System.out.println("Surface normals: " + surfaceNormals + " -> " + surfaceNormals.size() + " elements");
+		//System.out.println("Surface normals: " + surfaceNormals + " -> " + surfaceNormals.size() + " elements");
 		
 		//calculate max and min coordinate on each axis
 		for(Vector3f normal : surfaceNormals) { //https://gamedevelopment.tutsplus.com/tutorials/collision-detection-using-the-separating-axis-theorem--gamedev-169
@@ -92,8 +92,8 @@ public class SATCollision {
 			}
 			minMaxPoints.put(normal, new float[] {min, max});
 		}
-		minMaxPoints.forEach((a, b) -> System.out.println(a + " -> [" + b[0] + " " + b[1] + "]"));
-		System.out.println(minMaxPoints.size());
+		//minMaxPoints.forEach((a, b) -> System.out.println(a + " -> [" + b[0] + " " + b[1] + "]"));
+		//System.out.println(minMaxPoints.size());
 		return minMaxPoints;
 	}
 }

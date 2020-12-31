@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
+import net.alevel.asteroids.engine.cl.MatrixMulTest;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
@@ -40,6 +41,28 @@ public class GameLogic implements ILogic {
 	@Override
 	public void init(Window window) throws Exception {
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
+		
+		/*int n = Integer.MAX_VALUE >> 19;
+        float[] srcArrayA = {
+        	1, 0, 1,
+        	0, 1, 0,
+        	1, 0, 1
+        };
+        float[] srcArrayB = {
+        	2, 3, 2,
+        	1, 2, 1,
+        	3, 1, 2
+        };
+		try(CLProgram testCL = new CLProgram(GameLogic.class.getResourceAsStream("/collisions/MatVecMul.cl"), "matrixMultiply")) {
+			testCL.addFloatMemory(srcArrayA)
+				  .addFloatMemory(srcArrayB)
+				  .addEmptyMemory(9);
+			testCL.exec(new long[] {n});
+			float[] out = new float[n];
+			testCL.readFloatBuffer(out, 2, true);
+			System.out.println(Arrays.toString(out));
+		}*/
+		MatrixMulTest.run();
 		
 		this.player = new Ship();
 		this.rigidObjects = new RigidObject[] {

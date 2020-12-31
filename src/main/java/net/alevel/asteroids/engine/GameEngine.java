@@ -2,6 +2,7 @@ package net.alevel.asteroids.engine;
 
 import java.util.List;
 
+import net.alevel.asteroids.engine.cl.CLManager;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.graphics.Renderer;
 import net.alevel.asteroids.engine.input.Input;
@@ -34,6 +35,7 @@ public class GameEngine implements Runnable {
 	}
 	
 	protected void init() throws Exception { //any errors will passed to the method that called this method
+		CLManager.init();
 		this.window.init();
 		this.renderer.initShaderProgram(window);
 		this.humanInput.init(this.window);
@@ -97,5 +99,6 @@ public class GameEngine implements Runnable {
 	protected void cleanUp() {
 		this.renderer.cleanUp();
 		this.gameLogic.cleanUp();
+		CLManager.cleanUp();
 	}
 }
