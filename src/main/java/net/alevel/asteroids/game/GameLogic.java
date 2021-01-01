@@ -65,7 +65,7 @@ public class GameLogic implements ILogic {
 		}*/
 		//MatrixMulTest.run();
 		SurfaceNormalsTest.run();
-		SurfaceNormalsTest.runJava();
+		//SurfaceNormalsTest.runJava();
 		
 		this.player = new Ship();
 		this.rigidObjects = new RigidObject[] {
