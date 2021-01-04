@@ -26,11 +26,12 @@ __kernel void matrixVectorMultiply (
     __global float *transformedVectors
 )
 {
-    int vector = get_global_id(0) * matrixDimensions[0];
-    int component = get_global_id(1);
+    int vector = get_group_id(0) * matrixDimensions[0];
+    int component = get_local_id(0);
+    //printf("%d %d\n", vector, component);
     float acc = .0f;
-    for(int i = 0; i < matrixDimensions[0]; i++){
-        acc += matrix[component * matrixDimensions[0] + i];
+    for(int i = component, j = 0; i < matrixDimensions[0] * matrixDimensions[1]; i += matrixDimensions[1], j++){
+        acc += matrix[i] * vectors[vector + j];
     }
     transformedVectors[vector + component] = acc;
 }
