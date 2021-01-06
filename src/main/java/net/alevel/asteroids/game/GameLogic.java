@@ -1,5 +1,6 @@
 package net.alevel.asteroids.game;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,10 +12,6 @@ import org.lwjgl.opengl.GL11;
 import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
-import net.alevel.asteroids.engine.cl.GetMinMaxPoints;
-import net.alevel.asteroids.engine.cl.MatrixMulTest;
-import net.alevel.asteroids.engine.cl.MatrixVectorMulTest;
-import net.alevel.asteroids.engine.cl.SurfaceNormalsTest;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
@@ -24,7 +21,7 @@ import net.alevel.asteroids.game.objects.ObjectAssembly;
 import net.alevel.asteroids.game.objects.Ship;
 import net.alevel.asteroids.game.objects.shapes.MeshGen;
 import net.alevel.asteroids.game.physics.RigidObject;
-import net.alevel.asteroids.game.physics.SATCollision;
+import net.alevel.asteroids.game.physics.SATCL;
 
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
@@ -35,7 +32,7 @@ public class GameLogic implements ILogic {
 	private RigidObject[] rigidObjects;
 	private final List<ObjectAssembly> ships;
 	
-	private GameLogic() {
+	private GameLogic() throws IOException {
 		this.camera = new Camera();
 		this.gameObjects = new ArrayList<GameObject>();
 		this.ships = new ArrayList<ObjectAssembly>();
@@ -44,6 +41,7 @@ public class GameLogic implements ILogic {
 	@Override
 	public void init(Window window) throws Exception {
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
+		SATCL.init();
 		
 		/*int n = Integer.MAX_VALUE >> 19;
         float[] srcArrayA = {
@@ -69,7 +67,7 @@ public class GameLogic implements ILogic {
 		//SurfaceNormalsTest.run();
 		//SurfaceNormalsTest.runJava();
 		//MatrixVectorMulTest.run();
-		GetMinMaxPoints.run();
+		//GetMinMaxPoints.run();
 		
 		this.player = new Ship();
 		this.rigidObjects = new RigidObject[] {
@@ -117,7 +115,8 @@ public class GameLogic implements ILogic {
 		}
 		this.rigidObjects[0].move(0, 0, -.01f);
 		this.rigidObjects[1].move(0, 0, .01f);
-		SATCollision.checkCollisions(this.gameObjects);
+		//SATCollision.checkCollisions(this.gameObjects);
+		SATCL.testCollisions(this.gameObjects);
 		for(int i = 0; i < this.gameObjects.size(); i++)
 			this.gameObjects.get(i).update(accumulatedTime);
 	}
@@ -131,6 +130,7 @@ public class GameLogic implements ILogic {
 	public void cleanUp() {
 		for(GameObject o : gameObjects)
 			o.getMesh().cleanUp();
+		SATCL.cleanUp();
 	}
 	
 	public void addObject(GameObject o) {
@@ -143,7 +143,7 @@ public class GameLogic implements ILogic {
 	
 	private static GameLogic instance;
 	
-	public static GameLogic init() {
+	public static GameLogic init() throws IOException {
 		if(instance == null)
 			instance = new GameLogic();
 		return instance;

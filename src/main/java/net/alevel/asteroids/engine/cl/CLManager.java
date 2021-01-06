@@ -69,6 +69,7 @@ public class CLManager {
 		// Create a command-queue for the selected device
 		queueProperties = new cl_queue_properties();
 		commandQueue = clCreateCommandQueueWithProperties(context, device, queueProperties, null);
+		CL.clFinish(commandQueue);
 	}
 	
 	public static void cleanUp() {

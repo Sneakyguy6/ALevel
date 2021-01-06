@@ -4,11 +4,15 @@ import static org.jocl.CL.CL_MEM_COPY_HOST_PTR;
 import static org.jocl.CL.CL_MEM_READ_ONLY;
 import static org.jocl.CL.CL_MEM_READ_WRITE;
 import static org.jocl.CL.CL_TRUE;
+import static org.jocl.CL.clBuildProgram;
 import static org.jocl.CL.clCreateBuffer;
 import static org.jocl.CL.clCreateKernel;
 import static org.jocl.CL.clCreateProgramWithSource;
 import static org.jocl.CL.clEnqueueNDRangeKernel;
 import static org.jocl.CL.clEnqueueReadBuffer;
+import static org.jocl.CL.clReleaseKernel;
+import static org.jocl.CL.clReleaseMemObject;
+import static org.jocl.CL.clReleaseProgram;
 import static org.jocl.CL.clSetKernelArg;
 
 import java.io.BufferedReader;
@@ -61,6 +65,8 @@ public class SATCL {
 						readClProgram("TestCollisions.cl")},
 				null,
 				null);
+		clBuildProgram(wholeProgram, 0, null, null, null, null);
+		
 		matVecMulKernel = clCreateKernel(wholeProgram, "matrixVectorMultiply", null);
 		//matMatMulKernel = clCreateKernel(wholeProgram, "matrixMultiply", null);
 		vectorAddKernel = clCreateKernel(wholeProgram, "vectorAdd", null);
@@ -86,7 +92,7 @@ public class SATCL {
 		}
 	}
 	
-	public static boolean checkIfCollide(RigidObject o1, RigidObject o2) {
+	private static boolean checkIfCollide(RigidObject o1, RigidObject o2) {
 		//get world vertices
 		float[] o1ModelVertices = o1.getMesh().getVertices();
 		cl_mem o1ModelVerticesMem = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * o1ModelVertices.length, Pointer.to(o1ModelVertices), null);
@@ -182,7 +188,13 @@ public class SATCL {
 				null,
 				null);
 		CL.clFinish(commandQueue);
-		
+		clReleaseMemObject(transformMatDimensionsMem);
+		clReleaseMemObject(o1TransformMem);
+		clReleaseMemObject(o2TransformMem);
+		clReleaseMemObject(o1ModelVerticesMem);
+		clReleaseMemObject(o2ModelVerticesMem);
+		clReleaseMemObject(o1PosVecMem);
+		clReleaseMemObject(o2PosVecMem);
 		
 		//by this point, I should have all the transformed vertices
 		//now I get the surface normals
@@ -199,7 +211,7 @@ public class SATCL {
 		global_work_size = new long[] {o1Indices.length / 3};
 		clEnqueueNDRangeKernel( //calculate o1 surface normals
 				commandQueue,
-				matVecMulKernel,
+				getSurfaceNormalKernel,
 				global_work_size.length,
 				null,
 				global_work_size,
@@ -215,7 +227,7 @@ public class SATCL {
 		global_work_size = new long[] {o1Indices.length / 3};
 		clEnqueueNDRangeKernel( //calculate o2 surface normals
 				commandQueue,
-				matVecMulKernel,
+				getSurfaceNormalKernel,
 				global_work_size.length,
 				null,
 				global_work_size,
@@ -262,11 +274,15 @@ public class SATCL {
 		};
 		cl_mem finalSurfaceNormalsMem = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * finalSurfaceNormals.length, Pointer.to(finalSurfaceNormals), null);
 		
+		clReleaseMemObject(o1SurfaceNormalsMem);
+		clReleaseMemObject(o2SurfaceNormalsMem);
+		clReleaseMemObject(o1IndicesMem);
+		clReleaseMemObject(o2IndicesMem);
 		
 		//now i calculate the max and min points for each object for each axis
-		cl_mem tempMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * (o1ModelVertices.length / 3), null, null); //debug
-		cl_mem tempMem2 = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * o1ModelVertices.length, null, null); //debug
-		cl_mem tempMem3 = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * o1ModelVertices.length, null, null); //debug
+		//cl_mem tempMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * (o1ModelVertices.length / 3), null, null); //debug
+		//cl_mem tempMem2 = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * o1ModelVertices.length, null, null); //debug
+		//cl_mem tempMem3 = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * o1ModelVertices.length, null, null); //debug
 		
 		cl_mem o1MinMaxPoints = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * (finalSurfaceNormals.length * 2 / 3), null, null);
 		cl_mem o2MinMaxPoints = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * (finalSurfaceNormals.length * 2 / 3), null, null);
@@ -275,14 +291,14 @@ public class SATCL {
 		clSetKernelArg(getMinMaxKernel, 2, Sizeof.cl_mem, Pointer.to(o1MinMaxPoints));
 		clSetKernelArg(getMinMaxKernel, 3, Sizeof.cl_float * o1ModelVertices.length, null);
 		clSetKernelArg(getMinMaxKernel, 4, Sizeof.cl_float * o1ModelVertices.length, null);
-		clSetKernelArg(getMinMaxKernel, 5, Sizeof.cl_mem, Pointer.to(tempMem)); //debug
-		clSetKernelArg(getMinMaxKernel, 6, Sizeof.cl_mem, Pointer.to(tempMem2)); //debug
-		clSetKernelArg(getMinMaxKernel, 7, Sizeof.cl_mem, Pointer.to(tempMem3)); //debug
+		//clSetKernelArg(getMinMaxKernel, 5, Sizeof.cl_mem, Pointer.to(tempMem)); //debug
+		//clSetKernelArg(getMinMaxKernel, 6, Sizeof.cl_mem, Pointer.to(tempMem2)); //debug
+		//clSetKernelArg(getMinMaxKernel, 7, Sizeof.cl_mem, Pointer.to(tempMem3)); //debug
 		global_work_size = new long[] {(finalSurfaceNormals.length / 3) * (o1ModelVertices.length / 3)};
 		local_work_size = new long[] {(o1ModelVertices.length / 3)};
-		clEnqueueNDRangeKernel( //calculate o2 surface normals
+		clEnqueueNDRangeKernel( //calculate o1 min and max
 				commandQueue,
-				matVecMulKernel,
+				getMinMaxKernel,
 				global_work_size.length,
 				null,
 				global_work_size,
@@ -298,9 +314,9 @@ public class SATCL {
 		clSetKernelArg(getMinMaxKernel, 4, Sizeof.cl_float * o2ModelVertices.length, null);
 		global_work_size = new long[] {(finalSurfaceNormals.length / 3) * (o2ModelVertices.length / 3)};
 		local_work_size = new long[] {(o2ModelVertices.length / 3)};
-		clEnqueueNDRangeKernel( //calculate o2 surface normals
+		clEnqueueNDRangeKernel( //calculate o2 min and max
 				commandQueue,
-				matVecMulKernel,
+				getMinMaxKernel,
 				global_work_size.length,
 				null,
 				global_work_size,
@@ -310,9 +326,58 @@ public class SATCL {
 				null);
 		CL.clFinish(commandQueue);
 		
+		//clReleaseMemObject(tempMem);
+		//clReleaseMemObject(tempMem2);
+		//clReleaseMemObject(tempMem3);
+		clReleaseMemObject(finalSurfaceNormalsMem);
+		clReleaseMemObject(o1WorldVerticesMem);
+		clReleaseMemObject(o2WorldVerticesMem);
 		
 		//I now have my max and min points and now just need to put them through the SAT algorithm to get the final outcome
-		return false;
+		//float[] allMinMaxPoints = new float[finalSurfaceNormals.length * 4 / 3]; //double the sizes of o1MinMaxPoints and o2MinMaxPoints. This array will contain both
+		cl_mem collisionTests = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_uint * finalSurfaceNormals.length, null, null);
+		clSetKernelArg(testCollisionKernel, 0, Sizeof.cl_mem, Pointer.to(o1MinMaxPoints));
+		clSetKernelArg(testCollisionKernel, 1, Sizeof.cl_mem, Pointer.to(o2MinMaxPoints));
+		clSetKernelArg(testCollisionKernel, 2, Sizeof.cl_mem, Pointer.to(collisionTests));
+		global_work_size = new long[] {finalSurfaceNormals.length};
+		clEnqueueNDRangeKernel( //calculate o2 min and max
+				commandQueue,
+				testCollisionKernel,
+				global_work_size.length,
+				null,
+				global_work_size,
+				null,
+				0,
+				null,
+				null);
+		
+		int[] isColliding = new int[1];
+		clEnqueueReadBuffer( //read o2 surface normals memory
+				CLManager.getCommandQueue(),
+				collisionTests,
+				CL_TRUE, //pause thread until kernel finishes processing
+				0,
+				Sizeof.cl_uint, //only read first item (Sizeof.cl_uint * 1)
+				Pointer.to(isColliding),
+				0,
+				null,
+				null);
+		
+		clReleaseMemObject(o1MinMaxPoints);
+		clReleaseMemObject(o2MinMaxPoints);
+		clReleaseMemObject(collisionTests);
+		
+		return isColliding[0] == 1;
+	}
+	
+	public static void cleanUp() {
+		clReleaseKernel(matVecMulKernel);
+		clReleaseKernel(vectorAddKernel);
+		clReleaseKernel(getSurfaceNormalKernel);
+		clReleaseKernel(getMinMaxKernel);
+		clReleaseKernel(testCollisionKernel);
+		
+		clReleaseProgram(wholeProgram);
 	}
 	
 	private static String readClProgram(String name) throws IOException {
