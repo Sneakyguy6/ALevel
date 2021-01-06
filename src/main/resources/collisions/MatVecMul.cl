@@ -36,6 +36,17 @@ __kernel void matrixVectorMultiply (
     transformedVectors[vector + component] = acc;
 }
 
+__kernel void vectorAdd (
+    __global const float *vectors,
+    __global const float *vectorToAdd,
+    __global float *out
+)
+{
+    int id = get_global_id(0) * 3;
+    out[id] = vectors[id] + vectorToAdd[0];
+    out[id + 1] = vectors[id + 1] + vectorToAdd[1];
+    out[id + 2] = vectors[id + 2] + vectorToAdd[2];
+}
 //printf("%d %d %d %d\n", A[0], A[1], A[2], A[3]);
     /*int x = get_global_id(0);
     int y = get_global_id(1); //coords of element to calculate

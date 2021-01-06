@@ -1,19 +1,6 @@
 package net.alevel.asteroids.engine.cl;
 
-import static org.jocl.CL.CL_MEM_COPY_HOST_PTR;
-import static org.jocl.CL.CL_MEM_READ_ONLY;
-import static org.jocl.CL.CL_MEM_READ_WRITE;
-import static org.jocl.CL.CL_TRUE;
-import static org.jocl.CL.clBuildProgram;
-import static org.jocl.CL.clCreateBuffer;
-import static org.jocl.CL.clCreateKernel;
-import static org.jocl.CL.clCreateProgramWithSource;
-import static org.jocl.CL.clEnqueueNDRangeKernel;
-import static org.jocl.CL.clEnqueueReadBuffer;
-import static org.jocl.CL.clReleaseKernel;
-import static org.jocl.CL.clReleaseMemObject;
-import static org.jocl.CL.clReleaseProgram;
-import static org.jocl.CL.clSetKernelArg;
+import static org.jocl.CL.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,20 +32,21 @@ public class GetMinMaxPoints {
 		float[] vertices = {1, 1, 0, 0, 1, 0, 0, 1, 1};
 		float[] normals = {0, 1, 0};
 		float[] maxMins = new float[vertices.length * 2 / 3];
-		System.out.println(vertices.length);
-		System.out.println(maxMins.length);
+		//System.out.println(vertices.length);
+		//System.out.println(maxMins.length);
 		
 		cl_mem verticesMem = clCreateBuffer(CLManager.getContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * vertices.length, Pointer.to(vertices), null);
 		cl_mem normalsMem = clCreateBuffer(CLManager.getContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * normals.length, Pointer.to(normals), null);
 		cl_mem maxMinsMem = clCreateBuffer(CLManager.getContext(), CL_MEM_READ_WRITE, Sizeof.cl_float * maxMins.length, null, null);
 		
-		
+		//System.out.println(Pointer.to(verticesMem));
 		clSetKernelArg(kernel, 0, Sizeof.cl_mem, Pointer.to(verticesMem));
 		clSetKernelArg(kernel, 1, Sizeof.cl_mem, Pointer.to(normalsMem));
 		clSetKernelArg(kernel, 2, Sizeof.cl_mem, Pointer.to(maxMinsMem));
-		clSetKernelArg(kernel, 3, Sizeof.cl_float * vertices.length, null);
-		clSetKernelArg(kernel, 4, Sizeof.cl_float * vertices.length, null);
-		System.out.println("some text " + 90);
+		clSetKernelArg(kernel, 3, Sizeof.cl_mem, null);
+		clSetKernelArg(kernel, 4, Sizeof.cl_mem, null);
+		//clSetKernelArg(kernel, 3, Sizeof.cl_float * vertices.length, null);
+		//clSetKernelArg(kernel, 4, Sizeof.cl_float * vertices.length, null);
 		long[] global_work_size = {(normals.length / 3) * (vertices.length / 3)};
 		long[] local_work_size = {(vertices.length / 3)};
 		clEnqueueNDRangeKernel(
@@ -82,7 +70,19 @@ public class GetMinMaxPoints {
 				0,
 				null,
 				null);
+		float[] temp = new float[vertices.length];
+		clEnqueueReadBuffer(
+				CLManager.getCommandQueue(),
+				verticesMem,
+				CL_TRUE,
+				0,
+				Sizeof.cl_float * vertices.length,
+				Pointer.to(temp),
+				0,
+				null,
+				null);
 		System.out.println(Arrays.toString(maxMins));
+		System.out.println(Arrays.toString(temp));
 		
 		clReleaseMemObject(verticesMem);
 		clReleaseMemObject(normalsMem);
