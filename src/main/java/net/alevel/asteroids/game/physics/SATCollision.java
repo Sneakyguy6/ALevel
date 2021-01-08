@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.joml.Vector3f;
 
-import net.alevel.asteroids.engine.GameObject;
+import net.alevel.asteroids.engine.objects.GameObject;
 
 /**Checks for collisions using the 'Separating axis' theorem
  */

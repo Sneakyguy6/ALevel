@@ -6,6 +6,7 @@ import net.alevel.asteroids.engine.cl.CLManager;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.graphics.Renderer;
 import net.alevel.asteroids.engine.input.Input;
+import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.utils.Pair;
 
 public class GameEngine implements Runnable {
@@ -30,6 +31,7 @@ public class GameEngine implements Runnable {
 			this.init();
 			this.gameLoop();
 		} catch (Exception e) {
+			System.out.println("A fatal error has occured and the program has stopped!");
 			e.printStackTrace(); //print any error to console
 		}
 	}
@@ -43,8 +45,9 @@ public class GameEngine implements Runnable {
 	}
 	
 	/** This is the main game loop. Methods are protected for convenience. It may come in useful if I need to alter what happens in the loop.
+	 * @throws Exception 
 	 */
-	protected void gameLoop() { //the main loop
+	protected void gameLoop() throws Exception { //the main loop
 		float lastLoop = System.nanoTime() / 1000_000_000f; //stores time that last loop started
 		float accumulator = 0f; //stores the amount of time that the game needs to catch up with
 		float interval = 1f / TARGET_UPS; //the time interval between each update (the speed of the in game clock)
@@ -83,8 +86,9 @@ public class GameEngine implements Runnable {
 	}
 	
 	/** Update objects (simulate physics for that instant of time)
+	 * @throws Exception 
 	 */
-	protected void update(float accumulatedTime, float interval) {
+	protected void update(float accumulatedTime, float interval) throws Exception {
 		this.gameLogic.update(accumulatedTime, interval, this.humanInput);
 	}
 	

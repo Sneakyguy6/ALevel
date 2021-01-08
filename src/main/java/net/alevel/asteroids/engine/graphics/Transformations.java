@@ -3,7 +3,7 @@ package net.alevel.asteroids.engine.graphics;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import net.alevel.asteroids.engine.GameObject;
+import net.alevel.asteroids.engine.objects.GameObject;
 
 public class Transformations {
 	private final Matrix4f projectionMatrix; //The matrix that converts the view coords to on screen coords. Creates depth perception

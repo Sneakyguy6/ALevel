@@ -8,8 +8,8 @@ import org.joml.Matrix2f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.graphics.Mesh;
+import net.alevel.asteroids.engine.objects.GameObject;
 
 /**Creates different shapes.<br>
  * NOTE: when used in a {@link GameObject}, the position points to the centre of the shape

@@ -2,67 +2,49 @@ package net.alevel.asteroids.game;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
-import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
+import net.alevel.asteroids.engine.objects.GameObject;
+import net.alevel.asteroids.engine.objects.NonRenderableObject;
 import net.alevel.asteroids.engine.utils.Pair;
+import net.alevel.asteroids.game.objects.GameObjects;
 import net.alevel.asteroids.game.objects.ObjectAssembly;
 import net.alevel.asteroids.game.objects.Ship;
 import net.alevel.asteroids.game.objects.shapes.MeshGen;
 import net.alevel.asteroids.game.physics.RigidObject;
-import net.alevel.asteroids.game.physics.SATCL;
+import net.alevel.asteroids.game.physics.worldCoords.WorldCoords;
 
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
 	public static final float MOUSE_SENSITIVITY = 0.05f;
 	private final Camera camera;
-	private final List<GameObject> gameObjects;
+	private final GameObjects gameObjects;
+	//private final List<GameObject> gameObjects;
 	private Ship player;
 	private RigidObject[] rigidObjects;
 	private final List<ObjectAssembly> ships;
 	
 	private GameLogic() throws IOException {
 		this.camera = new Camera();
-		this.gameObjects = new ArrayList<GameObject>();
+		this.gameObjects = new GameObjects(); // ArrayList<GameObject>();
 		this.ships = new ArrayList<ObjectAssembly>();
 	}
 	
 	@Override
 	public void init(Window window) throws Exception {
 		System.out.println(GL11.glGetString(GL11.GL_VERSION));
-		SATCL.init();
+		//SATCL.init();
 		
-		/*int n = Integer.MAX_VALUE >> 19;
-        float[] srcArrayA = {
-        	1, 0, 1,
-        	0, 1, 0,
-        	1, 0, 1
-        };
-        float[] srcArrayB = {
-        	2, 3, 2,
-        	1, 2, 1,
-        	3, 1, 2
-        };
-		try(CLProgram testCL = new CLProgram(GameLogic.class.getResourceAsStream("/collisions/MatVecMul.cl"), "matrixMultiply")) {
-			testCL.addFloatMemory(srcArrayA)
-				  .addFloatMemory(srcArrayB)
-				  .addEmptyMemory(9);
-			testCL.exec(new long[] {n});
-			float[] out = new float[n];
-			testCL.readFloatBuffer(out, 2, true);
-			System.out.println(Arrays.toString(out));
-		}*/
 		//MatrixMulTest.run();
 		//SurfaceNormalsTest.run();
 		//SurfaceNormalsTest.runJava();
@@ -76,14 +58,14 @@ public class GameLogic implements ILogic {
 		};
 		this.rigidObjects[0].setPosition(0, 0, 10);
 		this.rigidObjects[1].setPosition(0, 0, -10);
-		this.gameObjects.addAll(Arrays.asList(this.rigidObjects));
+		this.gameObjects.spawnAll(this.rigidObjects);
 		//this.player.spawn();
 		//this.gameObjects.add(new StaticGameObject(MeshGen.triangularPrism(new Vector2f(0, 0), new Vector2f(1, 0), new Vector2f(0, 1), 10)));
 		//this.gameObjects.add(new StaticGameObject(MeshGen.sphere(2)));
 	}
 
 	@Override
-	public void update(float accumulatedTime, float interval, Input input) {
+	public void update(float accumulatedTime, float interval, Input input) throws IOException {
 		final Vector3f cameraInc = new Vector3f();
 		if(input.isKeyPressed('W') && !input.isKeyPressed('S'))
 			cameraInc.z = -1f;
@@ -113,32 +95,37 @@ public class GameLogic implements ILogic {
 			//this.ships.get(i).rotate(0, 0.01f, 0);
 			//this.ships.get(i).translate(0, 0.001f, 0);
 		}
-		this.rigidObjects[0].move(0, 0, -.01f);
-		this.rigidObjects[1].move(0, 0, .01f);
+		WorldCoords.getAllWorldCoordinates(this.gameObjects.getRigidObjects());
+		this.rigidObjects[0].translate(0, 0, -.01f).rotate(0, (float) Math.PI / 3, 0);
+		this.rigidObjects[1].translate(0, 0, .01f);
 		//SATCollision.checkCollisions(this.gameObjects);
-		SATCL.testCollisions(this.gameObjects);
-		for(int i = 0; i < this.gameObjects.size(); i++)
-			this.gameObjects.get(i).update(accumulatedTime);
+		//SATCL.testCollisions(this.gameObjects);
+		List<NonRenderableObject> objects = this.gameObjects.getAllObjects();
+		for(int i = 0; i < objects.size(); i++)
+			objects.get(i).update(accumulatedTime);
+		for(int i = 0; i < objects.size(); i++)
+			objects.get(i).onUpdateFinish(interval);
 	}
 	
 	@Override
 	public Pair<Camera, List<GameObject>> toRender() {
-		return new Pair<Camera, List<GameObject>>(this.camera, this.gameObjects);
+		return new Pair<Camera, List<GameObject>>(this.camera, this.gameObjects.getRenderableObjects());
 	}
 
 	@Override
 	public void cleanUp() {
-		for(GameObject o : gameObjects)
-			o.getMesh().cleanUp();
-		SATCL.cleanUp();
+		for(NonRenderableObject o : gameObjects.getAllObjects())
+			o.cleanUp();
+		//SATCL.cleanUp();
+		WorldCoords.cleanUp();
 	}
 	
 	public void addObject(GameObject o) {
-		this.gameObjects.add(o);
+		this.gameObjects.spawnObject(o);
 	}
 	
 	public void removeObject(GameObject o) {
-		this.gameObjects.remove(o);
+		this.gameObjects.despawnObject(o);
 	}
 	
 	private static GameLogic instance;

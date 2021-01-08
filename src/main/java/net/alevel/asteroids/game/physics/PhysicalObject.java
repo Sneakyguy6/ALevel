@@ -4,8 +4,9 @@ import org.joml.AABBf;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
-import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.graphics.Mesh;
+import net.alevel.asteroids.engine.objects.GameObject;
+import net.alevel.asteroids.game.objects.GameObjects;
 
 /**@deprecated no longer using axis aligned bounding boxes
  */
@@ -23,7 +24,7 @@ public class PhysicalObject extends GameObject {
 	}
 	
 	@Override
-	public final void update(float time) {
+	public final void onUpdate(float time) {
 		this.simulatePhysics(time);
 		
 		Matrix3f rotateAndScale = new Matrix3f();
@@ -80,5 +81,23 @@ public class PhysicalObject extends GameObject {
 	
 	public final AABBf getModelBoundingBox() {
 		return this.modelBoundingBox;
+	}
+
+	@Override
+	public void onUpdateFinish(float time) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSpawn(GameObjects objectsManager) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDespawn(GameObjects objectsManager) {
+		// TODO Auto-generated method stub
+		
 	}
 }

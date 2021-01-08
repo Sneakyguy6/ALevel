@@ -21,6 +21,7 @@ public class CLManager {
 	private static cl_context context;
 	private static cl_queue_properties queueProperties;
 	private static cl_command_queue commandQueue;
+	//private static int preferredGroupSize;
 
 	/**
 	 * Creates a CL context for the kernals.<br>
@@ -61,6 +62,7 @@ public class CLManager {
 		cl_device_id devices[] = new cl_device_id[numDevices];
 		clGetDeviceIDs(platform, deviceType, numDevices, devices, null);
 		cl_device_id device = devices[deviceIndex];
+		//clGetDeviceInfo(device, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE, param_value_size, param_value, param_value_size_ret) returns warp width (SIMD width) by default on GPU
 
 		// Create a context for the selected device
 		context = clCreateContext(contextProperties, 1, new cl_device_id[] { device }, null, null, err);

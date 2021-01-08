@@ -3,7 +3,7 @@ package net.alevel.asteroids.game.objects;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import net.alevel.asteroids.engine.GameObject;
+import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.game.objects.shapes.MeshGen;
 
 /**A standard ship

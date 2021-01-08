@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.joml.Matrix4f;
 
-import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.Window;
+import net.alevel.asteroids.engine.objects.GameObject;
 
 /**This manages which objects are to be rendered and also manages the uniforms within the shader program
  */

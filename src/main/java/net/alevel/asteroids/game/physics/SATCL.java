@@ -18,6 +18,7 @@ import static org.jocl.CL.clSetKernelArg;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,9 +34,10 @@ import org.jocl.cl_program;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
-import net.alevel.asteroids.engine.GameObject;
 import net.alevel.asteroids.engine.cl.CLManager;
+import net.alevel.asteroids.engine.objects.GameObject;
 
+@Deprecated
 public class SATCL {
 	private static cl_context context;
 	//private static cl_queue_properties queueProperties;
@@ -112,21 +114,24 @@ public class SATCL {
 		float[] o2TransformArr = new float[9];
 		o2Transform.get(o2TransformArr);
 		float[] o1PosVec = {o1.getPosition().x, o1.getPosition().y, o1.getPosition().z};
+		//System.out.println(Arrays.toString(o1PosVec));
 		float[] o2PosVec = {o2.getPosition().x, o2.getPosition().y, o2.getPosition().z};
 		cl_mem transformMatDimensionsMem = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_int * 2, Pointer.to(new int[] {3, 3}), null);
 		cl_mem o1TransformMem = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * 9, Pointer.to(o1TransformArr), null);
 		cl_mem o2TransformMem = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * 9, Pointer.to(o2TransformArr), null);
 		cl_mem o1PosVecMem = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * o1PosVec.length, Pointer.to(o1PosVec), null);
 		cl_mem o2PosVecMem = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * o2PosVec.length, Pointer.to(o2PosVec), null);
+		cl_mem o1WorldWithoutAddVerticesMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * o1ModelVertices.length, null, null);
+		cl_mem o2WorldWithoutAddVerticesMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * o2ModelVertices.length, null, null);
 		cl_mem o1WorldVerticesMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * o1ModelVertices.length, null, null);
 		cl_mem o2WorldVerticesMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_float * o2ModelVertices.length, null, null);
 		
 		clSetKernelArg(matVecMulKernel, 0, Sizeof.cl_mem, Pointer.to(o1TransformMem));
 		clSetKernelArg(matVecMulKernel, 1, Sizeof.cl_mem, Pointer.to(transformMatDimensionsMem));
 		clSetKernelArg(matVecMulKernel, 2, Sizeof.cl_mem, Pointer.to(o1ModelVerticesMem));
-		clSetKernelArg(matVecMulKernel, 3, Sizeof.cl_mem, Pointer.to(o1WorldVerticesMem));
+		clSetKernelArg(matVecMulKernel, 3, Sizeof.cl_mem, Pointer.to(o1WorldWithoutAddVerticesMem));
 		
-		clSetKernelArg(vectorAddKernel, 0, Sizeof.cl_mem, Pointer.to(o1WorldVerticesMem));
+		clSetKernelArg(vectorAddKernel, 0, Sizeof.cl_mem, Pointer.to(o1WorldWithoutAddVerticesMem));
 		clSetKernelArg(vectorAddKernel, 1, Sizeof.cl_mem, Pointer.to(o1PosVecMem));
 		clSetKernelArg(vectorAddKernel, 2, Sizeof.cl_mem, Pointer.to(o1WorldVerticesMem));
 		
@@ -158,9 +163,9 @@ public class SATCL {
 		clSetKernelArg(matVecMulKernel, 0, Sizeof.cl_mem, Pointer.to(o2TransformMem));
 		clSetKernelArg(matVecMulKernel, 1, Sizeof.cl_mem, Pointer.to(transformMatDimensionsMem));
 		clSetKernelArg(matVecMulKernel, 2, Sizeof.cl_mem, Pointer.to(o2ModelVerticesMem));
-		clSetKernelArg(matVecMulKernel, 3, Sizeof.cl_mem, Pointer.to(o2WorldVerticesMem));
+		clSetKernelArg(matVecMulKernel, 3, Sizeof.cl_mem, Pointer.to(o2WorldWithoutAddVerticesMem));
 		
-		clSetKernelArg(vectorAddKernel, 0, Sizeof.cl_mem, Pointer.to(o2WorldVerticesMem));
+		clSetKernelArg(vectorAddKernel, 0, Sizeof.cl_mem, Pointer.to(o2WorldWithoutAddVerticesMem));
 		clSetKernelArg(vectorAddKernel, 1, Sizeof.cl_mem, Pointer.to(o2PosVecMem));
 		clSetKernelArg(vectorAddKernel, 2, Sizeof.cl_mem, Pointer.to(o2WorldVerticesMem));
 		
@@ -193,6 +198,8 @@ public class SATCL {
 		clReleaseMemObject(o2TransformMem);
 		clReleaseMemObject(o1ModelVerticesMem);
 		clReleaseMemObject(o2ModelVerticesMem);
+		clReleaseMemObject(o1WorldWithoutAddVerticesMem);
+		clReleaseMemObject(o2WorldWithoutAddVerticesMem);
 		clReleaseMemObject(o1PosVecMem);
 		clReleaseMemObject(o2PosVecMem);
 		
@@ -273,7 +280,7 @@ public class SATCL {
 			i += 3;
 		};
 		cl_mem finalSurfaceNormalsMem = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * finalSurfaceNormals.length, Pointer.to(finalSurfaceNormals), null);
-		
+		//System.out.println(surfaceNormalsSet);
 		clReleaseMemObject(o1SurfaceNormalsMem);
 		clReleaseMemObject(o2SurfaceNormalsMem);
 		clReleaseMemObject(o1IndicesMem);
