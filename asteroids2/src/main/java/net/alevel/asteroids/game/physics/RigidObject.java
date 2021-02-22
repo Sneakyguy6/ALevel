@@ -1,22 +1,26 @@
 package net.alevel.asteroids.game.physics;
 
+import static org.jocl.CL.CL_TRUE;
+import static org.jocl.CL.clEnqueueReadBuffer;
 import static org.jocl.CL.clReleaseMemObject;
 
-import org.jocl.CL;
+import org.jocl.Pointer;
+import org.jocl.Sizeof;
 import org.jocl.cl_mem;
 import org.joml.Vector3f;
 
 import net.alevel.asteroids.engine.graphics.Mesh;
 import net.alevel.asteroids.engine.objects.GameObject;
+import net.alevel.asteroids.game.cl.CLManager;
 import net.alevel.asteroids.game.objects.GameObjects;
 
 public class RigidObject extends GameObject {
 	private cl_mem worldVertices; //sub buffer of the worldVertices buffer
-	//private float[] worldVerticesArr;
+	private float[] worldVerticesArr;
 	
 	public RigidObject(Mesh mesh) {
 		super(mesh);
-		//this.maxMinPoints = SATCollision.getMinMaxPoints(mesh.getVertices(), mesh.getIndices());
+		this.worldVerticesArr = new float[mesh.getVertices().length];
 	}
 	
 	/**Runs every time this object collides with another.<br>
@@ -45,7 +49,7 @@ public class RigidObject extends GameObject {
 	
 	@Override
 	public void onDespawn(GameObjects objectsManager) {
-		CL.clReleaseMemObject(this.worldVertices);
+		//CL.clReleaseMemObject(this.worldVertices);
 	}
 	
 	public void setWorldVerticesMem(cl_mem in) {
@@ -61,21 +65,21 @@ public class RigidObject extends GameObject {
 	 * @return
 	 */
 	public float[] getWorldVerticesArr() {
-		float[] out = new float[super.mesh.getVertices().length];
-		/*clEnqueueReadBuffer(
+		//float[] out = new float[super.mesh.getVertices().length];
+		//if(this.worldVerticesArr == null)
+		//	this.worldVerticesArr = new float[super.mesh.getVertices().length];
+		//if(this.worldVertices == null)
+		//	return this.worldVerticesArr;
+		clEnqueueReadBuffer(
 				CLManager.getCommandQueue(),
 				this.worldVertices,
 				CL_TRUE,
 				0,
-				Sizeof.cl_float * out.length,
-				Pointer.to(out),
+				Sizeof.cl_float * this.worldVerticesArr.length,
+				Pointer.to(this.worldVerticesArr),
 				0,
 				null,
-				null);*/
-		return out;
+				null);
+		return this.worldVerticesArr;
 	}
-	
-	/*public Map<Vector3f, float[]> getMinMaxPoints() {
-		return this.maxMinPoints;
-	}*/
 }

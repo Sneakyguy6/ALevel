@@ -17,26 +17,33 @@ import net.alevel.asteroids.engine.input.enums.SpecialChars;
 import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.objects.NonRenderableObject;
 import net.alevel.asteroids.engine.utils.Pair;
+import net.alevel.asteroids.game.cl.CLManager;
 import net.alevel.asteroids.game.objects.GameObjects;
 import net.alevel.asteroids.game.objects.ObjectAssembly;
 import net.alevel.asteroids.game.objects.Ship;
 import net.alevel.asteroids.game.objects.shapes.MeshGen;
+import net.alevel.asteroids.game.physics.Physics;
 import net.alevel.asteroids.game.physics.RigidObject;
 
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
 	public static final float MOUSE_SENSITIVITY = 0.05f;
 	private final Camera camera;
+	
 	private final GameObjects gameObjects;
 	//private final List<GameObject> gameObjects;
 	private Ship player;
 	private RigidObject[] rigidObjects;
 	private final List<ObjectAssembly> ships;
 	
+	private final Physics physics;
+	
 	private GameLogic() throws IOException {
+		CLManager.init();
 		this.camera = new Camera();
 		this.gameObjects = new GameObjects(); // ArrayList<GameObject>();
 		this.ships = new ArrayList<ObjectAssembly>();
+		this.physics = new Physics();
 	}
 	
 	@Override
@@ -55,9 +62,10 @@ public class GameLogic implements ILogic {
 				new RigidObject(MeshGen.cube(1, 1, 1)),
 				new RigidObject(MeshGen.cube(1, 1, 1))
 		};
-		this.rigidObjects[0].setPosition(0, 0, 10);
-		this.rigidObjects[1].setPosition(0, 0, -10);
+		//this.rigidObjects[0].setPosition(0, 0, 10);
+		this.rigidObjects[0].setPosition(0, 0, -10);
 		this.gameObjects.spawnAll(this.rigidObjects);
+		//this.gameObjects.spawnObject(this.player);
 		//this.player.spawn();
 		//this.gameObjects.add(new StaticGameObject(MeshGen.triangularPrism(new Vector2f(0, 0), new Vector2f(1, 0), new Vector2f(0, 1), 10)));
 		//this.gameObjects.add(new StaticGameObject(MeshGen.sphere(2)));
@@ -90,15 +98,11 @@ public class GameLogic implements ILogic {
 		
 		this.player.rotate(0, 0.1f, 0);
 		
-		for(int i = 0; i < this.ships.size(); i++) {
-			//this.ships.get(i).rotate(0, 0.01f, 0);
-			//this.ships.get(i).translate(0, 0.001f, 0);
-		}
-		//WorldCoords.getAllWorldCoordinates(this.gameObjects.getRigidObjects());
-		this.rigidObjects[0].translate(0, 0, -.01f).rotate(0, (float) Math.PI / 3, 0);
-		this.rigidObjects[1].translate(0, 0, .01f);
-		//SATCollision.checkCollisions(this.gameObjects);
-		//SATCL.testCollisions(this.gameObjects);
+		//this.rigidObjects[0].translate(0, 0, -.01f).rotate(0, (float) Math.PI / 3, 0);
+		this.rigidObjects[0].translate(0, 0, .01f);
+		
+		this.physics.onUpdate(this.gameObjects.getRigidObjects());
+		
 		List<NonRenderableObject> objects = this.gameObjects.getAllObjects();
 		for(int i = 0; i < objects.size(); i++)
 			objects.get(i).update(accumulatedTime);
