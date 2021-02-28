@@ -18,6 +18,7 @@ public class CLUtil {
 			while((line = br.readLine()) != null)
 				programString += line + "\n";
 		}
+		//System.out.println(programString);
 		cl_program program = clCreateProgramWithSource(context,
 				1,
 				new String[] {programString},

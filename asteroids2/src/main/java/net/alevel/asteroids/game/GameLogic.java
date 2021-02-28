@@ -60,7 +60,7 @@ public class GameLogic implements ILogic {
 		this.player = new Ship();
 		this.rigidObjects = new RigidObject[] {
 				new RigidObject(MeshGen.cube(1, 1, 1)),
-				new RigidObject(MeshGen.cube(1, 1, 1))
+				//new RigidObject(MeshGen.cube(1, 1, 1))
 		};
 		//this.rigidObjects[0].setPosition(0, 0, 10);
 		this.rigidObjects[0].setPosition(0, 0, -10);

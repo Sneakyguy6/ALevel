@@ -1,6 +1,15 @@
 package net.alevel.asteroids.game.physics.SAT;
 
-import static net.alevel.asteroids.game.cl.CLUtil.loadProgram;
+import static org.jocl.CL.CL_MEM_COPY_HOST_PTR;
+import static org.jocl.CL.CL_MEM_READ_ONLY;
+import static org.jocl.CL.CL_MEM_READ_WRITE;
+import static org.jocl.CL.CL_TRUE;
+import static org.jocl.CL.clCreateBuffer;
+import static org.jocl.CL.clCreateKernel;
+import static org.jocl.CL.clEnqueueNDRangeKernel;
+import static org.jocl.CL.clEnqueueReadBuffer;
+import static org.jocl.CL.clSetKernelArg;
+import static org.jocl.CL.setExceptionsEnabled;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -8,38 +17,28 @@ import java.util.List;
 
 import org.jocl.Pointer;
 import org.jocl.Sizeof;
-import org.jocl.cl_command_queue;
-import org.jocl.cl_context;
 import org.jocl.cl_kernel;
 import org.jocl.cl_mem;
-import org.jocl.cl_program;
-import static org.jocl.CL.*;
 
-import net.alevel.asteroids.game.cl.CLManager;
 import net.alevel.asteroids.game.physics.RigidObject;
+import net.alevel.asteroids.game.physics.pipeline.PipeLineableClMem;
 import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
-import net.alevel.asteroids.game.physics.pipeline.PipelineableFunction;
+import net.alevel.asteroids.game.physics.pipeline.PipelineableCLFunction;
 import net.alevel.asteroids.game.physics.worldCoords.WorldCoordinates;
 
-public class SurfaceNormals implements PipelineableFunction {
-	private final cl_program program;
+public class SurfaceNormals extends PipelineableCLFunction {
 	private final cl_kernel surfaceNormalKernel;
 	
-	private final cl_context context;
-	private final cl_command_queue commandQueue;
-	
-	public SurfaceNormals() throws IOException {
-		this.context = CLManager.getContext();
-		this.commandQueue = CLManager.getCommandQueue();
-		
-		this.program = loadProgram("SurfaceNormals.cl", SurfaceNormals.class, this.context);
-		this.surfaceNormalKernel = clCreateKernel(this.program, "getSurfaceNormals", null);
+	public SurfaceNormals(SAT sat) throws IOException {
+		super(sat);
+		this.surfaceNormalKernel = clCreateKernel(super.program, "getSurfaceNormals", null);
 	}
 
 	@Override
 	public void pipeFunction(PipelineBuffer pipelineBuffer, PipelineBuffer globalPipelineBuffer, List<RigidObject> rigidObjects) {
 		setExceptionsEnabled(true);
 		WorldCoordinates worldCoordinates = (WorldCoordinates) globalPipelineBuffer.get(0);
+		
 		int noOfIndices = 0;
 		for(RigidObject i : rigidObjects)
 			noOfIndices += i.getMesh().getIndices().length;
@@ -52,15 +51,15 @@ public class SurfaceNormals implements PipelineableFunction {
 				indicesArray[worldCoordSubBufferPointers[i] + j] = rigidObjectIndicesTemp[j] + worldCoordSubBufferPointers[i];
 		}
 		
-		cl_mem indicesBuffer = clCreateBuffer(this.context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_int * noOfIndices, Pointer.to(indicesArray), null);
-		cl_mem surfaceNormalsBuffer = clCreateBuffer(this.context, CL_MEM_READ_WRITE, Sizeof.cl_float * noOfIndices, null, null);
+		cl_mem indicesBuffer = clCreateBuffer(super.context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_int * noOfIndices, Pointer.to(indicesArray), null);
+		cl_mem surfaceNormalsBuffer = clCreateBuffer(super.context, CL_MEM_READ_WRITE, Sizeof.cl_float * noOfIndices, null, null);
 		
 		clSetKernelArg(this.surfaceNormalKernel, 0, Sizeof.cl_mem, Pointer.to(worldCoordinates.getWorldCoords()));
 		clSetKernelArg(this.surfaceNormalKernel, 1, Sizeof.cl_mem, Pointer.to(indicesBuffer));
 		clSetKernelArg(this.surfaceNormalKernel, 2, Sizeof.cl_mem, Pointer.to(surfaceNormalsBuffer));
 		long[] global_work_size = {noOfIndices / 3};
 		clEnqueueNDRangeKernel(
-				this.commandQueue,
+				super.commandQueue,
 				this.surfaceNormalKernel,
 				global_work_size.length,
 				null,
@@ -71,7 +70,7 @@ public class SurfaceNormals implements PipelineableFunction {
 				null);
 		float[] surfaceNormalsArray = new float[noOfIndices];
 		clEnqueueReadBuffer(
-				CLManager.getCommandQueue(),
+				super.commandQueue,
 				surfaceNormalsBuffer,
 				CL_TRUE,
 				0,
@@ -81,5 +80,6 @@ public class SurfaceNormals implements PipelineableFunction {
 				null,
 				null);
 		System.out.println(Arrays.toString(surfaceNormalsArray));
+		pipelineBuffer.add(0, new PipeLineableClMem(surfaceNormalsBuffer));
 	}
 }

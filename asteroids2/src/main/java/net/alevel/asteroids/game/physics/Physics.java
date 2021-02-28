@@ -16,9 +16,10 @@ public class Physics {
 	public Physics() throws IOException {
 		this.physicsPipeline = new PipelineBuffer();
 		this.worldCoordsCalc = new WorldCoordinates();
-		this.collisionDetector = new SAT(this.physicsPipeline);
 		
 		this.physicsPipeline.add(0, this.worldCoordsCalc);
+		
+		this.collisionDetector = new SAT(this.physicsPipeline);
 	}
 	
 	public void onUpdate(List<RigidObject> objects) {
