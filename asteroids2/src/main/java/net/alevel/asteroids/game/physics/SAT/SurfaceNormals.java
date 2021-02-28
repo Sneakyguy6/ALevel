@@ -81,5 +81,6 @@ public class SurfaceNormals extends PipelineableCLFunction {
 				null);
 		System.out.println(Arrays.toString(surfaceNormalsArray));
 		pipelineBuffer.add(0, new PipeLineableClMem(surfaceNormalsBuffer));
+		pipelineBuffer.add(1, noOfIndices / 3); //number of surface normals needed for other pipeline functions
 	}
 }

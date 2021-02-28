@@ -9,7 +9,6 @@ import static org.jocl.CL.clCreateBuffer;
 import static org.jocl.CL.clCreateKernel;
 import static org.jocl.CL.clCreateSubBuffer;
 import static org.jocl.CL.clEnqueueNDRangeKernel;
-import static org.jocl.CL.clFinish;
 import static org.jocl.CL.clReleaseMemObject;
 import static org.jocl.CL.clSetKernelArg;
 import static org.jocl.CL.setExceptionsEnabled;
@@ -30,9 +29,9 @@ import org.joml.Vector3f;
 import net.alevel.asteroids.game.cl.CLManager;
 import net.alevel.asteroids.game.physics.RigidObject;
 import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
-import net.alevel.asteroids.game.physics.pipeline.PipelineBufferable;
+import net.alevel.asteroids.game.physics.pipeline.Releasable;
 
-public class WorldCoordinates implements PipelineBufferable {
+public class WorldCoordinates implements Releasable {
 	private final cl_program program;
 	private final cl_kernel rotMatKernel;
 	private final cl_kernel transformKernel;
@@ -43,6 +42,7 @@ public class WorldCoordinates implements PipelineBufferable {
 	private cl_mem worldCoords;
 	private cl_mem worldCoordsIndices;
 	private int[] objectSubBufferPointers;
+	private int numberOfVertices;
 	
 	public WorldCoordinates() throws IOException {
 		this.context = CLManager.getContext();
@@ -70,11 +70,11 @@ public class WorldCoordinates implements PipelineBufferable {
 	public void calc(List<RigidObject> objects, PipelineBuffer pipeline) {
 		setExceptionsEnabled(true);
 		
-		int numOfVertices = 0;
+		this.numberOfVertices = 0;
 		for(RigidObject i : objects)
-			numOfVertices += i.getMesh().getVertices().length;
-		float[] floats = new float[numOfVertices];
-		int[] objectIndices = new int[numOfVertices / 3]; //an array telling which vertex belongs to which object
+			this.numberOfVertices += i.getMesh().getVertices().length;
+		float[] floats = new float[this.numberOfVertices];
+		int[] objectIndices = new int[this.numberOfVertices / 3]; //an array telling which vertex belongs to which object
 		float[] objectPositions = new float[objects.size() * 3];
 		float[] objectRotations = new float[objects.size() * 3]; //each object has 2 float3 vector properties (2 * 3 = 6)
 		/*E.g. floats = {1, 0, 0, 1, 1, 1}
@@ -183,5 +183,9 @@ public class WorldCoordinates implements PipelineBufferable {
 
 	public cl_mem getWorldCoordsIndices() {
 		return worldCoordsIndices;
+	}
+	
+	public int getNoOfVertices() {
+		return this.numberOfVertices;
 	}
 }

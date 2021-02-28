@@ -1,8 +1,8 @@
-__kernel void getSurfaceNormals(
-    __global const float *vertices, //vector3f array (These are the transformed vertices (world coords, not model))
+kernel void getSurfaceNormals(
+    global const float *vertices, //vector3f array (These are the transformed vertices (world coords, not model))
                                     //i.e. the rotation and position vectors have been applied
-    __global const int *indices, //vector3i array where vertices x, y and z are corners of a triangle
-    __global float *surfaceNormals //vector3f array
+    global const int *indices, //vector3i array where vertices x, y and z are corners of a triangle
+    global float *surfaceNormals //vector3f array
 )
 {
     int globalId = get_global_id(0) * 3;
@@ -22,13 +22,12 @@ __kernel void getSurfaceNormals(
     surfaceNormals[globalId + 2] = c.z;
 }
 
-__kernel void getProjectedBoundaries(
-    __global const float *surfaceNormals,
-    __global const float *vertices,
-    __global const int *subBufferPointers,
-    __global float *boundaries,
-    __local float *projectedVerticesMin,
-    __local float *projectedVerticesMax
+kernel void getProjectedBoundaries(
+    global const float *surfaceNormals,
+    global const float *vertices,
+    global float *boundaries,
+    local float *projectedVerticesMin,
+    local float *projectedVerticesMax
 )
 {
     int globalId = get_global_id(0) * 3;
