@@ -161,4 +161,9 @@ public class MeshGen {
 		System.out.println(Arrays.toString(positions) + pointsOnCircle.size());
 		return new Mesh(positions, positions, positions, indices);
 	}
+	
+	public static void grid(int length, int width) {
+		float[] vertices = new float[length * width];
+		
+	}
 }

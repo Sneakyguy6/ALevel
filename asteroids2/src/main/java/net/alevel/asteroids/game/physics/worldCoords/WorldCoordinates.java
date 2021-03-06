@@ -82,6 +82,7 @@ public class WorldCoordinates implements Releasable {
 		 * 	   objectProperties = {0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0}
 		 * It will apply the object properties of object 0 to the first vector. The second vector will have object 1's properties applied to it
 		 */
+		this.numberOfVertices /= 3; //because before this number represented the size of the float array which is 3x the number of vertices
 		
 		int i = 0, i2 = 0;
 		for(int objectIndex = 0; objectIndex < objects.size(); objectIndex++) {

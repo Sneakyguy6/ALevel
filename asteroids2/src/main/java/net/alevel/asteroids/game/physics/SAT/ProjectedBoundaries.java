@@ -16,11 +16,13 @@ import net.alevel.asteroids.game.physics.pipeline.PipelineableCLFunction;
 import net.alevel.asteroids.game.physics.worldCoords.WorldCoordinates;
 
 public class ProjectedBoundaries extends PipelineableCLFunction {
-	private final cl_kernel kernel;
+	private final cl_kernel projectPointsKernel;
+	private final cl_kernel boundariesKernel;
 	
 	public ProjectedBoundaries(SAT sat) {
 		super(sat);
-		this.kernel = clCreateKernel(super.program, "getProjectedBoundaries", null);
+		this.projectPointsKernel = clCreateKernel(super.program, "getProjectedVertices", null);
+		this.boundariesKernel = clCreateKernel(super.program, "getBoundaries", null);
 	}
 	
 	@Override
@@ -32,25 +34,49 @@ public class ProjectedBoundaries extends PipelineableCLFunction {
 		WorldCoordinates worldCoords = (WorldCoordinates) globalPipelineBuffer.get(0);
 		int[] subBufferPointers = worldCoords.getSubBufferPointers();
 		
-		cl_mem boundaries = clCreateBuffer(super.context, CL_MEM_READ_WRITE, rigidObjects.size() * noOfSurfaceNormals * 2, null, null);
+		cl_mem boundaries = clCreateBuffer(super.context, CL_MEM_READ_WRITE, rigidObjects.size() * noOfSurfaceNormals * 2 * Sizeof.cl_float, null, null);
+		cl_mem maxBoundariesTemp = clCreateBuffer(super.context, CL_MEM_READ_WRITE, worldCoords.getNoOfVertices() * noOfSurfaceNormals * Sizeof.cl_float, null, null);
+		cl_mem minBoundariesTemp = clCreateBuffer(super.context, CL_MEM_READ_WRITE, worldCoords.getNoOfVertices() * noOfSurfaceNormals * Sizeof.cl_float, null, null);
+		cl_mem subBufPointBuffer = clCreateBuffer(super.context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, subBufferPointers.length * Sizeof.cl_int, Pointer.to(subBufferPointers), null);
 		
-		clSetKernelArg(this.kernel, 0, Sizeof.cl_mem, Pointer.to(surfaceNormalsBuffer));
-		clSetKernelArg(this.kernel, 1, Sizeof.cl_mem, Pointer.to(worldCoords.getWorldCoords()));
-		clSetKernelArg(this.kernel, 2, Sizeof.cl_mem, Pointer.to(boundaries));
-		clSetKernelArg(this.kernel, 3, Sizeof.cl_mem, null);
-		clSetKernelArg(this.kernel, 4, Sizeof.cl_mem, null);
+		clSetKernelArg(this.projectPointsKernel, 0, Sizeof.cl_mem, Pointer.to(surfaceNormalsBuffer));
+		clSetKernelArg(this.projectPointsKernel, 1, Sizeof.cl_mem, Pointer.to(worldCoords.getWorldCoords()));
+		clSetKernelArg(this.projectPointsKernel, 2, Sizeof.cl_mem, Pointer.to(minBoundariesTemp));
+		clSetKernelArg(this.projectPointsKernel, 3, Sizeof.cl_mem, Pointer.to(maxBoundariesTemp));
+		
+		clSetKernelArg(this.boundariesKernel, 0, Sizeof.cl_mem, Pointer.to(maxBoundariesTemp));
+		clSetKernelArg(this.boundariesKernel, 1, Sizeof.cl_mem, Pointer.to(minBoundariesTemp));
+		clSetKernelArg(this.boundariesKernel, 2, Sizeof.cl_mem, Pointer.to(subBufPointBuffer));
+		clSetKernelArg(this.boundariesKernel, 3, Sizeof.cl_mem, Pointer.to(boundaries));
+		
+		clEnqueueNDRangeKernel(
+				super.commandQueue,
+				this.projectPointsKernel,
+				1,
+				null,
+				new long[] {noOfSurfaceNormals},
+				new long[] {worldCoords.getNoOfVertices() * noOfSurfaceNormals},
+				0,
+				null,
+				null
+		);
+		clFinish(super.commandQueue);
 		
 		for(int i = 0; i < subBufferPointers.length; i++) {
 			clEnqueueNDRangeKernel(
 					super.commandQueue,
-					this.kernel,
+					this.boundariesKernel,
 					1,
 					new long[] {subBufferPointers[i]},
 					new long[] {(i + 1) == subBufferPointers.length ? worldCoords.getNoOfVertices() - subBufferPointers[i] : subBufferPointers[i + 1] - subBufferPointers[i]},
-					new long[] {noOfSurfaceNormals},
+					new long[] {worldCoords.getNoOfVertices()},
 					0,
 					null,
 					null);
 		}
+		clFinish(super.commandQueue);
+		
+		clReleaseMemObject(minBoundariesTemp);
+		clReleaseMemObject(maxBoundariesTemp);
 	}
 }
