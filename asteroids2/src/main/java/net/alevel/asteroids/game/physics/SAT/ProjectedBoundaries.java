@@ -74,7 +74,31 @@ public class ProjectedBoundaries extends PipelineableCLFunction {
 					null,
 					null);
 		}
-		clFinish(super.commandQueue);
+		//clFinish(super.commandQueue);
+		
+		float[] maxBoundariesArray = new float[worldCoords.getNoOfVertices() * noOfSurfaceNormals];
+		float[] minBoundariesArray = new float[worldCoords.getNoOfVertices() * noOfSurfaceNormals];
+		clEnqueueReadBuffer(
+				super.commandQueue,
+				maxBoundariesTemp,
+				CL_TRUE,
+				0,
+				Sizeof.cl_float * maxBoundariesArray.length,
+				Pointer.to(maxBoundariesArray),
+				0,
+				null,
+				null);
+		clEnqueueReadBuffer(
+				super.commandQueue,
+				minBoundariesTemp,
+				CL_TRUE,
+				0,
+				Sizeof.cl_float * minBoundariesArray.length,
+				Pointer.to(minBoundariesArray),
+				0,
+				null,
+				null);
+		
 		
 		clReleaseMemObject(minBoundariesTemp);
 		clReleaseMemObject(maxBoundariesTemp);

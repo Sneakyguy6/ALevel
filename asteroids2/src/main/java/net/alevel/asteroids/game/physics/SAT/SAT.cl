@@ -1,3 +1,5 @@
+int get_group_size(int x);
+
 kernel void getSurfaceNormals(
     global const float *vertices, //vector3f array (These are the transformed vertices (world coords, not model))
                                     //i.e. the rotation and position vectors have been applied
@@ -36,7 +38,7 @@ kernel void getProjectedVertices(
     float3 a = (float3)(vertices[localId], vertices[localId + 1], vertices[localId + 2]);
     float3 n = (float3)(surfaceNormals[groupId], surfaceNormals[groupId + 1], surfaceNormals[groupId + 2]);
     
-    float lambda = dot(a, n) / (n.x^2 + n.y^2 + n.z^2);
+    float lambda = dot(a, n) / (pow(n.x, 2) + pow(n.y, 2) + pow(n.z, 2));
     int projectedVerticesIndex = get_group_id(0) * groupSize + get_local_id(0);
     projectedVerticesMin[projectedVerticesIndex] = lambda;
     projectedVerticesMax[projectedVerticesIndex] = lambda;
@@ -50,9 +52,7 @@ kernel void getProjectedVertices(
 
 kernel void getBoundaries(
     global const float maxProjectedBoundaries,
-    global const float minProjectedBoundaries,
-    global const float subBufferPointers,
-    global float boundaries
+    global const float minProjectedBoundaries
 )
 {
     int globalId = get_global_id(0);
@@ -76,20 +76,17 @@ kernel void getBoundaries(
         barrier(CLK_LOCAL_MEM_FENCE);
     }
     if(localId == 0){
-        int offset = get_global_offset(0);
+        /*int offset = get_global_offset(0);
         int subBufferIndex = 0;
         for(; subBufferPointers[subBufferIndex] != offset; subBufferIndex++);
         int boundaryIndex = (groupId * groupSize + subBufferIndex) * 2;
-
-        
-
-        boundaries[boundaryIndex] = projectedVerticesMin[0];
+        boundaries[boundaryIndex] = projectedVerticesMin[0];*/
     }
 
     //same algorithm but for max value
     //barrier(CLK_LOCAL_MEM_FENCE);
     for(int stride = groupSize >> 1; stride != 0; stride >>= 1) {
-        if(trueGlobalId < stride) {
+        if(localId < stride) {
             int a = projectedVerticesMax[globalId];
             int b = projectedVerticesMax[globalId + stride];
             if(b > a){
@@ -98,9 +95,9 @@ kernel void getBoundaries(
         }
         barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if(trueGlobalId == 0){
-        int boundaryIndex = (localId + groupId) * 2;
-        boundaries[boundaryIndex + 1] = projectedVerticesMax[0];
+    if(localId == 0){
+        //int boundaryIndex = (localId + groupId) * 2;
+        //boundaries[boundaryIndex + 1] = projectedVerticesMax[0];
     }
 }
 
@@ -111,40 +108,3 @@ kernel void testIntersections(
 {
     
 }
-
-/*int stride = get_global_size(0);
-    int boundaryIndex = (get_global_id(0) + get_local_id(0)) * 2;
-    int globalId = get_local_id(0);
-
-    //get minimum (uses parallel reduction algorithm (https://dournac.org/info/gpu_sum_reduction))
-    barrier(CLK_LOCAL_MEM_FENCE);
-    int groupSize = get_local_size(0);
-    for(int stride = groupSize / 2; stride > 0; stride /= 2) {
-        if(globalId < stride) {
-            int a = projectedVerticesMin[globalId];
-            int b = projectedVerticesMin[globalId + stride];
-            if(b < a){
-                projectedVerticesMin[globalId] = b;
-            }
-        }
-        barrier(CLK_LOCAL_MEM_FENCE);
-    }
-    if(globalId == 0){
-         boundaries[boundaryIndex] = projectedVerticesMin[0];
-    }
-
-    //same algorithm but for max value
-    //barrier(CLK_LOCAL_MEM_FENCE);
-    for(int stride = groupSize / 2; stride > 0; stride /= 2) {
-        if(globalId < stride) {
-            int a = projectedVerticesMax[globalId];
-            int b = projectedVerticesMax[globalId + stride];
-            if(b > a){
-                projectedVerticesMax[globalId] = b;
-            }
-        }
-        barrier(CLK_LOCAL_MEM_FENCE);
-    }
-    if(globalId == 0){
-        boundaries[boundaryIndex + 1] = projectedVerticesMax[0];
-    }*/

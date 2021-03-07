@@ -10,6 +10,7 @@ import org.joml.Vector3f;
 
 import net.alevel.asteroids.engine.graphics.Mesh;
 import net.alevel.asteroids.engine.objects.GameObject;
+import net.alevel.asteroids.game.objects.ModifiableMesh;
 
 /**Creates different shapes.<br>
  * NOTE: when used in a {@link GameObject}, the position points to the centre of the shape
@@ -94,6 +95,25 @@ public class MeshGen {
 	 * @return a mesh of the sphere
 	 */
 	public static Mesh sphere(float radius, int resolution) {
+		/*GenOctahedron genOctahedron = new GenOctahedron(resolution);
+		List<Vector3f> positions = genOctahedron.getPositions();
+		float[] floats = new float[positions.size() * 3];
+		for(int i = 0; i < positions.size(); i++) {
+			Vector3f vertex = positions.get(i);
+			float scale = radius - vertex.length();
+			float dX = vertex.x * (scale / vertex.length());
+			float dY = vertex.y * (scale / vertex.length());
+			float dZ = vertex.z * (scale / vertex.length());
+			floats[i * 3] = vertex.x + dX;
+			floats[i * 3 + 1] = vertex.y + dY;
+			floats[i * 3 + 2] = vertex.z + dZ;
+		}
+		return new Mesh(floats, floats, floats, genOctahedron.getIndices());*/
+		ModifiableMesh m = modifiableSphere(radius, resolution);
+		return new Mesh(m.getPositions(), null, null, m.getIndices());
+	}
+	
+	public static ModifiableMesh modifiableSphere(float radius, int resolution) {
 		GenOctahedron genOctahedron = new GenOctahedron(resolution);
 		List<Vector3f> positions = genOctahedron.getPositions();
 		float[] floats = new float[positions.size() * 3];
@@ -107,7 +127,7 @@ public class MeshGen {
 			floats[i * 3 + 1] = vertex.y + dY;
 			floats[i * 3 + 2] = vertex.z + dZ;
 		}
-		return new Mesh(floats, floats, floats, genOctahedron.getIndices());
+		return new ModifiableMesh(floats, genOctahedron.getIndices());
 	}
 	
 	public static Mesh cylinder(float radius, float length) {
@@ -160,10 +180,5 @@ public class MeshGen {
 		System.out.println(Arrays.toString(indices));
 		System.out.println(Arrays.toString(positions) + pointsOnCircle.size());
 		return new Mesh(positions, positions, positions, indices);
-	}
-	
-	public static void grid(int length, int width) {
-		float[] vertices = new float[length * width];
-		
 	}
 }

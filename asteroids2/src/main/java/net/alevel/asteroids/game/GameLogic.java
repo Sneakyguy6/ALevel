@@ -3,6 +3,7 @@ package net.alevel.asteroids.game;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -11,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
+import net.alevel.asteroids.engine.graphics.Mesh;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
@@ -18,9 +20,12 @@ import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.objects.NonRenderableObject;
 import net.alevel.asteroids.engine.utils.Pair;
 import net.alevel.asteroids.game.cl.CLManager;
+import net.alevel.asteroids.game.noise.Perlin;
 import net.alevel.asteroids.game.objects.GameObjects;
+import net.alevel.asteroids.game.objects.ModifiableMesh;
 import net.alevel.asteroids.game.objects.ObjectAssembly;
 import net.alevel.asteroids.game.objects.Ship;
+import net.alevel.asteroids.game.objects.StaticGameObject;
 import net.alevel.asteroids.game.objects.shapes.MeshGen;
 import net.alevel.asteroids.game.physics.Physics;
 import net.alevel.asteroids.game.physics.RigidObject;
@@ -65,6 +70,16 @@ public class GameLogic implements ILogic {
 		//this.rigidObjects[0].setPosition(0, 0, 10);
 		this.rigidObjects[0].setPosition(0, 0, -10);
 		this.gameObjects.spawnAll(this.rigidObjects);
+		
+		ModifiableMesh asteroid = MeshGen.modifiableSphere(5, 6);
+		System.out.println(asteroid.getPositions().length);
+		Perlin noise = new Perlin(asteroid.getPositions().length / 2, 2, new Random().nextLong());
+		for(int i = 0; i < asteroid.getPositions().length / 2; i++) {
+			for(int j = 0; j < 2; j++)
+				asteroid.changePosition(i + j, (float) (asteroid.getPositions()[i + j] * (noise.get(i / 10, j / 10) + 1)));
+		}
+		
+		this.gameObjects.spawnObject(new StaticGameObject(new Mesh(asteroid.getPositions(), new float[0], new float[0], asteroid.getIndices())));
 		//this.gameObjects.spawnObject(this.player);
 		//this.player.spawn();
 		//this.gameObjects.add(new StaticGameObject(MeshGen.triangularPrism(new Vector2f(0, 0), new Vector2f(1, 0), new Vector2f(0, 1), 10)));

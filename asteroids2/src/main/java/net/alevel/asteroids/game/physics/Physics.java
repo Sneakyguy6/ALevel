@@ -11,7 +11,7 @@ import net.alevel.asteroids.game.physics.worldCoords.WorldCoordinates;
 public class Physics {
 	private final PipelineBuffer physicsPipeline;
 	private final WorldCoordinates worldCoordsCalc;
-	private final FunctionPipeline collisionDetector;
+	//private final FunctionPipeline collisionDetector;
 	
 	public Physics() throws IOException {
 		this.physicsPipeline = new PipelineBuffer();
@@ -19,11 +19,11 @@ public class Physics {
 		
 		this.physicsPipeline.add(0, this.worldCoordsCalc);
 		
-		this.collisionDetector = new SAT(this.physicsPipeline);
+		//this.collisionDetector = new SAT(this.physicsPipeline);
 	}
 	
 	public void onUpdate(List<RigidObject> objects) {
 		this.worldCoordsCalc.calc(objects, this.physicsPipeline);
-		this.collisionDetector.runPipeline(objects);
+		//this.collisionDetector.runPipeline(objects);
 	}
 }
