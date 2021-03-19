@@ -71,12 +71,12 @@ public class GameLogic implements ILogic {
 		this.rigidObjects[0].setPosition(0, 0, -10);
 		this.gameObjects.spawnAll(this.rigidObjects);
 		
-		ModifiableMesh asteroid = MeshGen.modifiableSphere(5, 6);
-		System.out.println(asteroid.getPositions().length);
+		ModifiableMesh asteroid = MeshGen.modifiableSphere(5, 2); //resolution to use is 6
+		//System.out.println(asteroid.getPositions().length);
 		Perlin noise = new Perlin(asteroid.getPositions().length / 2, 2, new Random().nextLong());
 		for(int i = 0; i < asteroid.getPositions().length / 2; i++) {
 			for(int j = 0; j < 2; j++)
-				asteroid.changePosition(i + j, (float) (asteroid.getPositions()[i + j] * (noise.get(i / 10, j / 10) + 1)));
+				asteroid.changePosition(i + j, (float) (asteroid.getPositions()[i + j] * ((noise.get((double) i / 10, (double) j / 10) + 0.5) * 1)));
 		}
 		
 		this.gameObjects.spawnObject(new StaticGameObject(new Mesh(asteroid.getPositions(), new float[0], new float[0], asteroid.getIndices())));

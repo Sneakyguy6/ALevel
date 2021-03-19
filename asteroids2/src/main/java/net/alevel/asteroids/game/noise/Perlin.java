@@ -1,6 +1,7 @@
 package net.alevel.asteroids.game.noise;
 
-import org.joml.Random;
+import java.util.Random;
+
 import org.joml.Vector2d;
 
 public class Perlin {
@@ -27,7 +28,7 @@ public class Perlin {
 		for(int i = 0; i < width; i++) {
 			for(int j = 0; j < height; j++) {
 				this.gVectors[i][j] = rng.nextInt(8);
-				this.influenceValues[i][j] = rng.nextInt(10);
+				this.influenceValues[i][j] = rng.nextInt(1);
 				//System.out.println(gVectors[i][j]);
 			}
 		}
@@ -39,6 +40,7 @@ public class Perlin {
 			x1 = x0 + 1,
 			y0 = (int) y,
 			y1 = y0 + 1;
+		//System.out.println(x + " " + y);
 		
 		//calculate distance vectors
 		Vector2d[] distVectors = {
@@ -47,6 +49,7 @@ public class Perlin {
 				new Vector2d(x - x1, y - y0),
 				new Vector2d(x - x1, y - y1)
 		};
+		//System.out.println(Arrays.toString(distVectors));
 		
 		double[] dotProducts = {
 				gVectorList[this.gVectors[x0][y0]].dot(distVectors[0]),
