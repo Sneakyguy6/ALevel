@@ -73,12 +73,14 @@ public class GameLogic implements ILogic {
 		//this.gameObjects.spawnAll(this.rigidObjects);
 		
 		ModifiableMesh grid = Grid.create(50, 50, 1);
-		Perlin noise = new Perlin(26, 26, new Random().nextLong());
+		Perlin noise = new Perlin(10, 10, new Random().nextLong());
+		//Random rng = new Random();
+		//System.out.println(noise.get(0.05, 0.05));
 		for(int i = 0; i < 50; i++) {
 			for(int j = 0; j < 50; j++) {
-				float height = (float) noise.get(i / 2, j / 2);
-				System.out.println(height);
-				grid.changePosition(((i + j) * 3) + 1, height);
+				float height = (float) (noise.get((double) i / 10, (double) j / 10) * 10);
+				//System.out.println(((double)(i / 100)) + " " + ((double)(j / 100)) + " => " + height);
+				grid.changePosition((((i * 50) + j) * 3) + 1, height);
 			}
 		}
 		
@@ -117,9 +119,9 @@ public class GameLogic implements ILogic {
 			cameraInc.y = 1f;
 		float posStep;
 		if(input.isKeyPressed(NonPrintableChars.LEFT_CTRL))
-			posStep = 3;
+			posStep = 20f;
 		else
-			posStep = 0.25f;
+			posStep = 10f;
 		camera.movePosition(cameraInc.x * CAMERA_POS_STEP * posStep, cameraInc.y * CAMERA_POS_STEP * posStep, cameraInc.z * CAMERA_POS_STEP * posStep);
 		//this.player.translate(cameraInc.x * CAMERA_POS_STEP * posStep, cameraInc.y * CAMERA_POS_STEP * posStep, cameraInc.z * CAMERA_POS_STEP * posStep); //player always in same position as camera
 		Vector2f rotVec = input.getDeltaMousePos();
