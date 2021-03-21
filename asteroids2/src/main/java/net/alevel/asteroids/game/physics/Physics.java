@@ -23,6 +23,8 @@ public class Physics {
 	}
 	
 	public void onUpdate(List<RigidObject> objects) {
+		if(objects.size() == 0)
+			return;
 		this.worldCoordsCalc.calc(objects, this.physicsPipeline);
 		//this.collisionDetector.runPipeline(objects);
 	}
