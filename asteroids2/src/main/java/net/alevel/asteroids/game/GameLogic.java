@@ -21,6 +21,7 @@ import net.alevel.asteroids.engine.objects.NonRenderableObject;
 import net.alevel.asteroids.engine.utils.Pair;
 import net.alevel.asteroids.game.cl.CLManager;
 import net.alevel.asteroids.game.noise.Perlin;
+import net.alevel.asteroids.game.noise.Perlin2;
 import net.alevel.asteroids.game.objects.GameObjects;
 import net.alevel.asteroids.game.objects.ModifiableMesh;
 import net.alevel.asteroids.game.objects.ObjectAssembly;
@@ -72,19 +73,36 @@ public class GameLogic implements ILogic {
 		this.rigidObjects[0].setPosition(0, 0, -10);
 		//this.gameObjects.spawnAll(this.rigidObjects);
 		
-		ModifiableMesh grid = Grid.create(50, 50, 1);
-		Perlin noise = new Perlin(10, 10, new Random().nextLong());
+		ModifiableMesh grid = Grid.create(500, 500, 1);
+		System.out.println(grid.getPositions().length);
+		System.out.println(grid.getIndices().length);
+		//Perlin noise = new Perlin(10, 10, new Random().nextLong());
+		Perlin2 noise = new Perlin2();
 		//Random rng = new Random();
 		//System.out.println(noise.get(0.05, 0.05));
-		for(int i = 0; i < 50; i++) {
-			for(int j = 0; j < 50; j++) {
+		for(int i = 0; i < 500; i++) {
+			for(int j = 0; j < 500; j++) {
 				float height = (float) (noise.get((double) i / 10, (double) j / 10) * 10);
 				//System.out.println(((double)(i / 100)) + " " + ((double)(j / 100)) + " => " + height);
-				grid.changePosition((((i * 50) + j) * 3) + 1, height);
+				grid.changePosition((((i * 500) + j) * 3) + 1, height);
+			}
+		}
+		
+		ModifiableMesh asteroid = MeshGen.modifiableSphere(5, 4);
+		Perlin2 noise2 = new Perlin2();
+		for(int i = 0; i < asteroid.getPositions().length / 10; i++) {
+			for(int j = 0; j < 10; j++) {
+				float height = (float) noise2.get((double) i / 5, (double) j / 5) * 0.5f;
+				//System.out.println(height);
+				asteroid.changePosition((i * 10) + j, (float) (asteroid.getPositions()[(i * 10) + j] * (height + 0.5)));
 			}
 		}
 		
 		this.gameObjects.spawnObject(new StaticGameObject(new Mesh(grid.getPositions(), grid.getPositions(), grid.getPositions(), grid.getIndices())));
+		StaticGameObject asteroidObject = new StaticGameObject(new Mesh(asteroid.getPositions(), asteroid.getPositions(), asteroid.getPositions(), asteroid.getIndices()));
+		asteroidObject.setPosition(0, 10, 0);
+		//asteroidObject.setScale(100);
+		this.gameObjects.spawnObject(asteroidObject);
 		//Grid.debug(this.gameObjects);
 		
 		/*ModifiableMesh asteroid = MeshGen.modifiableSphere(5, 2); //resolution to use is 6

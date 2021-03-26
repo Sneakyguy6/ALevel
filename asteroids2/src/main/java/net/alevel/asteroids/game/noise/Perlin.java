@@ -17,18 +17,18 @@ public class Perlin {
 	};
 	
 	private final int[][] gVectors;
-	private final int[][] influenceValues;
+	//private final int[][] influenceValues;
 	
 	public Perlin(int width, int height, long seed) {
 		this.gVectors = new int[width][height];
-		this.influenceValues = new int[width][height];
+		//this.influenceValues = new int[width][height];
 		Random rng = new Random(seed);
 		
 		//System.out.println(width + " " + height);
 		for(int i = 0; i < width; i++) {
 			for(int j = 0; j < height; j++) {
 				this.gVectors[i][j] = rng.nextInt(8);
-				this.influenceValues[i][j] = rng.nextInt(1);
+				//this.influenceValues[i][j] = rng.nextInt(1);
 				//System.out.println(gVectors[i][j]);
 			}
 		}
@@ -61,10 +61,10 @@ public class Perlin {
 		double u = fade(x - x0),
 			   v = fade(y - y0);
 		
-		double lerp1 = lerp(dotProducts[0], dotProducts[1], u);
-		double lerp2 = lerp(dotProducts[2], dotProducts[3], u);
+		double lerp1 = lerp(dotProducts[0], dotProducts[1], v);
+		double lerp2 = lerp(dotProducts[2], dotProducts[3], v);
 		
-		double avg = lerp(lerp1, lerp2, v);
+		double avg = lerp(lerp1, lerp2, u);
 		//System.out.println(avg);
 		
 		return avg;
