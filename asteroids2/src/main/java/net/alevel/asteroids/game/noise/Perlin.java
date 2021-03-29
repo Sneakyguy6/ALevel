@@ -4,6 +4,10 @@ import java.util.Random;
 
 import org.joml.Vector2d;
 
+/**Use Perlin2
+ *
+ */
+@Deprecated
 public class Perlin {
 	private static final Vector2d[] gVectorList = {
 			new Vector2d(1, 0),

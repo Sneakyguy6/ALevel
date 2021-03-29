@@ -3,14 +3,12 @@ package net.alevel.asteroids.game.physics.SAT;
 import static net.alevel.asteroids.game.cl.CLUtil.loadProgram;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.jocl.cl_command_queue;
 import org.jocl.cl_context;
 import org.jocl.cl_program;
 
 import net.alevel.asteroids.game.cl.CLManager;
-import net.alevel.asteroids.game.physics.RigidObject;
 import net.alevel.asteroids.game.physics.pipeline.FunctionPipeline;
 import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 
@@ -38,12 +36,12 @@ public class SAT extends FunctionPipeline {
 		);
 	}
 	
-	@Override
+	/*@Override
 	public void runPipeline(List<RigidObject> rigidObjects) {
 		//if(rigidObjects.size() < 2)
 		//	return;
 		super.runPipeline(rigidObjects);
-	}
+	}*/
 
 	public cl_context getContext() {
 		return this.context;

@@ -2,6 +2,11 @@ package net.alevel.asteroids.game.noise;
 
 import org.joml.Vector2d;
 
+import net.alevel.asteroids.engine.graphics.Mesh;
+import net.alevel.asteroids.game.objects.ModifiableMesh;
+import net.alevel.asteroids.game.objects.StaticGameObject;
+import net.alevel.asteroids.game.objects.shapes.Grid;
+
 public class Perlin2 {
 
 	public Perlin2() {
@@ -72,4 +77,25 @@ public class Perlin2 {
 			176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195,
 			78, 66, 215, 61, 156, 180
 	};
+	
+	public static StaticGameObject example() {
+		int width = 1000,
+			height = 1000;
+		ModifiableMesh grid = Grid.create(width, height, 1);
+		//System.out.println(grid.getPositions().length);
+		//System.out.println(grid.getIndices().length);
+		//Perlin noise = new Perlin(10, 10, new Random().nextLong());
+		Perlin2 noise = new Perlin2();
+		//Random rng = new Random();
+		//System.out.println(noise.get(0.05, 0.05));
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				float h = (float) (noise.get((double) i / 10, (double) j / 10) * 10);
+				//System.out.println(((double)(i / 100)) + " " + ((double)(j / 100)) + " => " + height);
+				grid.changePosition((((i * 500) + j) * 3) + 1, h);
+			}
+		}
+		
+		return new StaticGameObject(new Mesh(grid.getPositions(), grid.getPositions(), grid.getPositions(), grid.getIndices()));
+	}
 }

@@ -3,7 +3,6 @@ package net.alevel.asteroids.game;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -12,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
-import net.alevel.asteroids.engine.graphics.Mesh;
 import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
@@ -20,14 +18,12 @@ import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.objects.NonRenderableObject;
 import net.alevel.asteroids.engine.utils.Pair;
 import net.alevel.asteroids.game.cl.CLManager;
-import net.alevel.asteroids.game.noise.Perlin;
 import net.alevel.asteroids.game.noise.Perlin2;
+import net.alevel.asteroids.game.objects.Asteroid;
 import net.alevel.asteroids.game.objects.GameObjects;
-import net.alevel.asteroids.game.objects.ModifiableMesh;
 import net.alevel.asteroids.game.objects.ObjectAssembly;
 import net.alevel.asteroids.game.objects.Ship;
 import net.alevel.asteroids.game.objects.StaticGameObject;
-import net.alevel.asteroids.game.objects.shapes.Grid;
 import net.alevel.asteroids.game.objects.shapes.MeshGen;
 import net.alevel.asteroids.game.physics.Physics;
 import net.alevel.asteroids.game.physics.RigidObject;
@@ -67,51 +63,17 @@ public class GameLogic implements ILogic {
 		this.player = new Ship();
 		this.rigidObjects = new RigidObject[] {
 				new RigidObject(MeshGen.cube(1, 1, 1)),
-				//new RigidObject(MeshGen.cube(1, 1, 1))
+				new RigidObject(MeshGen.cube(1, 1, 1))
 		};
-		//this.rigidObjects[0].setPosition(0, 0, 10);
-		this.rigidObjects[0].setPosition(0, 0, -10);
-		//this.gameObjects.spawnAll(this.rigidObjects);
+		this.rigidObjects[1].setPosition(-20, 0, 0);
+		this.rigidObjects[0].setPosition(-20, 0, -10);
+		this.gameObjects.spawnAll(this.rigidObjects);
 		
-		ModifiableMesh grid = Grid.create(500, 500, 1);
-		System.out.println(grid.getPositions().length);
-		System.out.println(grid.getIndices().length);
-		//Perlin noise = new Perlin(10, 10, new Random().nextLong());
-		Perlin2 noise = new Perlin2();
-		//Random rng = new Random();
-		//System.out.println(noise.get(0.05, 0.05));
-		for(int i = 0; i < 500; i++) {
-			for(int j = 0; j < 500; j++) {
-				float height = (float) (noise.get((double) i / 10, (double) j / 10) * 10);
-				//System.out.println(((double)(i / 100)) + " " + ((double)(j / 100)) + " => " + height);
-				grid.changePosition((((i * 500) + j) * 3) + 1, height);
-			}
-		}
-		
-		ModifiableMesh asteroid = MeshGen.modifiableSphere(5, 4);
-		Perlin2 noise2 = new Perlin2();
-		for(int i = 0; i < asteroid.getPositions().length / 10; i++) {
-			for(int j = 0; j < 10; j++) {
-				float height = (float) noise2.get((double) i / 5, (double) j / 5) * 0.5f;
-				//System.out.println(height);
-				asteroid.changePosition((i * 10) + j, (float) (asteroid.getPositions()[(i * 10) + j] * (height + 0.5)));
-			}
-		}
-		
-		this.gameObjects.spawnObject(new StaticGameObject(new Mesh(grid.getPositions(), grid.getPositions(), grid.getPositions(), grid.getIndices())));
-		StaticGameObject asteroidObject = new StaticGameObject(new Mesh(asteroid.getPositions(), asteroid.getPositions(), asteroid.getPositions(), asteroid.getIndices()));
-		asteroidObject.setPosition(0, 10, 0);
-		//asteroidObject.setScale(100);
+		this.gameObjects.spawnObject(Perlin2.example());
+		StaticGameObject asteroidObject = new Asteroid();
+		asteroidObject.setPosition(0, 60, 0);
 		this.gameObjects.spawnObject(asteroidObject);
 		//Grid.debug(this.gameObjects);
-		
-		/*ModifiableMesh asteroid = MeshGen.modifiableSphere(5, 2); //resolution to use is 6
-		//System.out.println(asteroid.getPositions().length);
-		Perlin noise = new Perlin(asteroid.getPositions().length / 2, 2, new Random().nextLong());
-		for(int i = 0; i < asteroid.getPositions().length / 2; i++) {
-			for(int j = 0; j < 2; j++)
-				asteroid.changePosition(i + j, (float) (asteroid.getPositions()[i + j] * ((noise.get((double) i / 10, (double) j / 10) + 0.5) * 1)));
-		}*/
 		
 		//this.gameObjects.spawnObject(new StaticGameObject(new Mesh(asteroid.getPositions(), new float[0], new float[0], asteroid.getIndices())));
 		//this.gameObjects.spawnObject(this.player);
@@ -137,9 +99,9 @@ public class GameLogic implements ILogic {
 			cameraInc.y = 1f;
 		float posStep;
 		if(input.isKeyPressed(NonPrintableChars.LEFT_CTRL))
-			posStep = 20f;
+			posStep = 100f;
 		else
-			posStep = 10f;
+			posStep = 20f;
 		camera.movePosition(cameraInc.x * CAMERA_POS_STEP * posStep, cameraInc.y * CAMERA_POS_STEP * posStep, cameraInc.z * CAMERA_POS_STEP * posStep);
 		//this.player.translate(cameraInc.x * CAMERA_POS_STEP * posStep, cameraInc.y * CAMERA_POS_STEP * posStep, cameraInc.z * CAMERA_POS_STEP * posStep); //player always in same position as camera
 		Vector2f rotVec = input.getDeltaMousePos();
