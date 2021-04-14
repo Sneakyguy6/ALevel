@@ -2,6 +2,7 @@ package net.alevel.asteroids.game.physics.SATJava;
 
 import static java.lang.Math.pow;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,9 +24,11 @@ public class SATJava extends FunctionPipeline implements PipelineableFunction {
 	@Override
 	public void pipeFunction(PipelineBuffer pipelineBuffer, PipelineBuffer globalPipelineBuffer, List<RigidObject> rigidObjects) {
 		//calculate surface normals (these will be the axis used)
+		System.out.println(rigidObjects);
 		Set<Vector3f> surfaceNormals = new HashSet<Vector3f>();
 		for(RigidObject rigidObject : rigidObjects) {
 			float[] vertices = rigidObject.getWorldVerticesArr();
+			System.out.println(Arrays.toString(vertices));
 			int[] indices = rigidObject.getMesh().getIndices();
 			for(int i = 0; i < indices.length; i += 3) {
 				Vector3f a = new Vector3f(
@@ -47,8 +50,8 @@ public class SATJava extends FunctionPipeline implements PipelineableFunction {
 					surfaceNormals.add(c);
 			}
 		}
-		System.out.println();
-		System.out.println(surfaceNormals);
+		//System.out.println();
+		//System.out.println(surfaceNormals);
 		
 		//calculate the projected boundaries for each normal (axis)
 		ObjectProjection[] projectedVertices = new ObjectProjection[rigidObjects.size()];
@@ -73,8 +76,8 @@ public class SATJava extends FunctionPipeline implements PipelineableFunction {
 				counter += 2;
 			}
 			projectedVertices[a] = new ObjectProjection(rigidObjects.get(a), allRanges);
-			//System.out.println(surfaceNormals);
-			//System.out.println(Arrays.toString(allRanges) + "\n");
+			System.out.println(surfaceNormals);
+			System.out.println(Arrays.toString(allRanges) + "\n");
 		}
 		
 		//test collisions
@@ -95,10 +98,12 @@ public class SATJava extends FunctionPipeline implements PipelineableFunction {
 	}
 	
 	private void testCollision(ObjectProjection o1, ObjectProjection o2) {
-		for(int i = 0; i < o1.projections.length; i += 2) 
+		for(int i = 0; i < o1.projections.length; i += 2) {
+			System.out.println(o1.projections[i + 1] < o2.projections[i] || o2.projections[i + 1] < o1.projections[i]);
 			if(o1.projections[i + 1] < o2.projections[i] || o2.projections[i + 1] < o1.projections[i])
 				return;
-		//System.out.println("Collision!");
+		}
+		System.out.println("Collision!");
 		o1.object.onCollision(o2.object);
 		o2.object.onCollision(o1.object);
 	}

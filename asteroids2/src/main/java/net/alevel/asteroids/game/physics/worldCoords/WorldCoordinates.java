@@ -9,6 +9,7 @@ import static org.jocl.CL.clCreateBuffer;
 import static org.jocl.CL.clCreateKernel;
 import static org.jocl.CL.clCreateSubBuffer;
 import static org.jocl.CL.clEnqueueNDRangeKernel;
+import static org.jocl.CL.clFinish;
 import static org.jocl.CL.clReleaseMemObject;
 import static org.jocl.CL.clSetKernelArg;
 import static org.jocl.CL.setExceptionsEnabled;
@@ -146,6 +147,7 @@ public class WorldCoordinates implements Releasable {
 				0,
 				null,
 				null);
+		clFinish(this.commandQueue);
 		
 		this.objectSubBufferPointers = new int[objects.size()];
 		for(int j = 0, c = 0; j < objects.size(); j++) {
@@ -157,8 +159,7 @@ public class WorldCoordinates implements Releasable {
 			c += length;
 			//System.out.println(" " + c);
 		}
-		
-		//clFinish(this.commandQueue); //makes sure that all vertices for all objects have been processed
+		clFinish(this.commandQueue); //makes sure that all vertices for all objects have been processed
 		//The CPU will continue the pipeline and queue more instructions regardless of whether the GPU is finished or not
 		//clReleaseMemObject(transformedVerticesMem);
 		this.worldCoords = transformedVerticesMem;

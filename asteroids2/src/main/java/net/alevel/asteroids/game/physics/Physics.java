@@ -17,7 +17,7 @@ public class Physics {
 		this.physicsPipeline = new PipelineBuffer();
 		this.worldCoordsCalc = new WorldCoordinates();
 		
-		this.physicsPipeline.add(0, this.worldCoordsCalc);
+		//this.physicsPipeline.add(0, this.worldCoordsCalc);
 		
 		this.collisionDetector = new SATJava(this.physicsPipeline);
 	}

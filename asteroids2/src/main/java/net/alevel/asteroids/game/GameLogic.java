@@ -60,8 +60,6 @@ public class GameLogic implements ILogic {
 		//MatrixVectorMulTest.run();
 		//GetMinMaxPoints.run();
 		
-		
-		
 		this.player = new Ship();
 		this.player.rotate(0, 90, 0);
 		this.rigidObjects = new RigidObject[] {

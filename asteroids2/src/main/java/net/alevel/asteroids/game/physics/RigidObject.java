@@ -2,6 +2,7 @@ package net.alevel.asteroids.game.physics;
 
 import static org.jocl.CL.CL_TRUE;
 import static org.jocl.CL.clEnqueueReadBuffer;
+import static org.jocl.CL.clFinish;
 import static org.jocl.CL.clReleaseMemObject;
 
 import org.jocl.Pointer;
@@ -71,6 +72,7 @@ public class RigidObject extends GameObject {
 		//	this.worldVerticesArr = new float[super.mesh.getVertices().length];
 		//if(this.worldVertices == null)
 		//	return this.worldVerticesArr;
+		//System.out.println(this.worldVertices);
 		if(this.worldVerticesArr == null) {
 			this.worldVerticesArr = new float[super.mesh.getVertices().length];
 			clEnqueueReadBuffer(
@@ -84,6 +86,7 @@ public class RigidObject extends GameObject {
 					null,
 					null
 			);
+			clFinish(CLManager.getCommandQueue());
 		}
 		return this.worldVerticesArr;
 	}

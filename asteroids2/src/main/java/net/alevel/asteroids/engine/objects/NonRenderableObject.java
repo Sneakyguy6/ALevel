@@ -39,6 +39,11 @@ public abstract class NonRenderableObject {
 	
 	public abstract void cleanUp();
 	
+	@Override
+	public String toString() {
+		return "(pos -> " + this.position + " rot -> " + this.rotation + ")";
+	}
+	
 	public NonRenderableObject setScale(float scale) {
 		this.scale = scale;
 		return this;
