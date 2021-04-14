@@ -104,7 +104,7 @@ public class WorldCoordinates implements Releasable {
 			objectRotations[objectIndex * 3 + 2] = rotation.z;
 		}
 		
-		System.out.println(floats.length);
+		//System.out.println(floats.length);
 		cl_mem floatsMem = clCreateBuffer(this.context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * floats.length, Pointer.to(floats), null);
 		cl_mem objectIndicesMem = clCreateBuffer(this.context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_int * objectIndices.length, Pointer.to(objectIndices), null);
 		cl_mem objectPositionsMem = clCreateBuffer(this.context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, Sizeof.cl_float * objectPositions.length, Pointer.to(objectPositions), null);

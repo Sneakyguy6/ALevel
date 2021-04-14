@@ -34,10 +34,10 @@ public class ProjectedBoundaries extends PipelineableCLFunction {
 		WorldCoordinates worldCoords = (WorldCoordinates) globalPipelineBuffer.get(0);
 		int[] subBufferPointers = worldCoords.getSubBufferPointers();
 		
-		cl_mem boundaries = clCreateBuffer(super.context, CL_MEM_READ_WRITE, rigidObjects.size() * noOfSurfaceNormals * 2 * Sizeof.cl_float, null, null);
+		//cl_mem boundaries = clCreateBuffer(super.context, CL_MEM_READ_WRITE, rigidObjects.size() * noOfSurfaceNormals * 2 * Sizeof.cl_float, null, null);
 		cl_mem maxBoundariesTemp = clCreateBuffer(super.context, CL_MEM_READ_WRITE, worldCoords.getNoOfVertices() * noOfSurfaceNormals * Sizeof.cl_float, null, null);
 		cl_mem minBoundariesTemp = clCreateBuffer(super.context, CL_MEM_READ_WRITE, worldCoords.getNoOfVertices() * noOfSurfaceNormals * Sizeof.cl_float, null, null);
-		cl_mem subBufPointBuffer = clCreateBuffer(super.context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, subBufferPointers.length * Sizeof.cl_int, Pointer.to(subBufferPointers), null);
+		//cl_mem subBufPointBuffer = clCreateBuffer(super.context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, subBufferPointers.length * Sizeof.cl_int, Pointer.to(subBufferPointers), null);
 		
 		clSetKernelArg(this.projectPointsKernel, 0, Sizeof.cl_mem, Pointer.to(surfaceNormalsBuffer));
 		clSetKernelArg(this.projectPointsKernel, 1, Sizeof.cl_mem, Pointer.to(worldCoords.getWorldCoords()));
@@ -46,8 +46,8 @@ public class ProjectedBoundaries extends PipelineableCLFunction {
 		
 		clSetKernelArg(this.boundariesKernel, 0, Sizeof.cl_mem, Pointer.to(maxBoundariesTemp));
 		clSetKernelArg(this.boundariesKernel, 1, Sizeof.cl_mem, Pointer.to(minBoundariesTemp));
-		clSetKernelArg(this.boundariesKernel, 2, Sizeof.cl_mem, Pointer.to(subBufPointBuffer));
-		clSetKernelArg(this.boundariesKernel, 3, Sizeof.cl_mem, Pointer.to(boundaries));
+		//clSetKernelArg(this.boundariesKernel, 2, Sizeof.cl_mem, Pointer.to(subBufPointBuffer));
+		//clSetKernelArg(this.boundariesKernel, 3, Sizeof.cl_mem, Pointer.to(boundaries));
 		
 		clEnqueueNDRangeKernel(
 				super.commandQueue,

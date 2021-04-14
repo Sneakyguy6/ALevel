@@ -55,6 +55,10 @@ public class Camera {
 		this.rotation.z = z;
 	}
 	
+	public void movePosition(Vector3f delta) {
+		this.movePosition(delta.x, delta.y, delta.z);
+	}
+	
 	public void movePosition(float offsetX, float offsetY, float offsetZ) {
 		if(offsetZ != 0) {
 			this.position.x += (float) Math.sin(Math.toRadians(rotation.y)) * -1f * offsetZ;

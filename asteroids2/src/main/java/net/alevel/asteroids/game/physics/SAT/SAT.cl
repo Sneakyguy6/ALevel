@@ -1,4 +1,4 @@
-int get_group_size(int x);
+//int get_group_size(int x);
 
 kernel void getSurfaceNormals(
     global const float *vertices, //vector3f array (These are the transformed vertices (world coords, not model))
@@ -50,9 +50,9 @@ kernel void getProjectedVertices(
     projectedVerticesMax[projectedVerticesIndex + 2] = lambda * n.z;*/
 }
 
-kernel void getBoundaries(
-    global const float maxProjectedBoundaries,
-    global const float minProjectedBoundaries
+/*kernel void getBoundaries(
+    global float *maxProjectedBoundaries,
+    global float *minProjectedBoundaries
 )
 {
     int globalId = get_global_id(0);
@@ -67,10 +67,10 @@ kernel void getBoundaries(
 
     for(int stride = groupSize >> 1; stride != 0; stride >>= 1) { //int stride = groupSize / 2; stride > 0; stride /= 2
         if(localId < stride) {
-            int a = projectedVerticesMin[index];
-            int b = projectedVerticesMin[index + stride];
+            int a = minProjectedBoundaries[index];
+            int b = minProjectedBoundaries[index + stride];
             if(b < a){
-                projectedVerticesMin[index] = b;
+                minProjectedBoundaries[index] = b;
             }
         }
         barrier(CLK_LOCAL_MEM_FENCE);
@@ -81,16 +81,16 @@ kernel void getBoundaries(
         for(; subBufferPointers[subBufferIndex] != offset; subBufferIndex++);
         int boundaryIndex = (groupId * groupSize + subBufferIndex) * 2;
         boundaries[boundaryIndex] = projectedVerticesMin[0];*/
-    }
+    /*}
 
     //same algorithm but for max value
     //barrier(CLK_LOCAL_MEM_FENCE);
     for(int stride = groupSize >> 1; stride != 0; stride >>= 1) {
         if(localId < stride) {
-            int a = projectedVerticesMax[globalId];
-            int b = projectedVerticesMax[globalId + stride];
+            int a = maxProjectedBoundaries[globalId];
+            int b = maxProjectedBoundaries[globalId + stride];
             if(b > a){
-                projectedVerticesMax[globalId] = b;
+                maxProjectedBoundaries[globalId] = b;
             }
         }
         barrier(CLK_LOCAL_MEM_FENCE);
@@ -102,9 +102,9 @@ kernel void getBoundaries(
 }
 
 kernel void testIntersections(
-    global const float boundaries,
-    global float collisions
+    global const float *boundaries,
+    global float *collisions
 )
 {
     
-}
+}*/

@@ -60,7 +60,10 @@ public class GameLogic implements ILogic {
 		//MatrixVectorMulTest.run();
 		//GetMinMaxPoints.run();
 		
+		
+		
 		this.player = new Ship();
+		this.player.rotate(0, 90, 0);
 		this.rigidObjects = new RigidObject[] {
 				new RigidObject(MeshGen.cube(1, 1, 1)),
 				new RigidObject(MeshGen.cube(1, 1, 1))
@@ -76,8 +79,7 @@ public class GameLogic implements ILogic {
 		//Grid.debug(this.gameObjects);
 		
 		//this.gameObjects.spawnObject(new StaticGameObject(new Mesh(asteroid.getPositions(), new float[0], new float[0], asteroid.getIndices())));
-		//this.gameObjects.spawnObject(this.player);
-		//this.player.spawn();
+		this.gameObjects.spawnObject(this.player);
 		//this.gameObjects.add(new StaticGameObject(MeshGen.triangularPrism(new Vector2f(0, 0), new Vector2f(1, 0), new Vector2f(0, 1), 10)));
 		//this.gameObjects.add(new StaticGameObject(MeshGen.sphere(2)));
 	}
@@ -102,12 +104,13 @@ public class GameLogic implements ILogic {
 			posStep = 100f;
 		else
 			posStep = 20f;
-		camera.movePosition(cameraInc.x * CAMERA_POS_STEP * posStep, cameraInc.y * CAMERA_POS_STEP * posStep, cameraInc.z * CAMERA_POS_STEP * posStep);
+		camera.movePosition(cameraInc.mul(CAMERA_POS_STEP).mul(posStep));
+		this.player.translate(cameraInc);
 		//this.player.translate(cameraInc.x * CAMERA_POS_STEP * posStep, cameraInc.y * CAMERA_POS_STEP * posStep, cameraInc.z * CAMERA_POS_STEP * posStep); //player always in same position as camera
-		Vector2f rotVec = input.getDeltaMousePos();
-		camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+		Vector2f rotVec = input.getDeltaMousePos().mul(MOUSE_SENSITIVITY);
+		camera.moveRotation(rotVec.x, rotVec.y, 0);
 		
-		this.player.rotate(0, 0.1f, 0);
+		this.player.rotate(rotVec.x * -1, rotVec.y * -1, 0);
 		
 		//this.rigidObjects[0].translate(0, 0, -.01f).rotate(0, (float) Math.PI / 3, 0);
 		this.rigidObjects[0].translate(0, 0, .01f);

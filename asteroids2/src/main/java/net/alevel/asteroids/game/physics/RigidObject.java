@@ -41,6 +41,7 @@ public class RigidObject extends GameObject {
 	public void onUpdateFinish(float time) {
 		clReleaseMemObject(this.worldVertices);
 		this.worldVertices = null;
+		this.worldVerticesArr = null;
 	}
 	
 	@Override
@@ -70,16 +71,20 @@ public class RigidObject extends GameObject {
 		//	this.worldVerticesArr = new float[super.mesh.getVertices().length];
 		//if(this.worldVertices == null)
 		//	return this.worldVerticesArr;
-		clEnqueueReadBuffer(
-				CLManager.getCommandQueue(),
-				this.worldVertices,
-				CL_TRUE,
-				0,
-				Sizeof.cl_float * this.worldVerticesArr.length,
-				Pointer.to(this.worldVerticesArr),
-				0,
-				null,
-				null);
+		if(this.worldVerticesArr == null) {
+			this.worldVerticesArr = new float[super.mesh.getVertices().length];
+			clEnqueueReadBuffer(
+					CLManager.getCommandQueue(),
+					this.worldVertices,
+					CL_TRUE,
+					0,
+					Sizeof.cl_float * this.worldVerticesArr.length,
+					Pointer.to(this.worldVerticesArr),
+					0,
+					null,
+					null
+			);
+		}
 		return this.worldVerticesArr;
 	}
 }
