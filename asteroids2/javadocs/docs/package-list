@@ -1,0 +1,17 @@
+net.alevel.asteroids.engine
+net.alevel.asteroids.engine.graphics
+net.alevel.asteroids.engine.input
+net.alevel.asteroids.engine.input.enums
+net.alevel.asteroids.engine.objects
+net.alevel.asteroids.engine.utils
+net.alevel.asteroids.game
+net.alevel.asteroids.game.cl
+net.alevel.asteroids.game.noise
+net.alevel.asteroids.game.objects
+net.alevel.asteroids.game.objects.shapes
+net.alevel.asteroids.game.physics
+net.alevel.asteroids.game.physics.SAT
+net.alevel.asteroids.game.physics.SATJava
+net.alevel.asteroids.game.physics.collisions
+net.alevel.asteroids.game.physics.pipeline
+net.alevel.asteroids.game.physics.worldCoords

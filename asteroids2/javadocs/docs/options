@@ -1,0 +1,26 @@
+-classpath
+'C:/Users/manoo/.m2/repository/org/jocl/jocl/2.0.2/jocl-2.0.2.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl/3.2.3/lwjgl-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-assimp/3.2.3/lwjgl-assimp-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-bgfx/3.2.3/lwjgl-bgfx-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-glfw/3.2.3/lwjgl-glfw-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-nanovg/3.2.3/lwjgl-nanovg-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-nuklear/3.2.3/lwjgl-nuklear-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-openal/3.2.3/lwjgl-openal-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-opengl/3.2.3/lwjgl-opengl-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-par/3.2.3/lwjgl-par-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-stb/3.2.3/lwjgl-stb-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-vulkan/3.2.3/lwjgl-vulkan-3.2.3.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl/3.2.3/lwjgl-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-assimp/3.2.3/lwjgl-assimp-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-bgfx/3.2.3/lwjgl-bgfx-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-glfw/3.2.3/lwjgl-glfw-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-nanovg/3.2.3/lwjgl-nanovg-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-nuklear/3.2.3/lwjgl-nuklear-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-openal/3.2.3/lwjgl-openal-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-opengl/3.2.3/lwjgl-opengl-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-par/3.2.3/lwjgl-par-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/lwjgl/lwjgl-stb/3.2.3/lwjgl-stb-3.2.3-natives-windows.jar;C:/Users/manoo/.m2/repository/org/joml/joml/1.9.20/joml-1.9.20.jar'
+-encoding
+'Cp1252'
+-protected
+-source
+'1.8'
+-sourcepath
+'C:/Users/manoo/git/ALevel/asteroids2/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2021. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/manoo/git/ALevel/asteroids2/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'asteroids2 0.1.1-SNAPSHOT API'
+-linkoffline
+'https://docs.oracle.com/javase/8/docs/api' 'C:/Users/manoo/git/ALevel/asteroids2/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'asteroids2 0.1.1-SNAPSHOT API'
