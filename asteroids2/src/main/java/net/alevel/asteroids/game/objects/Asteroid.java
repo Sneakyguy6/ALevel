@@ -4,6 +4,9 @@ import net.alevel.asteroids.engine.graphics.Mesh;
 import net.alevel.asteroids.game.noise.Perlin2;
 import net.alevel.asteroids.game.objects.shapes.MeshGen;
 
+/**Represents an asteroid.
+ * The asteroid shapes are procedurally generated.
+ */
 public class Asteroid extends StaticGameObject {
 
 	public Asteroid() {
@@ -11,6 +14,9 @@ public class Asteroid extends StaticGameObject {
 		super.scale = 10;
 	}
 	
+	/**Gets an icosphere from {@link MeshGen#modifiableSphere(float, int)} and wraps a perlin noise height map (generated using {@link Perlin2}) around it to generate an asteroid.
+	 * @return
+	 */
 	private static Mesh generate() {
 		ModifiableMesh asteroid = MeshGen.modifiableSphere(5, 4);
 		Perlin2 noise2 = new Perlin2();

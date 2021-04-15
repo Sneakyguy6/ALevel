@@ -8,8 +8,7 @@ import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.objects.NonRenderableObject;
 import net.alevel.asteroids.game.physics.RigidObject;
 
-/**Manages objects in the world
- *
+/**Manages all objects in the world
  */
 public class GameObjects {
 	private final List<NonRenderableObject> allObjects;

@@ -17,6 +17,8 @@ import org.jocl.cl_device_id;
 import org.jocl.cl_platform_id;
 import org.jocl.cl_queue_properties;
 
+/**Manages OpenCL code. It creates the context (specifies the device etc.) and the instruction queue that the CL code will use
+ */
 public class CLManager {
 	private static cl_context context;
 	private static cl_queue_properties queueProperties;
@@ -74,6 +76,8 @@ public class CLManager {
 		CL.clFinish(commandQueue);
 	}
 	
+	/**To be run on simulation shut down. It shuts down the context and instruction queue
+	 */
 	public static void cleanUp() {
 		clReleaseCommandQueue(commandQueue);
 		clReleaseContext(context);

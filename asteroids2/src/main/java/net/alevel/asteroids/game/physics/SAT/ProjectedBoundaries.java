@@ -15,6 +15,8 @@ import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 import net.alevel.asteroids.game.physics.pipeline.PipelineableCLFunction;
 import net.alevel.asteroids.game.physics.worldCoords.WorldCoordinates;
 
+/**Calculates the projected boundaries for each axis
+ */
 public class ProjectedBoundaries extends PipelineableCLFunction {
 	private final cl_kernel projectPointsKernel;
 	private final cl_kernel boundariesKernel;

@@ -3,6 +3,8 @@ package net.alevel.asteroids.game.objects;
 import net.alevel.asteroids.engine.graphics.Mesh;
 import net.alevel.asteroids.engine.objects.GameObject;
 
+/**Represents a simple object that does not do anything on a simulation update
+ */
 public class StaticGameObject extends GameObject {
 
 	public StaticGameObject(Mesh mesh) {

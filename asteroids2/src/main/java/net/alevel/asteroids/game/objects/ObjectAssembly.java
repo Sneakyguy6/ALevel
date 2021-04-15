@@ -10,6 +10,8 @@ import org.joml.Vector3f;
 import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.objects.NonRenderableObject;
 
+/**Represents an Object made of multiple objects. These would be used to create more complex shapes (like ships)
+ */
 public class ObjectAssembly extends NonRenderableObject {
 	private final List<GameObject> objects;
 	private final List<Vector3f> relativePositions; //The vector linking the centre of a single component to the centre of the whole 'object'
@@ -25,7 +27,7 @@ public class ObjectAssembly extends NonRenderableObject {
 	}
 	
 	@Override
-	public void onUpdate(float time) {
+	protected void onUpdate(float time) {
 		this.rotateObjects();
 		this.moveObjects();
 	}
@@ -49,6 +51,10 @@ public class ObjectAssembly extends NonRenderableObject {
 			this.objects.get(i).setPosition(this.objects.get(i).getPosition().add(this.position));
 	}
 	
+	/**Add new object to assembly
+	 * @param o the object
+	 * @param relativePos the position of this object relative to the centre of the whole assembly
+	 */
 	public void addObject(GameObject o, Vector3f relativePos) {
 		this.objects.add(o);
 		o.setPosition(relativePos.add(this.position));

@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.joml.Vector3f;
 
+/**Generates an octahedron mesh using a specified number of triangles (resolution). Used for a variety of shapes like spheres.
+ */
 class GenOctahedron {
 	private List<Vector3f> positions;
 	private int[] indices;
@@ -14,6 +16,9 @@ class GenOctahedron {
 		this.generate(resolution);
 	}
 	
+	/**Generates an octahedron
+	 * @param resolution
+	 */
 	public void generate(int resolution) {
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
 		vertices.add(new Vector3f(0, 0, 1));
@@ -83,6 +88,9 @@ class GenOctahedron {
 		return this.positions;
 	}
 	
+	/**Same as {@link GenOctahedron#getPositions()} but as an array of floats rather than a 3D Vector list
+	 * @return
+	 */
 	public float[] getPositionsAsFloats() {
 		float[] floats = new float[this.positions.size() * 3];
 		for(int i = 0; i < this.positions.size(); i++) {
@@ -93,6 +101,9 @@ class GenOctahedron {
 		return floats;
 	}
 	
+	/**Get the indices used to specify which vertices are used for which triangle
+	 * @return
+	 */
 	public int[] getIndices() {
 		return this.indices;
 	}

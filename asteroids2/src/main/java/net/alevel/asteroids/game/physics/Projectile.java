@@ -2,6 +2,8 @@ package net.alevel.asteroids.game.physics;
 
 import net.alevel.asteroids.engine.graphics.Mesh;
 
+/**Represents a projectile. It uses projectile motion equations to calculate its position each update.
+ */
 public class Projectile extends RigidObject {
 	public static float ACC_GRAV = -9.8f;
 	private float C; //angle between where it is pointing and the x axis (between 0 and 90 degrees)

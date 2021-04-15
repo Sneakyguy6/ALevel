@@ -26,6 +26,8 @@ import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 import net.alevel.asteroids.game.physics.pipeline.PipelineableCLFunction;
 import net.alevel.asteroids.game.physics.worldCoords.WorldCoordinates;
 
+/**Calculates all the surface normals in the world. These will be the axis.
+ */
 public class SurfaceNormals extends PipelineableCLFunction {
 	private final cl_kernel surfaceNormalKernel;
 	

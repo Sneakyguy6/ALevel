@@ -7,11 +7,19 @@ import net.alevel.asteroids.game.objects.ModifiableMesh;
 import net.alevel.asteroids.game.objects.StaticGameObject;
 import net.alevel.asteroids.game.objects.shapes.Grid;
 
+/**Basic implementation of the 'Perlin noise' algorithm
+ * @see <a href="https://adrianb.io/2014/08/09/perlinnoise.html">https://adrianb.io/2014/08/09/perlinnoise.html</a>
+ */
 public class Perlin2 {
 
 	public Perlin2() {
 	}
-
+	
+	/**Generates a height value for a specific 2D point on the height map
+	 * @param x
+	 * @param y
+	 * @return the height
+	 */
 	public double get(double x, double y) {
 		// get reference to square that point is in. Where (x0, y0) represent bottom
 		// left corner
@@ -78,6 +86,9 @@ public class Perlin2 {
 			78, 66, 215, 61, 156, 180
 	};
 	
+	/**This function just creates an object used to test and demonstrate Perlin noise
+	 * @return a 2D perlin noise height map represented in 3D
+	 */
 	public static StaticGameObject example() {
 		int width = 1000,
 			height = 1000;

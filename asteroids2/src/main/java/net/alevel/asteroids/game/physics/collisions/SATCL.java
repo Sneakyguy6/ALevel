@@ -29,9 +29,14 @@ import org.jocl.cl_program;
 
 import net.alevel.asteroids.game.cl.CLManager;
 import net.alevel.asteroids.game.physics.RigidObject;
+import net.alevel.asteroids.game.physics.SAT.SAT;
 import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 import net.alevel.asteroids.game.physics.worldCoords.WorldCoordinates;
 
+/**
+ * @deprecated use {@link SAT} which uses the physics pipeline
+ */
+@Deprecated
 public class SATCL {
 	private final cl_program program;
 	private final cl_kernel surfaceNormalKernel;

@@ -1,5 +1,10 @@
 package net.alevel.asteroids.game.objects;
 
+import net.alevel.asteroids.engine.graphics.Mesh;
+
+/**Similar to {@link Mesh}. It stores positions, textures, normals and indices but does not load them into GL buffers as they could still change.<br>
+ * {@link Mesh} contains non modifiable attributes due to the fact that it represents data already sent to the GPU
+ */
 public class ModifiableMesh {
 	private float[] positions;
 	private float[] textures;
@@ -45,5 +50,12 @@ public class ModifiableMesh {
 
 	public void setIndices(int[] indices) {
 		this.indices = indices;
+	}
+	
+	/**Generates a non modifiable mesh using the attributes of 'this'.
+	 * @return
+	 */
+	public Mesh generateMesh() {
+		return new Mesh(positions, textures, normals, indices);
 	}
 }

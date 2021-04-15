@@ -13,7 +13,7 @@ import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.game.objects.ModifiableMesh;
 
 /**Creates different shapes.<br>
- * NOTE: when used in a {@link GameObject}, the position points to the centre of the shape
+ * NOTE: when used in a {@link GameObject}, the position attribute refers to the position of the centre of the shape
  */
 public class MeshGen {
 	/**Creates a mesh of a cube
@@ -89,7 +89,7 @@ public class MeshGen {
 		return sphere(f, 5);
 	}
 	
-	/**Creates a mesh of a sphere
+	/**Creates a mesh of an icosphere
 	 * @param radius
 	 * @param resolution
 	 * @return a mesh of the sphere
@@ -113,6 +113,11 @@ public class MeshGen {
 		return new Mesh(m.getPositions(), null, null, m.getIndices());
 	}
 	
+	/**Creates a sphere as a modifiable shape (used for asteroid generation)
+	 * @param radius
+	 * @param resolution
+	 * @return
+	 */
 	public static ModifiableMesh modifiableSphere(float radius, int resolution) {
 		GenOctahedron genOctahedron = new GenOctahedron(resolution);
 		List<Vector3f> positions = genOctahedron.getPositions();
@@ -130,10 +135,21 @@ public class MeshGen {
 		return new ModifiableMesh(floats, genOctahedron.getIndices());
 	}
 	
+	/**Generates a cylinder using a default circle resolution of 4
+	 * @param radius
+	 * @param length
+	 * @return
+	 */
 	public static Mesh cylinder(float radius, float length) {
 		return cylinder(radius, length, 4);
 	}
 	
+	/**Generates a cylinder
+	 * @param radius
+	 * @param length
+	 * @param circleResolution
+	 * @return
+	 */
 	public static Mesh cylinder(float radius, float length, int circleResolution) {
 		Matrix2f rotationMatrix = new Matrix2f().rotate((float) (Math.PI / 2) / circleResolution); //Where the angle is 90 degrees / circleResolution
 		List<Vector2f> pointsOnCircle = new ArrayList<Vector2f>(); //holds all points on a circle

@@ -8,6 +8,8 @@ import net.alevel.asteroids.game.physics.pipeline.FunctionPipeline;
 import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 import net.alevel.asteroids.game.physics.worldCoords.WorldCoordinates;
 
+/**This manages all physics.
+ */
 public class Physics {
 	private final PipelineBuffer physicsPipeline;
 	private final WorldCoordinates worldCoordsCalc;

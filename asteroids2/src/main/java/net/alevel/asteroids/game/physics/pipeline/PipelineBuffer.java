@@ -3,6 +3,9 @@ package net.alevel.asteroids.game.physics.pipeline;
 import java.util.HashMap;
 import java.util.Map;
 
+/**Stores data in a map for each pipeline (or all pipelines if it is the global pipeline).
+ * It is used by {@link PipelineableFunction} classes to store and communicate data between each other within a pipeline
+ */
 public class PipelineBuffer {
 	private final Map<Integer, Releasable> releasableBuffers;
 	private final Map<Integer, Object> nonReleasableBuffers;

@@ -32,6 +32,10 @@ import net.alevel.asteroids.game.physics.RigidObject;
 import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 import net.alevel.asteroids.game.physics.pipeline.Releasable;
 
+/**Calculates the world coordinates of each model vertex.
+ * In other words, it applies an object's position, scale, and rotation to work out where the positions are of each vertex in its mesh.<br>
+ * This uses OpenCL. It calculates the world coordinates on a GPU (or whatever device is specified by {@link CLManager}) as each vertex position can be calculated in parallel.
+ */
 public class WorldCoordinates implements Releasable {
 	private final cl_program program;
 	private final cl_kernel rotMatKernel;

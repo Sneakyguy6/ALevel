@@ -28,6 +28,8 @@ import net.alevel.asteroids.game.objects.shapes.MeshGen;
 import net.alevel.asteroids.game.physics.Physics;
 import net.alevel.asteroids.game.physics.RigidObject;
 
+/**Represents the main simulation logic. It manages the simulation and tells it what to do and what to render each time the game loop asks.
+ */
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
 	public static final float MOUSE_SENSITIVITY = 0.05f;

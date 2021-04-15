@@ -1,10 +1,9 @@
 package net.alevel.asteroids.game.objects.shapes;
 
-import net.alevel.asteroids.engine.graphics.Mesh;
-import net.alevel.asteroids.game.objects.GameObjects;
 import net.alevel.asteroids.game.objects.ModifiableMesh;
-import net.alevel.asteroids.game.objects.StaticGameObject;
 
+/**Creates a 2D grid in 3D space
+ */
 public class Grid {
 	public static ModifiableMesh create(int width, int length, int div) {
 		float[] points = new float[width * length * (1/div) * 3];
@@ -50,7 +49,7 @@ public class Grid {
 		return new ModifiableMesh(points, indices);
 	}
 	
-	public static void debug(GameObjects objects) {
+	/*public static void debug(GameObjects objects) {
 		float[] points = {
 				
 				/*0.0f, 0, 0.0f, 
@@ -68,7 +67,7 @@ public class Grid {
 				3.0f, 0, 0.0f, 
 				3.0f, 0, 1.0f, 
 				3.0f, 0, 2.0f, 
-				3.0f, 0, 3.0f, */
+				3.0f, 0, 3.0f, 
 				0.0f, 0f, 0.0f, 
 				0.0f, 0f, 1.0f, 
 				0.0f, 0f, 2.0f, 
@@ -122,7 +121,7 @@ public class Grid {
 				9, 10, 14,
 				9, 13, 14,
 				10, 11, 15,
-				10, 14, 15,*/
+				10, 14, 15,
 				//11, 12, 16,
 				//11, 15, 16,
 				/*0, 4, 5,
@@ -130,8 +129,8 @@ public class Grid {
 				1, 5, 6,
 				2, 6, 7,
 				3, 7, 8,
-				4, 8, 9,*/
+				4, 8, 9,
 		};
 		objects.spawnObject(new StaticGameObject(new Mesh(points, points, points, indices)));
-	}
+	}*/
 }

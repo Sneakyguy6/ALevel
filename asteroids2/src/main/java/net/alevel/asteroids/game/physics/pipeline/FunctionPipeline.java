@@ -5,6 +5,8 @@ import java.util.List;
 
 import net.alevel.asteroids.game.physics.RigidObject;
 
+/**Represents a pipeline. It is a list of functions that are run sequentially and use a {@link PipelineBuffer} or several to store and exchange data between each pipeline stage.
+ */
 public class FunctionPipeline implements Iterable<PipelineableFunction> {
 	private PipelineableFunction[] functionPipeline;
 	private final PipelineBuffer bufferPipeline;

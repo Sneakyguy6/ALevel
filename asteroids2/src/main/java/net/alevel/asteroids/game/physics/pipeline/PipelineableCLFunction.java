@@ -6,6 +6,8 @@ import org.jocl.cl_program;
 
 import net.alevel.asteroids.game.physics.SAT.SAT;
 
+/**A {@link PipelineableFunction} but contains attributes specifically for OpenCL related functions
+ */
 public abstract class PipelineableCLFunction implements PipelineableFunction {
 	protected final cl_program program;
 	protected final cl_context context;

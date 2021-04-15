@@ -4,8 +4,9 @@ import java.util.Random;
 
 import org.joml.Vector2d;
 
-/**Use Perlin2
- *
+/**
+ * @deprecated Use {@link Perlin2} as this has to have a predefined size during instantiation.
+ * @see Perlin2
  */
 @Deprecated
 public class Perlin {

@@ -15,6 +15,8 @@ import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.game.cl.CLManager;
 import net.alevel.asteroids.game.objects.GameObjects;
 
+/**Represents an in game object that should be effected by physics systems.
+ */
 public class RigidObject extends GameObject {
 	private cl_mem worldVertices; //sub buffer of the worldVertices buffer
 	private float[] worldVerticesArr;

@@ -14,6 +14,8 @@ import net.alevel.asteroids.game.physics.pipeline.FunctionPipeline;
 import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 import net.alevel.asteroids.game.physics.pipeline.PipelineableFunction;
 
+/**A simple implementation of the 'Separating Axis Theorem (SAT)' algorithm. This is a common method of collision detection in games.
+ */
 public class SATJava extends FunctionPipeline implements PipelineableFunction {
 
 	public SATJava(PipelineBuffer globalPipeline) {

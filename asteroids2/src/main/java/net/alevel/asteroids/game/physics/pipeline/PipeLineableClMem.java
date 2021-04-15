@@ -4,6 +4,8 @@ import static org.jocl.CL.clReleaseMemObject;
 
 import org.jocl.cl_mem;
 
+/**A wrapper for {@link cl_mem} that allows it to be used in a {@link PipelineBuffer}
+ */
 public class PipeLineableClMem implements Releasable {
 	private cl_mem buffer;
 	
