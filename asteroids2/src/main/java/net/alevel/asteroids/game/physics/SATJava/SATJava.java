@@ -15,15 +15,21 @@ import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 import net.alevel.asteroids.game.physics.pipeline.PipelineableFunction;
 
 public class SATJava extends FunctionPipeline implements PipelineableFunction {
-
+	private boolean calc;
+	
 	public SATJava(PipelineBuffer globalPipeline) {
 		super(globalPipeline);
 		super.setFunctions(this);
+		this.calc = false;
 	}
 
 	@Override
 	public void pipeFunction(PipelineBuffer pipelineBuffer, PipelineBuffer globalPipelineBuffer, List<RigidObject> rigidObjects) {
 		//calculate surface normals (these will be the axis used)
+		if(!this.calc) {
+			this.calc = true;
+			return;
+		}
 		System.out.println(rigidObjects);
 		Set<Vector3f> surfaceNormals = new HashSet<Vector3f>();
 		for(RigidObject rigidObject : rigidObjects) {
