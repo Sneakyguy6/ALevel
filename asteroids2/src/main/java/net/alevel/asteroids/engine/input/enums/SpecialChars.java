@@ -13,6 +13,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SEMICOLON;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SLASH;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
+/**These are characters that are neither letters or numbers
+ */
 public enum SpecialChars {
 	MINUS(GLFW_KEY_MINUS),
 	EQUALS(GLFW_KEY_EQUAL),

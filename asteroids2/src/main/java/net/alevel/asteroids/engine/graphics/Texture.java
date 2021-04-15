@@ -10,7 +10,7 @@ import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
 
-/**Stores a texture
+/**Stores a texture to be applied to a mesh.
  */
 public class Texture {
 	private final int id;

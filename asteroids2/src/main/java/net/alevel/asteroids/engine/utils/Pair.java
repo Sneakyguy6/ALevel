@@ -1,5 +1,9 @@
 package net.alevel.asteroids.engine.utils;
 
+/**Generic class with 2 objects. The data types of both objects are specified at instantiation/declaration
+ * @param <T1> data type of first object
+ * @param <T2> data type of second object
+ */
 public class Pair<T1, T2> {
 	private T1 o1;
 	private T2 o2;

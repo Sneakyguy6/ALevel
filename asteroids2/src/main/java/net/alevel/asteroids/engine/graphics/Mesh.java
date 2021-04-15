@@ -30,7 +30,8 @@ import java.util.List;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
-/**Stores data about the object's shape and texture.
+/**Stores data about the object's shape (i.e. the position of vertices) and also the object's texture and normal vectors (to be used for lighting mechanics mainly)
+ * It stores the references to the 4 buffers that belong to this mesh.
  */
 public class Mesh {
 	private static final Vector3f DEFAULT_COLOUR = new Vector3f(1f, 1f, 1f);
@@ -44,6 +45,12 @@ public class Mesh {
 	private final float[] positions; //for physics
 	private final int[] indices;
 	
+	/**Creates a new Mesh object. These 4 arrays will also be loaded onto the GPU.
+	 * @param positions Vertex positions (model positions)
+	 * @param textCoords Coords to be used to align the texture to the mesh
+	 * @param normals Normal vectors for each position vertex
+	 * @param indices Used to work out which position vertices make up which triangles
+	 */
 	public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) { //normals are only needed for lighting
 		this.positions = positions;
 		this.indices = indices;
@@ -124,11 +131,7 @@ public class Mesh {
 		}
 	}
 	
-	/*private AABBf createModelAABB(float[] positions) {
-		
-	}*/
-	
-	/**Called by the renderer to tell the engine to draw this element onto the screen
+	/**Called by {@link Renderer#render(net.alevel.asteroids.engine.Window, Camera, List)} to bind the VBOs (tell OpenGL to use 'these' VBOs) so the renderer knows what to draw
 	 */
 	public void render() {
 		if(this.texture != null) {
@@ -144,7 +147,7 @@ public class Mesh {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
-	/**Destroys all VBOs and the VAO. Use this when the game object is about to be destroyed
+	/**Destroys all VBOs and the VAO. This should be run when the mesh is no longer needed so there is no wasted memory on the GPU
 	 */
 	public void cleanUp() {
 		//if this method does not work, try binding the VAO and then disabling it

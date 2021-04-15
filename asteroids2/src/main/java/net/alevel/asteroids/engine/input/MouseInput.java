@@ -9,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.BitSet;
 
-/**Can get data on mouse activity with an instance of this class (Should be a singleton)
+/**Can get data on mouse activity with an instance of this class
  */
 class MouseInput {
 	private final Vector2d previousPos;

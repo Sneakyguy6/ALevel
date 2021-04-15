@@ -2,9 +2,10 @@ package net.alevel.asteroids.engine.objects;
 
 import org.joml.Vector3f;
 
+import net.alevel.asteroids.engine.GameEngine;
 import net.alevel.asteroids.game.objects.GameObjects;
 
-/**Base class for all object types
+/**Base class for all object types. Simply holds values for position, rotation and scale (size)
  */
 public abstract class NonRenderableObject {
 	protected Vector3f position;
@@ -21,22 +22,33 @@ public abstract class NonRenderableObject {
 		this.rotation = rot;
 	}
 	
+	/**This function runs on every update in the simulation
+	 * @param time the in game time (number of milliseconds since simulation start)
+	 */
 	public void update(float time) {
 		this.onUpdate(time);
 		//some code that should run in all types of objects
 	}
 	
-	public abstract void onUpdate(float time);
+	protected abstract void onUpdate(float time);
 	
 	/**This method exists so objects using opencl can clean up before opengl starts loading data. This is to make sure the GPU doesnt run out of memory
-	 * @param time the interval (not accumulated time)
+	 * @param time the time interval (not accumulated time) between each update call (should be reciprocal of {@link GameEngine#TARGET_UPS}
 	 */
 	public abstract void onUpdateFinish(float time);
 	
+	/**Runs every time an instance of the class is spawned into the world
+	 * @param objectsManager
+	 */
 	public abstract void onSpawn(GameObjects objectsManager);
 	
+	/**Runs every time an instance of the class is despawned from the world
+	 * @param objectsManager
+	 */
 	public abstract void onDespawn(GameObjects objectsManager);
 	
+	/**Runs when the object is no longer needed and about to be destroyed.
+	 */
 	public abstract void cleanUp();
 	
 	@Override

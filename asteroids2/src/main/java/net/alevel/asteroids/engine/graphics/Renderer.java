@@ -26,7 +26,10 @@ public class Renderer {//Might be worth making this a singleton as I don't see w
 		//this.initShaderProgram(window);
 	}
 	
-	public void initShaderProgram(Window window) throws IllegalStateException {
+	/**Loads the shader code and compiles it and links it to OpenGL. The uniform variables (variables used to interface between GLSL shaders and Java)
+	 * @throws IllegalStateException
+	 */
+	public void initShaderProgram() throws IllegalStateException {
 		this.shaderProgram = new ShaderProgram(); //create the shader program instance
 		this.shaderProgram.initShaders(); //initialise shaders (compile GLSL and create shader objects)
 		this.shaderProgram.link(); //apply to shader pipeline
@@ -41,10 +44,19 @@ public class Renderer {//Might be worth making this a singleton as I don't see w
 		//this.shaderProgram.createUniform("lightCoord"); //light test
 	}
 	
+	/*Clears the whole screen
+	 */
 	public void clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //| is bitwise OR. Clears the 2 buffers specified (sets them to their clear values)
 	}
 	
+	/**Renders all the renderable objects. It applies the world, camera and projection matrices to get the vertices the OpenGL should draw onto the window.<br>
+	 * It uses the GLSL shaders to do this.<br>
+	 * Each time this procedure runs, a new frame is generated
+	 * @param window Reference to the window to draw to
+	 * @param camera The client camera
+	 * @param gameObjects The objects to render
+	 */
 	public void render(Window window, Camera camera, List<GameObject> gameObjects) {
 		this.clear();
 		if(window.isResized()) {//If window is resized, update how OpenGL transforms the final projection coordinates to pixel coordinates
@@ -79,7 +91,7 @@ public class Renderer {//Might be worth making this a singleton as I don't see w
 		this.shaderProgram.unbind();
 	}
 	
-	/**Run this on shutdown
+	/**Run this on shutdown. It unloads the shader program.
 	 */
 	public void cleanUp() {
 		this.shaderProgram.cleanUp();

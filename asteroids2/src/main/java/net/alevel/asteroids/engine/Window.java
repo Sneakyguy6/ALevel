@@ -40,6 +40,8 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+/**This represents the window onto which the renderer draws to (this is what the human actually sees on the monitor)
+ */
 public class Window {
 	private long windowHandle; //ID of the window handler
 	private int width; //width and height variables will be used in the projection matrix
@@ -52,6 +54,8 @@ public class Window {
 		this.resized = false;
 	}
 	
+	/**Configures and opens the actual window
+	 */
 	public void init() { //width and height variables are to do with the size (in pixels) of the window
 		GLFWErrorCallback.createPrint(System.err).set(); //sets the GL error stream to the system stream
 		
@@ -103,7 +107,12 @@ public class Window {
 		GL30.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE); //draws meshes as wireframes (triangles have no fill). This is for testing
 	}
 	
-
+	/**Set the background colour
+	 * @param r red value
+	 * @param b blue value
+	 * @param g green value
+	 * @param alpha brightness
+	 */
 	public void setClearColour(float r, float b, float g, float alpha) {
 		glClearColor(r, g, b, alpha);
 	}

@@ -10,6 +10,8 @@ import net.alevel.asteroids.engine.input.enums.MouseBtns;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
 
+/**Stores a sample of the keyboard and mouse input. It is updated every time {@link Input#input(Window)} is run
+ */
 public class Input {
 	private final MouseInput mouse;
 	private final Vector2f deltaMouseMove; //create copies of mouse pos to store values at the instant they were recorded
@@ -27,10 +29,16 @@ public class Input {
 		this.keyBoard = new KeyBoardInput();
 	}
 	
+	/**Used to initialise the internally used {@link Mouse} class
+	 * @param window The window to sample
+	 */
 	public void init(Window window) {
 		this.mouse.init(window);
 	}
 	
+	/**Triggers the input to sample the mouse and keyboard input
+	 * @param window the window to sample
+	 */
 	public void input(Window window) {
 		this.mouse.input(window);
 		this.deltaMouseMove.set(this.mouse.getDisplayVec());
@@ -43,6 +51,10 @@ public class Input {
 		
 	}
 	
+	/**Queries the sample to check if the key specified was pressed
+	 * @param character the key to check
+	 * @return <strong>true</strong> if it was pressed, <strong>false</strong> if it wasn't
+	 */
 	public boolean isKeyPressed(char character) {
 		if(character >= 65 && character <= 90) //if true, it is an alphabetical letter
 			return this.keyBoard.getAlphabetKeysPressed().get(character - 65);
@@ -52,26 +64,47 @@ public class Input {
 			throw new IndexOutOfBoundsException("This method only accepts characters A-Z (capitals) and 0-9");
 	}
 	
+	/**Same as {@link Input#isKeyPressed(char)} but for special characters
+	 * @param character
+	 * @return <strong>true</strong> if it was pressed, <strong>false</strong> if it wasn't
+	 */
 	public boolean isKeyPressed(SpecialChars character) {
 		return this.keyBoard.getSpecialCharacters().get(character.ordinal());
 	}
 	
+	/**Same as {@link Input#isKeyPressed(char)} but for non printable characters
+	 * @param character
+	 * @return <strong>true</strong> if it was pressed, <strong>false</strong> if it wasn't
+	 */
 	public boolean isKeyPressed(NonPrintableChars character) {
 		return this.keyBoard.getNonPrintableCharacters().get(character.ordinal());
 	}
 	
+	/**Same as {@link Input#isKeyPressed(char)} but for mouse buttons
+	 * @param character
+	 * @return <strong>true</strong> if it was pressed, <strong>false</strong> if it wasn't
+	 */
 	public boolean isMouseBtnPressed(MouseBtns btn) {
 		return this.mouseBtnsPressed.get(btn.ordinal());
 	}
 	
+	/**Gets the difference between the mouse position in the most recent sample and the mouse position in the sample just before that
+	 * @return 2D vector representing the movement of the mouse between samples
+	 */
 	public Vector2f getDeltaMousePos() {
 		return this.deltaMouseMove;
 	}
 	
+	/**Gets the mouse position at the time of sampling
+	 * @return 2D vector representing that
+	 */
 	public Vector2d getCurrentMousePos() {
 		return this.currentMousePos;
 	}
 	
+	/**Checks if the mouse was in the window at the time of sampling
+	 * @return <strong>true</strong> if it was pressed, <strong>false</strong> if it wasn't
+	 */
 	public boolean isMouseInWindow() {
 		return this.isMouseInWindow;
 	}

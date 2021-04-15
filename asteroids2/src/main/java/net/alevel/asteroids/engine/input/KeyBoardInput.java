@@ -8,6 +8,8 @@ import java.util.BitSet;
 import net.alevel.asteroids.engine.input.enums.NonPrintableChars;
 import net.alevel.asteroids.engine.input.enums.SpecialChars;
 
+/**Stores a sample of all the keys pressed
+ */
 class KeyBoardInput {
 	private final BitSet alphabetKeysPressed; //best way to store a set of flags
 	private final BitSet numberKeysPressed;
@@ -21,6 +23,9 @@ class KeyBoardInput {
 		this.nonPrintableCharacters = new BitSet(NonPrintableChars.values().length);
 	}
 	
+	/**Updates the keys pressed (takes new sample)
+	 * @param windowId ID of the window to listen to
+	 */
 	public void input(long windowId) {
 		for(int i = 65; i <= 90; i++)
 			this.alphabetKeysPressed.set(i - 65, glfwGetKey(windowId, i) == GLFW_PRESS);

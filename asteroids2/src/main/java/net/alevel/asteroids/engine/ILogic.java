@@ -7,14 +7,15 @@ import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.utils.Pair;
 
-/** Implement this interface for classes that contribute to the logic of the game
+/**Implement this interface for classes that contribute to the main logic of the game. the functions {@link ILogic#update(float, float, Input)} and {@link ILogic#toRender()} run periodically
+ * as it is constantly called by the game loop. {@link ILogic#init(Window)} only runs once (at the start) and {@link ILogic#cleanUp()} also only runs once (at the end)
  */
 public interface ILogic {
 	/**Runs when the object is instantiated. Setup any initial states here
 	 */
 	public void init(Window window) throws Exception;
 	
-	/**Simulate the game (change object states and/or positions)
+	/**Defines what should happen each update (i.e what the simulation should do at that time) (e.g. change object states and/or positions)
 	 * @param interval the time between this update and the previous update (in terms of in game clock)
 	 * @param input the sample of the mouse and keyboard inputs at a certain instant
 	 */

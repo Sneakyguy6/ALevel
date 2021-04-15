@@ -17,6 +17,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_CONTROL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_SHIFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
 
+/**Represents keys that do not print characters<br>
+ * E.g. Shift, Ctrl
+ */
 public enum NonPrintableChars {
 	BACKSPACE(GLFW_KEY_BACKSPACE),
 	ENTER(GLFW_KEY_ENTER),

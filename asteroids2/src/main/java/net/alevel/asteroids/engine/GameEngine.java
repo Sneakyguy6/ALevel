@@ -9,7 +9,11 @@ import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.utils.Pair;
 
 public class GameEngine implements Runnable {
-	public static final int TARGET_FPS = 60; //frames per second
+	/**The target number of 'Frames per second' to be rendered.
+	 */
+	public static final int TARGET_FPS = 60;
+	/**The target number of 'Updates per second'. It is the speed of the in game clock.
+	 */
 	public static final int TARGET_UPS = 100; //updates per second
 	
 	private final Window window;
@@ -24,6 +28,8 @@ public class GameEngine implements Runnable {
 		this.humanInput = new Input();
 	}
 	
+	/**Starts the simulation
+	 */
 	@Override
 	public void run() { 
 		try {
@@ -35,15 +41,20 @@ public class GameEngine implements Runnable {
 		}
 	}
 	
+	/**Initialises the core components (like the renderer and the input sampler) and runs {@link ILogic#init(Window)} to setup the initial state of the simulation
+	 * @throws Exception
+	 */
 	protected void init() throws Exception { //any errors will passed to the method that called this method
 		//CLManager.init();
 		this.window.init();
-		this.renderer.initShaderProgram(window);
+		this.renderer.initShaderProgram();
 		this.humanInput.init(this.window);
 		this.gameLogic.init(this.window);
 	}
 	
-	/** This is the main game loop. Methods are protected for convenience. It may come in useful if I need to alter what happens in the loop.
+	/**This is the main game loop. Methods are protected for convenience. It may come in useful if I need to alter what happens in the loop.<br>
+	 * It is designed to hit {@link GameEngine#TARGET_FPS} and {@link GameEngine#TARGET_UPS} values. If a render takes more time than the UPS time interval, multiple updates will
+	 * happen before the next render to catch up. This ensures that the actual speed of the in game clock does not change when the FPS changes
 	 * @throws Exception 
 	 */
 	protected void gameLoop() throws Exception { //the main loop
@@ -78,20 +89,20 @@ public class GameEngine implements Runnable {
 		this.cleanUp();
 	}
 	
-	/** Record any keys pressed
+	/**Samples any keys pressed
 	 */
 	protected void input() {
 		this.humanInput.input(this.window);
 	}
 	
-	/** Update objects (simulate physics for that instant of time)
+	/**Update objects (simulate physics for that instant of time)
 	 * @throws Exception 
 	 */
 	protected void update(float accumulatedTime, float interval) throws Exception {
 		this.gameLogic.update(accumulatedTime, interval, this.humanInput);
 	}
 	
-	/** Draw the updated objects onto the screen. Then the window will be called to swap frame buffers
+	/**Draw the updated objects onto the screen. Then the window will be called to swap frame buffers
 	 */
 	protected void render() {
 		Pair<Camera, List<GameObject>> p = this.gameLogic.toRender();
@@ -99,6 +110,8 @@ public class GameEngine implements Runnable {
 		this.window.update(); //the method will tell OpenGL to swap the old frame buffer with the new frame buffer (i.e update what is being displayed)
 	}
 	
+	/**To be run when the simulation is about to end.
+	 */
 	protected void cleanUp() {
 		this.renderer.cleanUp();
 		this.gameLogic.cleanUp();

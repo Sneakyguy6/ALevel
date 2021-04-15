@@ -5,6 +5,8 @@ import org.joml.Vector3f;
 
 import net.alevel.asteroids.engine.objects.GameObject;
 
+/**Utility class. It has functions for the 3 matrices (view/camera, modelView, projection) used to calculate the positions of mesh vertices that OpenGL should draw.<br>
+ */
 public class Transformations {
 	private final Matrix4f projectionMatrix; //The matrix that converts the view coords to on screen coords. Creates depth perception
 	private final Matrix4f viewMatrix; //calculates the position of the object relative to the camera
@@ -28,6 +30,12 @@ public class Transformations {
 		return this.projectionMatrix.setPerspective(fov, width / height, zNear, zFar);
 	}
 	
+	/**Uses the view matrix (camera) as well as the scale (size), rotation and position to create the matrix
+	 * to be used to calculate the position of each vertex in a mesh in relation to the camera 
+	 * @param gameObject
+	 * @param viewMatrix
+	 * @return The model view matrix
+	 */
 	public Matrix4f getModelViewMatrix(GameObject gameObject, Matrix4f viewMatrix) {
 		Vector3f rotation = gameObject.getRotation();
 		this.modelViewMatrix.set(viewMatrix)
@@ -39,6 +47,12 @@ public class Transformations {
 		return this.modelViewMatrix;
 	}
 	
+	/**This gets the camera's rotation and position vectors as a matrix that can applied to mesh vertices.<br>
+	 * The camera in a simulation is always at position (0,0,0) and rotation (0,0,0).<br>
+	 * E.g. every time you move forwards, to the renderer, the objects are moving backwards
+	 * @see Transformations#getModelViewMatrix(GameObject, Matrix4f)
+	 * @return the view matrix
+	 */
 	public Matrix4f getViewMatrix(Camera camera) {
 		Vector3f position = camera.getPosition();
 		Vector3f rotation = camera.getRotation();

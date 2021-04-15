@@ -9,7 +9,16 @@ import java.util.List;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+/**Test class. It simply loads .obj files in the Wavefront format<br>
+ * @see <a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">https://en.wikipedia.org/wiki/Wavefront_.obj_file</a>
+ */
 public class WavefrontMeshLoader {
+	/**Loads a .obj file
+	 * @param fileName {@link WavefrontMeshLoader#readAllLines(String)}
+	 * @return A mesh object
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public static Mesh loadMesh(String fileName) throws ClassNotFoundException, IOException {
 		List<String> lines = readAllLines(fileName);
         List<Vector3f> vertices = new ArrayList<>();
@@ -162,6 +171,12 @@ public class WavefrontMeshLoader {
         }
     }
     
+    /**Reads all lines in a file. This is used for files that are stored internally within the .jar and not for files on the file system.
+     * @param fileName name of the file
+     * @return list of strings where each string is a line
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
     public static List<String> readAllLines(String fileName) throws ClassNotFoundException, IOException {
 		List<String> list = new ArrayList<String>();
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(Class.forName(WavefrontMeshLoader.class.getName()).getResourceAsStream(fileName)))) {

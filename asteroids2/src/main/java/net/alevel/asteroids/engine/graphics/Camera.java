@@ -2,7 +2,7 @@ package net.alevel.asteroids.engine.graphics;
 
 import org.joml.Vector3f;
 
-/**The camera object
+/**Encapsulates the position and rotation of the client camera.
  */
 public class Camera {
 	private final Vector3f position;
@@ -55,10 +55,21 @@ public class Camera {
 		this.rotation.z = z;
 	}
 	
+	/**Explained in more detail here -> {@link Camera#movePosition(float, float, float)}
+	 * @param delta. The vector to move by
+	 * @see Camera#movePosition(float, float, float)
+	 */
 	public void movePosition(Vector3f delta) {
 		this.movePosition(delta.x, delta.y, delta.z);
 	}
 	
+	/**Adds these offsets to the current position vector.<br>
+	 * Note that this vector is rotated by the current camera rotation<br>
+	 * e.g. if the camera is facing towards z = -infinity then a move vector of (1,0,0) (i.e. forward) will move it in that direction rather than towards x = +infinity
+	 * @param offsetX
+	 * @param offsetY
+	 * @param offsetZ
+	 */
 	public void movePosition(float offsetX, float offsetY, float offsetZ) {
 		if(offsetZ != 0) {
 			this.position.x += (float) Math.sin(Math.toRadians(rotation.y)) * -1f * offsetZ;
@@ -71,6 +82,11 @@ public class Camera {
 		this.position.y += offsetY;
 	}
 	
+	/**Adds these offsets to the current rotation vector
+	 * @param offsetX
+	 * @param offsetY
+	 * @param offsetZ
+	 */
 	public void moveRotation(float offsetX, float offsetY, float offsetZ) {
 		this.rotation.x += offsetX;
 		this.rotation.y += offsetY;

@@ -4,7 +4,7 @@ import org.joml.Vector3f;
 
 import net.alevel.asteroids.engine.graphics.Mesh;
 
-/**A generic in game object.
+/**Represents a generic in game object that can be rendered.
  */
 public abstract class GameObject extends NonRenderableObject {
 	protected final Mesh mesh;
