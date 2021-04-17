@@ -9,7 +9,7 @@ import java.util.List;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-/**Test class. It simply loads .obj files in the Wavefront format<br>
+/**No longer needed as I do no longer plan on using Blender to generate objects<br>
  * @see <a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">https://en.wikipedia.org/wiki/Wavefront_.obj_file</a>
  */
 public class WavefrontMeshLoader {
