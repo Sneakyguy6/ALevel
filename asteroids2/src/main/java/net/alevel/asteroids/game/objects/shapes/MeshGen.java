@@ -115,7 +115,7 @@ public class MeshGen {
 	
 	/**Creates a sphere as a modifiable shape (used for asteroid generation)
 	 * @param radius
-	 * @param resolution
+	 * @param resolution the number of vertices on the sphere. The more there are, the more spherical it looks
 	 * @return
 	 */
 	public static ModifiableMesh modifiableSphere(float radius, int resolution) {
@@ -147,7 +147,7 @@ public class MeshGen {
 	/**Generates a cylinder
 	 * @param radius
 	 * @param length
-	 * @param circleResolution
+	 * @param circleResolution the number of vertices for the circle
 	 * @return
 	 */
 	public static Mesh cylinder(float radius, float length, int circleResolution) {

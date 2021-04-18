@@ -12,6 +12,5 @@ net.alevel.asteroids.game.objects.shapes
 net.alevel.asteroids.game.physics
 net.alevel.asteroids.game.physics.SAT
 net.alevel.asteroids.game.physics.SATJava
-net.alevel.asteroids.game.physics.collisions
 net.alevel.asteroids.game.physics.pipeline
 net.alevel.asteroids.game.physics.worldCoords

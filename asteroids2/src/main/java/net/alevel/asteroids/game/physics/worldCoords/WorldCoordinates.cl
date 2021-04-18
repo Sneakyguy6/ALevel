@@ -1,3 +1,21 @@
+/*
+This file uses a modified version of the C language optimised for parallel.
+
+The functions here are known as kernels. They are designed in a way that allows multiple of them to run physically in parallel.
+Each instance of a kernel has several unique properties (e.g. global id, local id). I use these IDs to select the input data from the
+input arrays. For example, lets say inputData = {1, 2, 3, 4, 5, 6} and outputData = {0, 0, 0, 0, 0, 0}. You want to add 10 to each value in the inputData array.
+The kernel would look like this:
+kernel void add10(
+    global int inputData*
+    global int outputData*
+)
+{
+    int id = get_global_id(0)
+    outputData[id] = inputData[id] + 10;
+}
+There is no for loop required here. In the java code, I would just need to enqueue this kernel and tell it to do 10 instances for it. Each kernel instance
+will have a unique global ID (between 0 and 9) which I can use to specify the input data and the location where to store the data.
+*/
 __kernel void tranformVectors(
     __global const float *modelVertices,
     __global const int *objectIndices,

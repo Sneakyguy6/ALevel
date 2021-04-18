@@ -14,7 +14,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
-/**This class manages the shader files and all the uniforms. This is the interface between java and GLSL
+/**This class manages the shader files and all the uniforms. This is the interface between java and GLSL.
+ * A shader is a function that processes vertices and calculated the colour and position of each vertex on the screen.
+ * These functions are executed on the GPU
  */
 public class ShaderProgram {
 	private final int programId;

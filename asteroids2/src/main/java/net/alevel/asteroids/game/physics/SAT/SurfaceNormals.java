@@ -27,6 +27,8 @@ import net.alevel.asteroids.game.physics.pipeline.PipelineableCLFunction;
 import net.alevel.asteroids.game.physics.worldCoords.WorldCoordinates;
 
 /**Calculates all the surface normals in the world. These will be the axis.
+ * It takes the world coordinates from the pipeline buffer (which is 1 float buffer containing all the world coordinates for all objects)
+ * and calculates the surface normals using sub buffer pointers which point to the first index of each object's set of world coordinates in the buffer
  */
 public class SurfaceNormals extends PipelineableCLFunction {
 	private final cl_kernel surfaceNormalKernel;

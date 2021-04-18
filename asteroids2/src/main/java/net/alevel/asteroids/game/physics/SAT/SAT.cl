@@ -1,8 +1,12 @@
+//this file contains functions for my OpenCL SAT (Separating axis theorem) implementation
+//All world coordinates are stored in one huge array so the program could scale well and use the GPU to its full SIMT (same instruction multiple threads) capacity.
+
 //int get_group_size(int x);
 
+//This kernel is used in SAT.SurfaceNormals. It calculates a surface normal for each triangle for all triangles in the world. Each kernel instance is responsible for 1 triangle
 kernel void getSurfaceNormals(
     global const float *vertices, //vector3f array (These are the transformed vertices (world coords, not model))
-                                    //i.e. the rotation and position vectors have been applied
+                                    //i.e. the rotation and position vectors have been applied.
     global const int *indices, //vector3i array where vertices x, y and z are corners of a triangle
     global float *surfaceNormals //vector3f array
 )
@@ -24,10 +28,11 @@ kernel void getSurfaceNormals(
     surfaceNormals[globalId + 2] = c.z;
 }
 
+//These project the vertices onto each axis (surface normal)
 kernel void getProjectedVertices(
     global const float *surfaceNormals,
     global const float *vertices,
-    global float *projectedVerticesMin,
+    global float *projectedVerticesMin, //these arrays store exactly the same data which is needed for how I have done the getBoundaries method
     global float *projectedVerticesMax
 )
 {
@@ -50,7 +55,8 @@ kernel void getProjectedVertices(
     projectedVerticesMax[projectedVerticesIndex + 2] = lambda * n.z;*/
 }
 
-/*kernel void getBoundaries(
+//Gets the max and min values for lambda for each axis for each object. To be used when testing collisions as 2 intersecting. It uses a parallel reduction algorithm (https://dournac.org/info/gpu_sum_reduction)
+kernel void getBoundaries(
     global float *maxProjectedBoundaries,
     global float *minProjectedBoundaries
 )
@@ -60,7 +66,7 @@ kernel void getProjectedVertices(
     int localId = get_local_id(0);
     int groupSize = get_group_size(0);
 
-    //get minimum (uses parallel reduction algorithm (https://dournac.org/info/gpu_sum_reduction))
+    //get minimum
     barrier(CLK_LOCAL_MEM_FENCE);
     //int trueGlobalId = localId; // + get_global_offset(0); //globalId - get_global_offset(0);
     int index = groupId * groupSize + localId;
@@ -81,7 +87,7 @@ kernel void getProjectedVertices(
         for(; subBufferPointers[subBufferIndex] != offset; subBufferIndex++);
         int boundaryIndex = (groupId * groupSize + subBufferIndex) * 2;
         boundaries[boundaryIndex] = projectedVerticesMin[0];*/
-    /*}
+    }
 
     //same algorithm but for max value
     //barrier(CLK_LOCAL_MEM_FENCE);
@@ -101,7 +107,8 @@ kernel void getProjectedVertices(
     }
 }
 
-kernel void testIntersections(
+//use the boundaries to check for collisions from different objects
+/*kernel void testIntersections(
     global const float *boundaries,
     global float *collisions
 )

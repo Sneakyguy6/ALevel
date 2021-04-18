@@ -8,7 +8,7 @@ import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.objects.NonRenderableObject;
 import net.alevel.asteroids.game.physics.RigidObject;
 
-/**Manages all objects in the world
+/**Manages all objects in the world and puts them into separate lists so I can for example send all the renderable objects to the GPU with a simple command
  */
 public class GameObjects {
 	private final List<NonRenderableObject> allObjects;

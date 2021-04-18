@@ -12,7 +12,8 @@ import net.alevel.asteroids.game.cl.CLManager;
 import net.alevel.asteroids.game.physics.pipeline.FunctionPipeline;
 import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 
-/**Note on local pipeline buffer<br>
+/**This class contains the code for the OpenCL implementation of the separating axis theorem.
+ * Note on local pipeline buffer<br>
  * 0 -> surface normals<br>
  * 1 -> projectedBoundaries<br>
  * <br>

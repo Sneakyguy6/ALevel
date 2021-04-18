@@ -7,7 +7,7 @@ import net.alevel.asteroids.game.objects.ModifiableMesh;
 import net.alevel.asteroids.game.objects.StaticGameObject;
 import net.alevel.asteroids.game.objects.shapes.Grid;
 
-/**Basic implementation of the 'Perlin noise' algorithm
+/**Basic implementation of the 'Perlin noise' algorithm. It is based of this tutorial:
  * @see <a href="https://adrianb.io/2014/08/09/perlinnoise.html">https://adrianb.io/2014/08/09/perlinnoise.html</a>
  */
 public class Perlin2 {

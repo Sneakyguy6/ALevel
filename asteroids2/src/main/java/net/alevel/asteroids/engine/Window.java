@@ -41,6 +41,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 /**This represents the window onto which the renderer draws to (this is what the human actually sees on the monitor)
+ * Based off this tutorial -> <a href="https://ahbejarano.gitbook.io/lwjglgamedev">https://ahbejarano.gitbook.io/lwjglgamedev</a>
  */
 public class Window {
 	private long windowHandle; //ID of the window handler

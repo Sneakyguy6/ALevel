@@ -53,19 +53,6 @@ public class WorldCoordinates implements Releasable {
 		this.context = CLManager.getContext();
 		this.commandQueue = CLManager.getCommandQueue();
 		
-		/*String programString = "";
-		try(BufferedReader br = new BufferedReader(new InputStreamReader(WorldCoordinates.class.getResourceAsStream("WorldCoordinates.cl")))) {
-			String line;
-			while((line = br.readLine()) != null)
-				programString += line + "\n";
-		}
-		
-		this.program = clCreateProgramWithSource(this.context,
-				1,
-				new String[] {programString},
-				null,
-				null);
-		clBuildProgram(program, 0, null, null, null, null);*/
 		this.program = loadProgram("WorldCoordinates.cl", WorldCoordinates.class, this.context);
 		
 		this.transformKernel = clCreateKernel(this.program, "tranformVectors", null);

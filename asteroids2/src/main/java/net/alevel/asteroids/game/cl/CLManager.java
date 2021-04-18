@@ -17,7 +17,10 @@ import org.jocl.cl_device_id;
 import org.jocl.cl_platform_id;
 import org.jocl.cl_queue_properties;
 
-/**Manages OpenCL code. It creates the context (specifies the device etc.) and the instruction queue that the CL code will use
+/**Manages OpenCL code. It creates the context (specifies the device etc.) and the instruction queue that the CL code will run on
+ * In this case it will specify a GPU and create a queue for that.
+ * Based on this ->
+ * <a href="https://github.com/gpu/JOCLSamples/blob/master/src/main/java/org/jocl/samples/JOCLSample.java">https://github.com/gpu/JOCLSamples/blob/master/src/main/java/org/jocl/samples/JOCLSample.java</a>
  */
 public class CLManager {
 	private static cl_context context;

@@ -8,6 +8,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
+import net.alevel.asteroids.engine.GameEngine;
 import net.alevel.asteroids.engine.ILogic;
 import net.alevel.asteroids.engine.Window;
 import net.alevel.asteroids.engine.graphics.Camera;
@@ -29,6 +30,7 @@ import net.alevel.asteroids.game.physics.Physics;
 import net.alevel.asteroids.game.physics.RigidObject;
 
 /**Represents the main simulation logic. It manages the simulation and tells it what to do and what to render each time the game loop asks.
+ * The functions here are called every time the game loop in {@link GameEngine} repeats
  */
 public class GameLogic implements ILogic {
 	public static final float CAMERA_POS_STEP = 0.01f;
@@ -39,7 +41,7 @@ public class GameLogic implements ILogic {
 	//private final List<GameObject> gameObjects;
 	private Ship player;
 	private RigidObject[] rigidObjects;
-	private final List<ObjectAssembly> ships;
+	private final List<ObjectAssembly> ships; //AI ships
 	
 	private final Physics physics;
 	

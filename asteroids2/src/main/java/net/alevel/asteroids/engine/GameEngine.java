@@ -8,6 +8,10 @@ import net.alevel.asteroids.engine.input.Input;
 import net.alevel.asteroids.engine.objects.GameObject;
 import net.alevel.asteroids.engine.utils.Pair;
 
+/**This contains the actual game loop. It calls different functions in {@link ILogic} which causes the simulation to do something
+ * Most of the classes in engine.graphics and the game loop (which i modified a little) are based off this tutorial ->
+ * <a href="https://ahbejarano.gitbook.io/lwjglgamedev">https://ahbejarano.gitbook.io/lwjglgamedev</a>
+ */
 public class GameEngine implements Runnable {
 	/**The target number of 'Frames per second' to be rendered.
 	 */

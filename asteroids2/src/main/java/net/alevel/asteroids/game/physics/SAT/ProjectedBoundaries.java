@@ -10,12 +10,13 @@ import org.jocl.cl_kernel;
 import org.jocl.cl_mem;
 
 import net.alevel.asteroids.game.physics.RigidObject;
+import net.alevel.asteroids.game.physics.SATJava.SATJava;
 import net.alevel.asteroids.game.physics.pipeline.PipeLineableClMem;
 import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 import net.alevel.asteroids.game.physics.pipeline.PipelineableCLFunction;
 import net.alevel.asteroids.game.physics.worldCoords.WorldCoordinates;
 
-/**Calculates the projected boundaries for each axis
+/**Calculates the projected boundaries for each axis. This uses the same mathematical equation that I created in {@link SATJava}.
  */
 public class ProjectedBoundaries extends PipelineableCLFunction {
 	private final cl_kernel projectPointsKernel;

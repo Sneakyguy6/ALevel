@@ -15,6 +15,18 @@ import net.alevel.asteroids.game.physics.pipeline.PipelineBuffer;
 import net.alevel.asteroids.game.physics.pipeline.PipelineableFunction;
 
 /**A simple implementation of the 'Separating Axis Theorem (SAT)' algorithm. This is a common method of collision detection in games.
+ * Firstly, it calculates a normal vector for each triangle. These will be used as the axis that each object.<br>
+ * <br>The projection is done like this:
+ * <br>let 'A' be The world coordinate of the vertex to project
+ * <br>let 'n' the axis to project onto. The axis is treated as a 3D line going through the origin. n is the direction of this line
+ * <br>let 'B' the point on the line where the line AB is perpendicular to the line 'n'
+ * <br>then B = lambda * n
+ * <br>AB = B - A
+ * <br>dot(AB, n) = 0
+ * <br>n.x * (n.x * lambda - A.x) + n.y * (n.y * lambda - A.y) + n.z * (n.z * lambda - A.z) = 0
+ * <br>pow(n.x, 2) * lambda - A.x * n.x + pow(n.y, 2) * lambda - A.y * n.y + pow(n.z, 2) * lambda - A.z * n.z = 0
+ * <br>lambda * (pow(n.x, 2) + pow(n.y, 2) + pow(n.z, 2)) = A.x * n.x + A.y * n.y + A.z * n.z
+ * <br>lambda = dot(A, n) / pow(length(n), 2)
  */
 public class SATJava extends FunctionPipeline implements PipelineableFunction {
 	private boolean calc;
