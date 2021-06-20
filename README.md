@@ -1,5 +1,5 @@
 # ALevel
-asteroids is a broken project
+asteroids is a broken project (OpenCL issue)
 asteroids2 is the one i am updating
 
 The project is a 3D asteroids game. It involves shooting asteroids in 3D
